@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Mail, CheckCircle2, Sparkles, Send, ShieldCheck, Loader2 } from "lucide-react";
+import { saveNewsletterSubscriberFirestore } from "../lib/firebase";
 
 export const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -41,6 +42,12 @@ export const NewsletterSection: React.FC = () => {
     setSuccessMessage(null);
 
     try {
+      try {
+        await saveNewsletterSubscriberFirestore(email, selectedTopics);
+      } catch (fErr) {
+        console.warn("Firestore newsletter sync notice:", fErr);
+      }
+
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

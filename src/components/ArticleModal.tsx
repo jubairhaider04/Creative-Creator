@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   X, 
   Calendar, 
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { BlogPost } from "../types";
 import { ShareButtons } from "./ShareButtons";
+import { subscribeToBlogComments, addBlogCommentFirestore } from "../lib/firebase";
 
 interface ArticleModalProps {
   post: BlogPost | null;
@@ -42,6 +43,24 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
     }
   ]);
 
+  useEffect(() => {
+    if (post?.id) {
+      const unsub = subscribeToBlogComments(post.id, (firestoreComments) => {
+        if (firestoreComments && firestoreComments.length > 0) {
+          setComments(prev => {
+            const map = new Map();
+            firestoreComments.forEach(c => map.set(c.id, c));
+            prev.forEach(c => { if (!map.has(c.id)) map.set(c.id, c); });
+            return Array.from(map.values());
+          });
+        }
+      });
+      return () => {
+        if (unsub) unsub();
+      };
+    }
+  }, [post?.id]);
+
   if (!post) return null;
 
   const handleClap = () => {
@@ -49,20 +68,31 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
     setHasClapped(true);
   };
 
-  const handleAddComment = (e: React.FormEvent) => {
+  const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentText.trim()) return;
 
-    setComments([
-      {
-        id: `c-${Date.now()}`,
-        name: "You (Guest Reader)",
-        text: commentText.trim(),
-        time: "Just now"
-      },
-      ...comments
-    ]);
+    const newComment = {
+      id: `c-${Date.now()}`,
+      name: "You (Guest Reader)",
+      text: commentText.trim(),
+      time: "Just now"
+    };
+
+    setComments(prev => [newComment, ...prev]);
+    const textToSend = commentText.trim();
     setCommentText("");
+
+    if (post?.id) {
+      try {
+        await addBlogCommentFirestore(post.id, {
+          name: "Guest Reader",
+          text: textToSend
+        });
+      } catch (err) {
+        console.warn("Firestore comment sync notice:", err);
+      }
+    }
   };
 
   return (

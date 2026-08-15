@@ -123,17 +123,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Action CTAs */}
           <div className="hidden sm:flex items-center gap-2.5">
-            {/* AI Scope Advisor Button */}
+            {/* Google Intelligence Suite Button */}
             <button
               type="button"
               id="btn-nav-ai-consultant"
               onClick={onOpenAiConsultant}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all shadow-sm group"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
-              <span>AI Scope Advisor</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-12 transition-transform" />
+              <span>Google AI Suite</span>
               <span className="px-1.5 py-0.2 text-[9px] font-bold bg-amber-500/30 text-amber-200 rounded uppercase">
-                Thinking
+                Pro & Flash
               </span>
             </button>
 
@@ -145,7 +145,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-zinc-300 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all"
             >
               <BarChart3 className="w-3.5 h-3.5 text-blue-400" />
-              <span>Analytics</span>
+              <span>CRM & Telemetry</span>
               <span className="flex h-2 w-2 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
@@ -160,9 +160,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   id="btn-nav-user-profile"
                   onClick={onOpenAnalytics}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 hover:bg-emerald-900/40 transition-all"
-                  title="Client & Admin Portal"
+                  title="Client & Admin Portal (Firebase Auth)"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  {currentUser.avatar ? (
+                    <img src={currentUser.avatar} alt="Avatar" className="w-4 h-4 rounded-full object-cover" />
+                  ) : (
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  )}
                   <span className="max-w-[90px] truncate">{currentUser.name.split(" ")[0]}</span>
                 </button>
                 <button
@@ -179,10 +183,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 id="btn-nav-login"
                 onClick={onOpenAuth}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900/60 hover:bg-zinc-800 border border-zinc-800 transition-all"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 transition-all"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" />
-                <span>Portal / MFA</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+                <span>Google Sign-In / MFA</span>
               </button>
             )}
 
@@ -269,7 +273,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="w-full py-3 px-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-sm font-medium flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-4 h-4 text-amber-400" />
-                <span>AI Project Scope Advisor (Thinking Mode)</span>
+                <span>Google AI Suite (Thinking, Search & Maps Grounding)</span>
               </button>
 
               <button

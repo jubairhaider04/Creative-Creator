@@ -18,6 +18,7 @@ import {
   Filter
 } from "lucide-react";
 import { AnalyticsData, LeadInquiry, UserAuth } from "../types";
+import { subscribeToLeadsFirestore, updateLeadStatusFirestore } from "../lib/firebase";
 
 interface AnalyticsDashboardModalProps {
   isOpen: boolean;
@@ -41,6 +42,23 @@ export const AnalyticsDashboardModal: React.FC<AnalyticsDashboardModalProps> = (
   useEffect(() => {
     if (isOpen) {
       fetchDashboardData();
+
+      // Real-time Firestore sync
+      const unsubscribe = subscribeToLeadsFirestore((firestoreLeads) => {
+        if (firestoreLeads && firestoreLeads.length > 0) {
+          setLeads(prev => {
+            // merge unique leads
+            const map = new Map();
+            firestoreLeads.forEach(l => map.set(l.id, l));
+            prev.forEach(l => { if (!map.has(l.id)) map.set(l.id, l); });
+            return Array.from(map.values());
+          });
+        }
+      });
+
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
     }
   }, [isOpen]);
 
@@ -58,7 +76,12 @@ export const AnalyticsDashboardModal: React.FC<AnalyticsDashboardModalProps> = (
       }
       if (leadsRes.ok) {
         const lData = await leadsRes.json();
-        setLeads(lData.leads || []);
+        setLeads(prev => {
+          const map = new Map();
+          (lData.leads || []).forEach((l: any) => map.set(l.id, l));
+          prev.forEach(l => { if (!map.has(l.id)) map.set(l.id, l); });
+          return Array.from(map.values());
+        });
       }
     } catch (err) {
       console.error("Dashboard fetch error:", err);
@@ -69,6 +92,13 @@ export const AnalyticsDashboardModal: React.FC<AnalyticsDashboardModalProps> = (
 
   const handleUpdateLeadStatus = async (id: string, newStatus: string) => {
     try {
+      // Update in Firestore
+      try {
+        await updateLeadStatusFirestore(id, newStatus);
+      } catch (fErr) {
+        console.warn("Firestore update error:", fErr);
+      }
+
       const res = await fetch(`/api/leads/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

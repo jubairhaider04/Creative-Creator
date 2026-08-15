@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { ServicesSection } from "./components/ServicesSection";
@@ -9,10 +9,11 @@ import { BlogSection } from "./components/BlogSection";
 import { NewsletterSection } from "./components/NewsletterSection";
 import { ContactSection } from "./components/ContactSection";
 import { Footer } from "./components/Footer";
-import { AiConsultantModal } from "./components/AiConsultantModal";
+import { GoogleIntelligenceModal } from "./components/GoogleIntelligenceModal";
 import { AnalyticsDashboardModal } from "./components/AnalyticsDashboardModal";
 import { AuthModal } from "./components/AuthModal";
 import { ServiceCategory, UserAuth } from "./types";
+import { subscribeToAuthState, signOutUser } from "./lib/firebase";
 
 export default function App() {
   // Navigation & Category state
@@ -25,6 +26,25 @@ export default function App() {
 
   // Authenticated User state
   const [currentUser, setCurrentUser] = useState<UserAuth | null>(null);
+
+  // Subscribe to Firebase Auth state on mount
+  useEffect(() => {
+    const unsubscribe = subscribeToAuthState((firebaseUser) => {
+      if (firebaseUser) {
+        setCurrentUser({
+          email: firebaseUser.email || "user@google.com",
+          name: firebaseUser.displayName || "Google User",
+          role: (firebaseUser.email?.includes("admin") || firebaseUser.email?.includes("creative")) ? "admin" : "client",
+          avatar: firebaseUser.photoURL || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+          mfaVerifiedAt: new Date().toISOString()
+        });
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
 
   // Contact form pre-fill parameters
   const [inquiryBrief, setInquiryBrief] = useState<string>("");
@@ -68,7 +88,12 @@ export default function App() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await signOutUser();
+    } catch (err) {
+      console.warn("Sign out notice:", err);
+    }
     setCurrentUser(null);
   };
 
@@ -81,6 +106,10 @@ export default function App() {
         onOpenAnalytics={() => setIsAnalyticsOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLogout={handleLogout}
+        onOpenQuoteCalculator={() => {
+          const el = document.getElementById("calculator");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
       />
 
       {/* Main Content Sections */}
@@ -136,13 +165,15 @@ export default function App() {
       {/* Footer with Social Integration */}
       <Footer />
 
-      {/* Modals */}
-      <AiConsultantModal
+      {/* Google Intelligence Suite Modal (High Thinking, Search Grounding, Maps Grounding, Flash Lite) */}
+      <GoogleIntelligenceModal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
         onApplyBriefToContact={handleApplyAiBrief}
+        currentUser={currentUser}
       />
 
+      {/* Analytics & CRM Pipeline Modal */}
       <AnalyticsDashboardModal
         isOpen={isAnalyticsOpen}
         onClose={() => setIsAnalyticsOpen(false)}
@@ -153,6 +184,7 @@ export default function App() {
         }}
       />
 
+      {/* Authentication & MFA / Google Sign-in Modal */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}

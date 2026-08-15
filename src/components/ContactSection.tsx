@@ -17,6 +17,7 @@ import {
   Loader2
 } from "lucide-react";
 import confetti from "canvas-confetti";
+import { saveInquiryToFirestore } from "../lib/firebase";
 
 interface ContactSectionProps {
   prefilledBrief?: string;
@@ -108,6 +109,21 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     setErrorMessage(null);
 
     try {
+      // Save to Cloud Firestore
+      try {
+        await saveInquiryToFirestore({
+          name,
+          email,
+          company,
+          services: selectedServices,
+          budget,
+          timeline,
+          description: description + (attachedFiles.length > 0 ? `\n[Attachments: ${attachedFiles.map(f => f.name).join(", ")}]` : "")
+        });
+      } catch (firestoreErr) {
+        console.warn("Firestore sync notice:", firestoreErr);
+      }
+
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -1,6 +1,6 @@
 {
   "name": "Creative Creator",
-  "description": "All-in-one digital services portfolio for web development, content creation, video editing, and graphic design with dynamic showcases, real-time analytics dashboard, interactive lead capture, MFA security, and AI project scope consultant.",
-  "requestFramePermissions": [],
+  "description": "All-in-one digital services portfolio powered by Google features: Firebase Auth & Firestore data persistence, Google Search Grounding for live market intelligence, Google Maps Grounding for studio locator, and tiered Gemini AI (Pro with High Thinking, Flash, and Flash-Lite).",
+  "requestFramePermissions": ["geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
