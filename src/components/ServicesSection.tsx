@@ -7,11 +7,9 @@ import {
   CheckCircle2, 
   Clock, 
   ArrowRight, 
-  Sparkles, 
-  Zap, 
-  TrendingUp, 
   Layers, 
-  ChevronRight 
+  ChevronRight,
+  TrendingUp
 } from "lucide-react";
 import { SERVICE_PILLARS } from "../data/servicesData";
 import { ServiceCategory } from "../types";
@@ -26,10 +24,52 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onSelectServiceForInquiry,
   onOpenQuoteCalculator
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeServiceId, setActiveServiceId] = useState<string>("serv-web-dev");
 
   const currentService = SERVICE_PILLARS.find(s => s.id === activeServiceId) || SERVICE_PILLARS[0];
+
+  const getLocalizedService = (service: typeof currentService) => {
+    if (language === "bn" && service.bn) {
+      return {
+        title: service.banglaTitle || service.title,
+        tagline: service.bn.tagline || service.tagline,
+        description: service.bn.description || service.description,
+        turnaroundTime: service.bn.turnaroundTime || service.turnaroundTime,
+        highlightMetric: service.bn.highlightMetric || service.highlightMetric,
+        keyFeatures: service.bn.keyFeatures || service.keyFeatures,
+        deliverables: service.bn.deliverables || service.deliverables,
+        startingPrice: service.startingPrice,
+        techStack: service.techStack
+      };
+    }
+    if (language === "es" && service.es) {
+      return {
+        title: service.title,
+        tagline: service.es.tagline || service.tagline,
+        description: service.es.description || service.description,
+        turnaroundTime: service.es.turnaroundTime || service.turnaroundTime,
+        highlightMetric: service.es.highlightMetric || service.highlightMetric,
+        keyFeatures: service.es.keyFeatures || service.keyFeatures,
+        deliverables: service.es.deliverables || service.deliverables,
+        startingPrice: service.startingPrice,
+        techStack: service.techStack
+      };
+    }
+    return {
+      title: service.title,
+      tagline: service.tagline,
+      description: service.description,
+      turnaroundTime: service.turnaroundTime,
+      highlightMetric: service.highlightMetric,
+      keyFeatures: service.keyFeatures,
+      deliverables: service.deliverables,
+      startingPrice: service.startingPrice,
+      techStack: service.techStack
+    };
+  };
+
+  const localizedActive = getLocalizedService(currentService);
 
   const getIcon = (name: string) => {
     switch (name) {
@@ -84,6 +124,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           {SERVICE_PILLARS.map((service) => {
             const Icon = getIcon(service.iconName);
             const isSelected = activeServiceId === service.id;
+            const tabTitle = language === "bn" && service.banglaTitle ? service.banglaTitle : service.title;
             return (
               <button
                 key={service.id}
@@ -100,10 +141,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   <Icon className="w-5 h-5" />
                 </div>
                 <div className="font-bold text-base text-white mb-1">
-                  {service.title}
+                  {tabTitle}
                 </div>
                 <div className="text-xs text-zinc-400 line-clamp-1">
-                  Starting {service.startingPrice}
+                  {t.servicesStartingAt} {service.startingPrice}
                 </div>
                 {isSelected && (
                   <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-500 rounded-full" />
@@ -121,23 +162,23 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-3 border bg-zinc-950/80 text-zinc-300 border-zinc-800">
                   <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                  <span>Standard Sprint: {currentService.turnaroundTime}</span>
+                  <span>{t.servicesTurnaround}: {localizedActive.turnaroundTime}</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-3">
-                  {currentService.tagline}
+                  {localizedActive.tagline}
                 </h3>
                 <p className="text-sm text-zinc-400 leading-relaxed">
-                  {currentService.description}
+                  {localizedActive.description}
                 </p>
               </div>
 
               {/* Key Features List */}
               <div>
                 <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-3">
-                  Execution Highlights & Capabilities
+                  {t.servicesKeyFeatures}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {currentService.keyFeatures.map((feat, idx) => (
+                  {localizedActive.keyFeatures.map((feat, idx) => (
                     <div key={idx} className="flex items-start gap-2.5 text-xs text-zinc-300 bg-zinc-950/50 p-3 rounded-xl border border-zinc-800/60">
                       <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                       <span>{feat}</span>
@@ -149,10 +190,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               {/* Deliverables */}
               <div>
                 <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-2.5">
-                  Standard Scope Deliverables
+                  {t.servicesDeliverables}
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {currentService.deliverables.map((deliv, idx) => (
+                  {localizedActive.deliverables.map((deliv, idx) => (
                     <span 
                       key={idx}
                       className="px-3 py-1.5 rounded-lg bg-zinc-800/70 border border-zinc-700/60 text-xs font-medium text-zinc-200"
@@ -173,7 +214,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   <span>Performance Benchmark</span>
                 </div>
                 <div className="text-sm font-bold text-white">
-                  {currentService.highlightMetric}
+                  {localizedActive.highlightMetric}
                 </div>
               </div>
 
@@ -182,7 +223,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 <div>
                   <span className="text-xs text-zinc-400 uppercase font-medium">Standard Investment</span>
                   <div className="text-3xl font-extrabold text-white mt-0.5">
-                    {currentService.startingPrice}
+                    {localizedActive.startingPrice}
                   </div>
                 </div>
                 <span className="text-xs text-zinc-500">Tier-based / Fixed Sprint</span>
@@ -194,7 +235,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   Production Toolchain & Stack
                 </span>
                 <div className="flex flex-wrap gap-1.5">
-                  {currentService.techStack.map((tech, idx) => (
+                  {localizedActive.techStack.map((tech, idx) => (
                     <span 
                       key={idx}
                       className="px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-300"
@@ -213,7 +254,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   onClick={() => onSelectServiceForInquiry(currentService.title)}
                   className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition-all"
                 >
-                  <span>Inquire for {currentService.title}</span>
+                  <span>{t.servicesInquireNow}</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
 
@@ -223,7 +264,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   onClick={onOpenQuoteCalculator}
                   className="w-full py-2.5 px-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-medium border border-zinc-800 transition-colors"
                 >
-                  Configure Custom Add-ons
+                  {t.servicesCalculateQuote}
                 </button>
               </div>
             </div>

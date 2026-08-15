@@ -6,13 +6,7 @@ import {
   PenTool, 
   Film, 
   Palette, 
-  Calculator, 
-  CheckCircle2, 
-  TrendingUp, 
-  Zap, 
-  Star,
-  ShieldCheck,
-  Play
+  Calculator
 } from "lucide-react";
 import { ServiceCategory } from "../types";
 import { useLanguage } from "../context/LanguageContext";
@@ -28,7 +22,7 @@ export const Hero: React.FC<HeroProps> = ({
   onOpenQuoteCalculator,
   onSelectCategory
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<ServiceCategory>("Web Development");
 
   const services = [
@@ -37,7 +31,11 @@ export const Hero: React.FC<HeroProps> = ({
       icon: Code2,
       label: t.servicesWebDev,
       accent: "text-blue-400 border-blue-500/30 bg-blue-500/10",
-      description: "Next-gen React & WebGL full-stack apps with sub-second latency.",
+      description: language === "bn" 
+        ? "নেক্সট-জেন রিয়্যাক্ট ও ফুল-স্ট্যাক ওয়েব অ্যাপস এবং দ্রুতগতির ই-কমার্স।"
+        : language === "es"
+        ? "Aplicaciones full-stack con React y comercio electrónico ultrarrápido."
+        : "Next-gen React & WebGL full-stack apps with sub-second latency.",
       stat: "99+ Lighthouse"
     },
     {
@@ -45,7 +43,11 @@ export const Hero: React.FC<HeroProps> = ({
       icon: PenTool,
       label: t.servicesContentCreation,
       accent: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
-      description: "Viral narratives, high-intent SEO essays, and executive ghostwriting.",
+      description: language === "bn"
+        ? "ভাইরাল সোশ্যাল পোস্ট, হাই-কনভার্সন বিজ্ঞাপন কপি ও এসইও আর্টিকেল।"
+        : language === "es"
+        ? "Narrativas virales, textos publicitarios y artículos SEO de alto impacto."
+        : "Viral narratives, high-intent SEO essays, and executive ghostwriting.",
       stat: "4.5x Reach"
     },
     {
@@ -53,7 +55,11 @@ export const Hero: React.FC<HeroProps> = ({
       icon: Film,
       label: t.servicesVideoEditing,
       accent: "text-purple-400 border-purple-500/30 bg-purple-500/10",
-      description: "Cinematic color grading, 4K motion graphics & high-retention shorts.",
+      description: language === "bn"
+        ? "সিনেমাটিক কালার গ্রেডিং, ৪K মোশন গ্রাফিক্স ও সোশ্যাল রিলস।"
+        : language === "es"
+        ? "Gradación de color 4K, gráficos dinámicos y reels virales de alta retención."
+        : "Cinematic color grading, 4K motion graphics & high-retention shorts.",
       stat: "85%+ Retention"
     },
     {
@@ -61,8 +67,12 @@ export const Hero: React.FC<HeroProps> = ({
       icon: Palette,
       label: t.servicesGraphicDesign,
       accent: "text-amber-400 border-amber-500/30 bg-amber-500/10",
-      description: "3D brand identity, tokenized Figma systems & luxury packaging.",
-      stat: "100% Tokenized"
+      description: language === "bn"
+        ? "ইউনিক ভেক্টর লোগো, সম্পূর্ণ ব্র্যান্ড আইডেন্টিটি ও লাক্সারি প্যাকেজিং।"
+        : language === "es"
+        ? "Identidad visual de marca, diseño UI/UX en Figma y packaging."
+        : "3D brand identity, tokenized Figma systems & luxury packaging.",
+      stat: "100% Vector"
     },
   ];
 
@@ -97,7 +107,7 @@ export const Hero: React.FC<HeroProps> = ({
             </span>
             <span className="text-zinc-600">•</span>
             <span className="text-xs text-blue-400 font-semibold">
-              4-in-1 Digital Studio
+              {t.heroStudioLabel}
             </span>
           </div>
         </div>
@@ -195,14 +205,14 @@ export const Hero: React.FC<HeroProps> = ({
           <div className="flex items-center justify-between px-5 py-3 rounded-xl bg-zinc-900/50 border border-zinc-800/60 text-xs text-zinc-400">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-blue-500" />
-              <span>Active Focus: <strong className="text-zinc-200">{activeTab}</strong></span>
+              <span>{t.heroActiveFocus}: <strong className="text-zinc-200">{activeTab}</strong></span>
             </div>
             <a
               href="#showcase"
               onClick={() => onSelectCategory(activeTab)}
               className="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 group"
             >
-              <span>View {activeTab} Case Studies</span>
+              <span>{t.heroViewCaseStudies}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </a>
           </div>
@@ -215,7 +225,7 @@ export const Hero: React.FC<HeroProps> = ({
               120+
             </div>
             <div className="text-xs text-zinc-400 font-medium">
-              High-Impact Deliverables
+              {t.heroMetric1Label}
             </div>
           </div>
           <div>
@@ -223,15 +233,15 @@ export const Hero: React.FC<HeroProps> = ({
               99.4%
             </div>
             <div className="text-xs text-zinc-400 font-medium">
-              Client Satisfaction Rating
+              {t.heroMetric2Label}
             </div>
           </div>
           <div>
             <div className="text-2xl sm:text-3xl font-extrabold text-blue-400 tracking-tight mb-1">
-              ৳ ৫০ কোটি+
+              {t.heroMetric3Value}
             </div>
             <div className="text-xs text-zinc-400 font-medium">
-              Client Revenue & Pipeline Growth (BDT)
+              {t.heroMetric3Label}
             </div>
           </div>
           <div>
@@ -239,7 +249,7 @@ export const Hero: React.FC<HeroProps> = ({
               &lt; 0.8s
             </div>
             <div className="text-xs text-zinc-400 font-medium">
-              Average Web & Asset Delivery Speed
+              {t.heroMetric4Label}
             </div>
           </div>
         </div>

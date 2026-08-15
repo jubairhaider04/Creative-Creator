@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 export type Language = "en" | "bn" | "es";
 
@@ -34,7 +34,25 @@ export interface Translations {
   heroMetric1Label: string;
   heroMetric2Label: string;
   heroMetric3Label: string;
+  heroMetric3Value: string;
   heroMetric4Label: string;
+
+  // Pricing Section
+  pricingBadge: string;
+  pricingTitle: string;
+  pricingSubtitle: string;
+  pricingDeliveryLabel: string;
+  pricingPaymentLabel: string;
+  pricingIdealForLabel: string;
+  pricingIncludedLabel: string;
+  pricingBonusesLabel: string;
+  pricingWhatsAppBook: string;
+  pricingSelectBtn: string;
+  pricingCustomTitle: string;
+  pricingCustomSubtitle: string;
+  pricingOpenCalc: string;
+  pricingPaymentTitle: string;
+  pricingPaymentSubtitle: string;
 
   // Services
   servicesTitle: string;
@@ -151,12 +169,30 @@ const translations: Record<Language, Translations> = {
     heroViewCaseStudies: "View Case Studies",
     heroMetric1Label: "High-Impact Deliverables",
     heroMetric2Label: "Client Satisfaction Rating",
-    heroMetric3Label: "Client Value & Pipeline Created",
+    heroMetric3Label: "Client Revenue & Pipeline Growth (BDT)",
+    heroMetric3Value: "৳ 50+ Cr BDT",
     heroMetric4Label: "Average Web & Asset Delivery Speed",
+
+    // Pricing
+    pricingBadge: "Tailored Packages & Transparent Pricing (BDT / ৳)",
+    pricingTitle: "Transparent Packages & Pricing.",
+    pricingSubtitle: "No hidden fees. Choose the ideal tier for your business with fast turnaround, official invoice, and flexible installment options via bKash, Nagad, and Bank Transfer.",
+    pricingDeliveryLabel: "Delivery:",
+    pricingPaymentLabel: "Payment:",
+    pricingIdealForLabel: "Ideal For:",
+    pricingIncludedLabel: "Included Deliverables & Features:",
+    pricingBonusesLabel: "Special Free Bonuses:",
+    pricingWhatsAppBook: "Book on WhatsApp (+880 1676056414)",
+    pricingSelectBtn: "Select This Package",
+    pricingCustomTitle: "Need a custom scope or specific budget?",
+    pricingCustomSubtitle: "Use our interactive Quote Calculator to configure your exact features and receive an instant estimate.",
+    pricingOpenCalc: "Open Custom Quote Calculator",
+    pricingPaymentTitle: "Accepted Bangladeshi & International Payment Methods",
+    pricingPaymentSubtitle: "100% official invoice and receipt provided for every project",
 
     // Services
     servicesTitle: "Four Specialized Disciplines. One Unified Vision.",
-    servicesSubtitle: "Engineered for high-growth startups, luxury brands, and global creators demanding elite execution.",
+    servicesSubtitle: "Engineered for high-growth startups, local businesses, and modern brands demanding elite execution.",
     servicesWebDev: "Web Development",
     servicesContentCreation: "Content Creation",
     servicesVideoEditing: "Video Editing",
@@ -184,7 +220,7 @@ const translations: Record<Language, Translations> = {
     // Quote Calculator
     calcBadge: "Transparent Pricing Engine",
     calcTitle: "Interactive Scope & Budget Calculator",
-    calcSubtitle: "Select disciplines, project complexity, and strategic add-ons to receive an instant, accurate investment breakdown and sprint estimate.",
+    calcSubtitle: "Select disciplines, project complexity, and strategic add-ons to receive an instant, accurate investment breakdown and sprint estimate in BDT (৳).",
     calcSelectDisciplines: "1. Select Service Disciplines",
     calcSelectComplexity: "2. Select Project Scope & Complexity",
     calcSelectAddons: "3. Optional Strategic Add-ons",
@@ -268,7 +304,25 @@ const translations: Record<Language, Translations> = {
     heroMetric1Label: "সফল প্রজেক্ট ডেলিভারি",
     heroMetric2Label: "গ্রাহক সন্তুষ্টির হার",
     heroMetric3Label: "ক্লায়েন্ট ভ্যালু ও পাইপলাইন তৈরি",
+    heroMetric3Value: "৳ ৫০ কোটি+",
     heroMetric4Label: "গড় ওয়েব ডেলিভারি স্পিড",
+
+    // Pricing
+    pricingBadge: "বাংলাদেশি ব্যবসার জন্য সাশ্রয়ী প্যাকেজ (BDT / ৳)",
+    pricingTitle: "স্বচ্ছ মূল্য তালিকা ও প্যাকেজ।",
+    pricingSubtitle: "কোনো লুকানো খরচ নেই। আপনার ব্যবসার প্রয়োজন অনুযায়ী নিখুঁত প্যাকেজ বেছে নিন। প্রতিটি প্যাকেজে রয়েছে ফ্রি ডোমেইন, সুপার-ফাস্ট হোস্টিং এবং বিকাশ/নগদে সহজ কিস্তির সুবিধা।",
+    pricingDeliveryLabel: "ডেলিভারি সময়:",
+    pricingPaymentLabel: "পেমেন্ট শর্ত:",
+    pricingIdealForLabel: "উপযুক্ত যাদের জন্য:",
+    pricingIncludedLabel: "প্যাকেজের অন্তর্ভুক্ত সেবাসমূহ:",
+    pricingBonusesLabel: "স্পেশাল ফ্রি বোনাস:",
+    pricingWhatsAppBook: "হোয়াটসঅ্যাপে বুক করুন (+880 1676056414)",
+    pricingSelectBtn: "এই প্যাকেজটি নির্বাচন করুন",
+    pricingCustomTitle: "আপনার কি কাস্টম রিকোয়ারমেন্ট বা নির্দিষ্ট বাজেট আছে?",
+    pricingCustomSubtitle: "আমাদের ইন্টারেক্টিভ কোট ক্যালকুলেটর দিয়ে নিজের পছন্দমতো ফিচার ও সার্ভিস যোগ করে ইনস্ট্যান্ট বাজেট হিসাব করুন।",
+    pricingOpenCalc: "কাস্টম কোট ক্যালকুলেটর খুলুন",
+    pricingPaymentTitle: "সহজ ও নিরাপদ পেমেন্ট মেথড (Payment Methods in Bangladesh)",
+    pricingPaymentSubtitle: "১০০% অফিসিয়াল ইনভয়েস ও রসিদ প্রদান করা হয়",
 
     // Services
     servicesTitle: "চারটি বিশেষায়িত বিভাগ। একটি সমন্বিত লক্ষ্য।",
@@ -384,7 +438,25 @@ const translations: Record<Language, Translations> = {
     heroMetric1Label: "Entregables de Alto Impacto",
     heroMetric2Label: "Calificación de Satisfacción",
     heroMetric3Label: "Valor de Pipeline Generado",
+    heroMetric3Value: "৳ 50+ Cr BDT",
     heroMetric4Label: "Velocidad de Carga y Entrega",
+
+    // Pricing
+    pricingBadge: "Paquetes Transparentes y Precios (BDT / ৳)",
+    pricingTitle: "Paquetes y Precios Transparentes.",
+    pricingSubtitle: "Sin costos ocultos. Elija el paquete ideal para su negocio con entrega rápida, factura oficial y facilidades de pago en cuotas.",
+    pricingDeliveryLabel: "Entrega:",
+    pricingPaymentLabel: "Pago:",
+    pricingIdealForLabel: "Ideal Para:",
+    pricingIncludedLabel: "Servicios y Entregables Incluidos:",
+    pricingBonusesLabel: "Bonos Gratuitos Especiales:",
+    pricingWhatsAppBook: "Reservar por WhatsApp (+880 1676056414)",
+    pricingSelectBtn: "Seleccionar Este Paquete",
+    pricingCustomTitle: "¿Tiene requerimientos personalizados o presupuesto específico?",
+    pricingCustomSubtitle: "Utilice nuestro cotizador interactivo para agregar características a medida y obtener un presupuesto instantáneo.",
+    pricingOpenCalc: "Abrir Cotizador Personalizado",
+    pricingPaymentTitle: "Métodos de Pago Aceptados en Bangladesh e Internacionales",
+    pricingPaymentSubtitle: "100% de facturación oficial y recibo emitido por cada proyecto",
 
     // Services
     servicesTitle: "Cuatro Disciplinas Especializadas. Una Visión Unificada.",
@@ -416,7 +488,7 @@ const translations: Record<Language, Translations> = {
     // Quote Calculator
     calcBadge: "Motor de Precios Transparente",
     calcTitle: "Calculadora Interactiva de Alcance y Presupuesto",
-    calcSubtitle: "Seleccione disciplinas, complejidad del proyecto y complementos estratégicos para obtener un desglose instantáneo.",
+    calcSubtitle: "Seleccione disciplinas, complejidad del proyecto y complementos estratégicos para obtener un desglose instantáneo en BDT (৳).",
     calcSelectDisciplines: "1. Seleccione las Disciplinas",
     calcSelectComplexity: "2. Seleccione el Alcance y Complejidad",
     calcSelectAddons: "3. Complementos Estratégicos",
@@ -480,11 +552,15 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Local state initialized with saved preference or default English
+  // Default strictly to English ("en")
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem("cc_preferred_language") as Language;
-    if (saved && (saved === "en" || saved === "bn" || saved === "es")) {
-      return saved;
+    try {
+      const saved = localStorage.getItem("cc_preferred_language") as Language;
+      if (saved === "en" || saved === "bn" || saved === "es") {
+        return saved;
+      }
+    } catch {
+      // ignore
     }
     return "en";
   });
@@ -507,7 +583,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const value = {
     language,
     setLanguage,
-    t: translations[language],
+    t: translations[language] || translations.en,
     availableLanguages
   };
 

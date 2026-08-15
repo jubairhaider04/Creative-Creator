@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { 
-  Check, 
   Sparkles, 
   ArrowRight, 
   ShieldCheck, 
   Clock, 
-  HelpCircle, 
   Gift, 
   Zap, 
   CreditCard,
-  Building2,
   CheckCircle2,
   ChevronRight
 } from "lucide-react";
@@ -25,7 +22,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
   onSelectPlanForInquiry,
   onOpenQuoteCalculator
 }) => {
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
   const [selectedPlanId, setSelectedPlanId] = useState<string>("growth");
 
   return (
@@ -41,18 +38,18 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>বাংলাদেশি ব্যবসার জন্য সাশ্রয়ী প্যাকেজ (BDT / ৳)</span>
+            <span>{t.pricingBadge}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            স্বচ্ছ মূল্য তালিকা ও প্যাকেজ। <br />
+            {t.pricingTitle} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-blue-400 to-indigo-300">
-              Starter, Growth ও Scale
+              Starter, Growth & Scale
             </span>
           </h2>
 
           <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-            কোনো লুকানো খরচ নেই। আপনার ব্যবসার প্রয়োজন অনুযায়ী নিখুঁত প্যাকেজ বেছে নিন। প্রতিটি প্যাকেজে রয়েছে ফ্রি ডোমেইন, সুপার-ফাস্ট হোস্টিং এবং বিকাশ/নগদে সহজ কিস্তির সুবিধা।
+            {t.pricingSubtitle}
           </p>
         </div>
 
@@ -60,7 +57,18 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch mb-16">
           {PRICING_PLANS.map((plan) => {
             const isPopular = plan.isPopular;
-            const isSelected = selectedPlanId === plan.id;
+            const localized = language === "bn" ? plan.bn : language === "es" ? plan.es : null;
+
+            const name = localized?.name || plan.name;
+            const tagline = localized?.tagline || plan.tagline;
+            const badge = localized?.badge || plan.badge;
+            const idealFor = localized?.idealFor || plan.idealFor;
+            const turnaroundDays = localized?.turnaroundDays || plan.turnaroundDays;
+            const paymentTerms = localized?.paymentTerms || plan.paymentTerms;
+            const features = localized?.features || plan.features;
+            const bonuses = localized?.bonuses || plan.bonuses;
+            const ctaText = localized?.ctaText || plan.ctaText;
+            const whatsAppMessage = localized?.whatsAppMessage || plan.whatsAppMessage;
 
             return (
               <div
@@ -74,14 +82,14 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 } p-6 sm:p-8`}
               >
                 {/* Popular Highlight Badge */}
-                {plan.badge && (
+                {badge && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                     <span className={`px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg ${
                       isPopular 
                         ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-blue-600/30"
                         : "bg-zinc-800 text-zinc-300 border border-zinc-700"
                     }`}>
-                      {plan.badge}
+                      {badge}
                     </span>
                   </div>
                 )}
@@ -91,24 +99,24 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   <div className="border-b border-zinc-800/80 pb-6 mb-6">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                        {plan.banglaName}
+                        {name}
                       </h3>
                       <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider px-2 py-0.5 rounded bg-zinc-800/80">
-                        {plan.name}
+                        {plan.id.toUpperCase()}
                       </span>
                     </div>
 
                     <p className="text-xs text-zinc-400 leading-relaxed mb-5">
-                      {plan.tagline}
+                      {tagline}
                     </p>
 
-                    {/* Price in Bangla TK */}
+                    {/* Price in Bangla TK (BDT) */}
                     <div className="flex items-baseline gap-2 mb-2">
                       <span className="text-4xl sm:text-5xl font-black text-white tracking-tight">
                         {plan.formattedTk}
                       </span>
                       <span className="text-xs font-semibold text-zinc-400 uppercase">
-                        টাকা (BDT)
+                        BDT (৳)
                       </span>
                       <span className="text-xs text-zinc-500 line-through ml-1">
                         {plan.regularPriceTk}
@@ -119,11 +127,11 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <div className="grid grid-cols-2 gap-2 text-[11px] pt-3">
                       <div className="flex items-center gap-1.5 text-zinc-300 bg-zinc-800/50 px-2.5 py-1.5 rounded-lg border border-zinc-800">
                         <Clock className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                        <span>ডেলিভারি: <strong>{plan.turnaroundDays}</strong></span>
+                        <span>{t.pricingDeliveryLabel} <strong>{turnaroundDays}</strong></span>
                       </div>
                       <div className="flex items-center gap-1.5 text-zinc-300 bg-zinc-800/50 px-2.5 py-1.5 rounded-lg border border-zinc-800">
                         <ShieldCheck className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                        <span>পেমেন্ট: <strong>সহজ কিস্তিতে</strong></span>
+                        <span>{t.pricingPaymentLabel} <strong>{paymentTerms}</strong></span>
                       </div>
                     </div>
                   </div>
@@ -131,20 +139,20 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   {/* Ideal For Target Box */}
                   <div className="mb-6 p-3 rounded-xl bg-zinc-950/60 border border-zinc-800/60 text-xs">
                     <span className="text-[11px] font-semibold text-zinc-400 block mb-0.5">
-                      উপযুক্ত যাদের জন্য:
+                      {t.pricingIdealForLabel}
                     </span>
                     <span className="text-zinc-200 font-medium">
-                      {plan.idealFor}
+                      {idealFor}
                     </span>
                   </div>
 
                   {/* Features List */}
                   <div className="space-y-3 mb-6">
                     <span className="text-xs font-bold text-zinc-300 uppercase tracking-wider block">
-                      প্যাকেজের অন্তর্ভুক্ত সেবাসমূহ:
+                      {t.pricingIncludedLabel}
                     </span>
                     <ul className="space-y-2.5">
-                      {plan.features.map((feat, idx) => (
+                      {features.map((feat, idx) => (
                         <li key={idx} className="flex items-start gap-2.5 text-xs text-zinc-300">
                           <CheckCircle2 className={`w-4 h-4 mt-0.5 shrink-0 ${
                             isPopular ? "text-blue-400" : "text-emerald-400"
@@ -159,9 +167,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                   <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-1.5 mb-6">
                     <div className="flex items-center gap-1.5 text-amber-300 text-xs font-bold">
                       <Gift className="w-3.5 h-3.5 text-amber-400" />
-                      <span>স্পেশাল ফ্রি বোনাস:</span>
+                      <span>{t.pricingBonusesLabel}</span>
                     </div>
-                    {plan.bonuses.map((bonus, bIdx) => (
+                    {bonuses.map((bonus, bIdx) => (
                       <div key={bIdx} className="text-[11px] text-amber-200/90 leading-relaxed flex items-center gap-1.5">
                         <span className="w-1 h-1 rounded-full bg-amber-400" />
                         <span>{bonus}</span>
@@ -174,7 +182,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                 <div className="space-y-2.5 pt-4 border-t border-zinc-800/80">
                   {/* Direct WhatsApp Order Link */}
                   <a
-                    href={`https://wa.me/8801676056414?text=${encodeURIComponent(plan.whatsAppMessage)}`}
+                    href={`https://wa.me/8801676056414?text=${encodeURIComponent(whatsAppMessage)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     id={`btn-pricing-whatsapp-${plan.id}`}
@@ -183,7 +191,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                     <svg className="w-4 h-4 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
                       <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.77.813 2.796.814 3.183 0 5.768-2.587 5.768-5.766 0-3.18-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.519-4.481 10-10 10-1.745 0-3.385-.45-4.814-1.239l-5.186 1.36 1.385-5.06c-.868-1.488-1.385-3.218-1.385-5.061 0-5.519 4.481-10 10-10s10 4.481 10 10z"/>
                     </svg>
-                    <span>হোয়াটসঅ্যাপে বুক করুন (+880 1676056414)</span>
+                    <span>{t.pricingWhatsAppBook}</span>
                   </a>
 
                   {/* Select for Instant Project Inquiry */}
@@ -197,7 +205,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                         : "bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700"
                     }`}
                   >
-                    <span>{plan.ctaText}</span>
+                    <span>{ctaText}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -214,10 +222,10 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             </div>
             <div>
               <h4 className="text-base sm:text-lg font-bold text-white mb-1">
-                আপনার কি কাস্টম রিকোয়ারমেন্ট বা নির্দিষ্ট বাজেট আছে?
+                {t.pricingCustomTitle}
               </h4>
               <p className="text-xs sm:text-sm text-zinc-400">
-                আমাদের ইন্টারেক্টিভ কোট ক্যালকুলেটর দিয়ে নিজের পছন্দমতো ফিচার ও সার্ভিস যোগ করে ইনস্ট্যান্ট বাজেট হিসাব করুন।
+                {t.pricingCustomSubtitle}
               </p>
             </div>
           </div>
@@ -227,7 +235,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             onClick={onOpenQuoteCalculator}
             className="px-6 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold border border-zinc-700 whitespace-nowrap flex items-center gap-2 transition-colors shrink-0"
           >
-            <span>কাস্টম কোট ক্যালকুলেটর খুলুন</span>
+            <span>{t.pricingOpenCalc}</span>
             <ChevronRight className="w-4 h-4 text-zinc-400" />
           </button>
         </div>
@@ -238,11 +246,11 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <div className="flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-emerald-400" />
               <span className="text-xs font-bold text-white uppercase tracking-wider">
-                সহজ ও নিরাপদ পেমেন্ট মেথড (Payment Methods in Bangladesh)
+                {t.pricingPaymentTitle}
               </span>
             </div>
             <span className="text-[11px] text-zinc-400 font-medium">
-              ১০০% অফিসিয়াল ইনভয়েস ও রসিদ প্রদান করা হয়
+              {t.pricingPaymentSubtitle}
             </span>
           </div>
 

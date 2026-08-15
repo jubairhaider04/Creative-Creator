@@ -64,21 +64,22 @@ export default function App() {
   };
 
   const handleSelectPlanForInquiry = (plan: PricingPlan) => {
-    setInquiryBrief(`[প্যাকেজ ইনকোয়ারি - ${plan.name} (${plan.banglaName})]\nবাজেট: ${plan.formattedTk} BDT\nডেলিভারি সময়: ${plan.turnaroundDays}\nপেমেন্ট শর্ত: ${plan.paymentTerms}\nমূল রিকোয়ারমেন্ট: `);
+    const planNameBn = plan.bn?.name ? ` / ${plan.bn.name}` : "";
+    setInquiryBrief(`[Package Inquiry: ${plan.name}${planNameBn}]\nInvestment: ${plan.formattedTk} BDT\nDelivery Timeline: ${plan.turnaroundDays}\nPayment Terms: ${plan.paymentTerms}\nKey Requirements: `);
     setInquiryServices(["Web Development", "Graphic Design"]);
     setInquiryBudget(
       plan.id === "starter" 
-        ? "৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার প্যাকেজ)"
+        ? "৳ 10,000 - ৳ 25,000 BDT (Starter Tier)"
         : plan.id === "growth"
-        ? "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - মোস্ট পপুলার)"
-        : "৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল প্যাকেজ)"
+        ? "৳ 25,000 - ৳ 50,000 BDT (Growth Tier - Popular)"
+        : "৳ 50,000 - ৳ 100,000 BDT (Scale Tier)"
     );
     setInquiryTimeline(
       plan.id === "starter"
-        ? "৫-৭ দিন (জরুরি / রাশ ডেলিভারি)"
+        ? "5 - 7 Days (Rush Delivery)"
         : plan.id === "growth"
-        ? "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)"
-        : "৩-৪ সপ্তাহ (কম্প্রিহেনসিভ প্রজেক্ট)"
+        ? "10 - 14 Days (Standard Sprint)"
+        : "3 - 4 Weeks (Comprehensive Project)"
     );
 
     const contactElem = document.getElementById("contact");

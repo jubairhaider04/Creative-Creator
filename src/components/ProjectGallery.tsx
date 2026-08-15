@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import { 
   Search, 
-  Filter, 
-  ExternalLink, 
   Play, 
   ArrowUpRight, 
-  Layers, 
-  Tag, 
-  Sparkles,
-  Check
+  Sparkles
 } from "lucide-react";
 import { Project, ServiceCategory } from "../types";
 import { PORTFOLIO_PROJECTS } from "../data/portfolioData";
 import { ProjectModal } from "./ProjectModal";
+import { useLanguage } from "../context/LanguageContext";
 
 interface ProjectGalleryProps {
   selectedCategory: ServiceCategory | "All";
@@ -25,6 +21,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
   onSelectCategory,
   onSelectForInquiry
 }) => {
+  const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
 
@@ -35,6 +32,15 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
     "Video Editing",
     "Graphic Design",
   ];
+
+  const getCategoryLabel = (cat: ServiceCategory | "All") => {
+    if (cat === "All") return t.showcaseAll;
+    if (cat === "Web Development") return t.servicesWebDev;
+    if (cat === "Content Creation") return t.servicesContentCreation;
+    if (cat === "Video Editing") return t.servicesVideoEditing;
+    if (cat === "Graphic Design") return t.servicesGraphicDesign;
+    return cat;
+  };
 
   const filteredProjects = PORTFOLIO_PROJECTS.filter((proj) => {
     const matchesCategory = selectedCategory === "All" || proj.category === selectedCategory;
@@ -55,11 +61,11 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
               <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-              <span>Curated Client Case Studies</span>
+              <span>{t.showcaseBadge}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              Selected Work & <br />
-              <span className="text-zinc-400">Dynamic Deliverables.</span>
+              {t.showcaseTitle} <br />
+              <span className="text-zinc-400">{t.showcaseSubtitle}</span>
             </h2>
           </div>
 
@@ -69,7 +75,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
             <input
               id="input-gallery-search"
               type="text"
-              placeholder="Search stack, client, tag..."
+              placeholder={language === "bn" ? "সার্চ করুন..." : "Search stack, client, tag..."}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
@@ -80,7 +86,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
                 onClick={() => setSearchQuery("")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400 hover:text-white"
               >
-                Clear
+                {language === "bn" ? "মুছুন" : "Clear"}
               </button>
             )}
           </div>
@@ -102,7 +108,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
                     : "bg-zinc-900/70 text-zinc-400 border-zinc-800/80 hover:text-white hover:bg-zinc-800"
                 }`}
               >
-                {cat}
+                {getCategoryLabel(cat)}
                 {cat === "All" ? ` (${PORTFOLIO_PROJECTS.length})` : ` (${PORTFOLIO_PROJECTS.filter(p => p.category === cat).length})`}
               </button>
             );
@@ -112,7 +118,9 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
         {/* Gallery Grid */}
         {filteredProjects.length === 0 ? (
           <div className="py-20 text-center bg-zinc-900/30 rounded-3xl border border-zinc-800/60 p-8">
-            <p className="text-zinc-400 text-sm mb-4">No projects matched your search criteria.</p>
+            <p className="text-zinc-400 text-sm mb-4">
+              {language === "bn" ? "কোনো প্রজেক্ট পাওয়া যায়নি।" : "No projects matched your search criteria."}
+            </p>
             <button
               type="button"
               onClick={() => {
@@ -121,7 +129,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
               }}
               className="px-4 py-2 rounded-xl bg-zinc-800 text-white text-xs font-semibold hover:bg-zinc-700"
             >
-              Reset Filters
+              {language === "bn" ? "ফিল্টার রিসেট করুন" : "Reset Filters"}
             </button>
           </div>
         ) : (
@@ -147,6 +155,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
                         alt={project.title}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                         loading="lazy"
+                        referrerPolicy="no-referrer"
                       />
 
                       {/* Subtle Top Gradient Sheen */}
@@ -209,7 +218,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
 
                         {/* Footer link */}
                         <div className="pt-3 border-t border-zinc-800/80 group-hover:border-zinc-800 flex items-center justify-between text-xs text-blue-400 font-medium transition-colors">
-                          <span className="group-hover:text-blue-300">View Full Case Study</span>
+                          <span className="group-hover:text-blue-300">{t.showcaseViewProject}</span>
                           <ArrowUpRight className="w-4 h-4 text-blue-400 group-hover:text-blue-300 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" />
                         </div>
                       </div>

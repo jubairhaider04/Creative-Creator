@@ -39,6 +39,22 @@ export interface ServicePillar {
   deliverables: string[];
   techStack: string[];
   highlightMetric: string;
+  bn?: {
+    tagline?: string;
+    description?: string;
+    turnaroundTime?: string;
+    keyFeatures?: string[];
+    deliverables?: string[];
+    highlightMetric?: string;
+  };
+  es?: {
+    tagline?: string;
+    description?: string;
+    turnaroundTime?: string;
+    keyFeatures?: string[];
+    deliverables?: string[];
+    highlightMetric?: string;
+  };
 }
 
 export interface Testimonial {

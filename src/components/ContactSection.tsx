@@ -7,12 +7,10 @@ import {
   X, 
   Sparkles, 
   Clock, 
-  DollarSign, 
   ShieldCheck,
   Building,
   Mail,
   User,
-  MessageSquare,
   AlertCircle,
   Loader2
 } from "lucide-react";
@@ -30,10 +28,10 @@ interface ContactSectionProps {
 export const ContactSection: React.FC<ContactSectionProps> = ({
   prefilledBrief = "",
   prefilledServices = ["Web Development"],
-  prefilledBudget = "$10,000 - $25,000",
-  prefilledTimeline = "4-6 weeks"
+  prefilledBudget = "৳ 25,000 - ৳ 50,000 BDT",
+  prefilledTimeline = "10 - 14 Days"
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -62,18 +60,38 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     "Graphic Design"
   ];
 
-  const budgetOptions = [
+  const budgetOptions = language === "bn" ? [
     "৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার প্যাকেজ)",
-    "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - মোস্ট পপুলার)",
+    "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - সবচেয়ে জনপ্রিয়)",
     "৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল প্যাকেজ)",
     "৳ ১,০০,০০০+ (ফুল এন্টারপ্রাইজ সল্যুশন)"
+  ] : language === "es" ? [
+    "৳ 10.000 - ৳ 25.000 BDT (Paquete Inicial)",
+    "৳ 25.000 - ৳ 50.000 BDT (Paquete Crecimiento)",
+    "৳ 50.000 - ৳ 100.000 BDT (Paquete Escala)",
+    "৳ 100.000+ BDT (Solución Completa)"
+  ] : [
+    "৳ 10,000 - ৳ 25,000 BDT (Starter Tier)",
+    "৳ 25,000 - ৳ 50,000 BDT (Growth Tier - Popular)",
+    "৳ 50,000 - ৳ 100,000 BDT (Scale Tier)",
+    "৳ 100,000+ BDT (Enterprise Full Studio)"
   ];
 
-  const timelineOptions = [
+  const timelineOptions = language === "bn" ? [
     "৫-৭ দিন (জরুরি / রাশ ডেলিভারি)",
     "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)",
     "৩-৪ সপ্তাহ (কম্প্রিহেনসিভ প্রজেক্ট)",
     "মাসিক রিটেইনার পার্টনারশিপ"
+  ] : language === "es" ? [
+    "5 - 7 Días (Entrega Urgente)",
+    "10 - 14 Días (Plazo Estándar)",
+    "3 - 4 Semanas (Proyecto Completo)",
+    "Contrato Mensual Continuo"
+  ] : [
+    "5 - 7 Days (Rush Delivery)",
+    "10 - 14 Days (Standard Sprint)",
+    "3 - 4 Weeks (Comprehensive Project)",
+    "Monthly Studio Retainer"
   ];
 
   const toggleService = (srv: string) => {
@@ -190,14 +208,16 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 </span>
               </h2>
               <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-                Tell us about your objectives. Our Principal Creative Director reviews all submissions and replies within 24 hours with an actionable scope recommendation.
+                {language === "bn"
+                  ? "আপনার প্রজেক্টের লক্ষ্য ও বাজেট জানান। আমাদের টিম ২৪ ঘণ্টার মধ্যে কাস্টম প্রপোজাল সহ যোগাযোগ করবে।"
+                  : "Tell us about your objectives. Our team will review your requirements and respond within 24 hours with an actionable roadmap."}
               </p>
             </div>
 
             {/* Guarantees Box */}
             <div className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-4">
               <h3 className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
-                The Creative Creator Standard
+                {language === "bn" ? "আমাদের কোয়ালিটি অঙ্গীকার" : "The Creative Creator Standard"}
               </h3>
 
               <div className="space-y-3">
@@ -206,8 +226,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     <Clock className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">24-Hour Scoping Turnaround</h4>
-                    <p className="text-[11px] text-zinc-400">Receive a structured milestone roadmap & pricing proposal within one business day.</p>
+                    <h4 className="text-xs font-bold text-white">
+                      {language === "bn" ? "২৪ ঘণ্টার মধ্যে স্কোপিং ফিডব্যাক" : "24-Hour Scoping Turnaround"}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400">
+                      {language === "bn" ? "১ কার্যদিবসের মধ্যে পূর্ণাঙ্গ রোডম্যাপ ও মূল্য প্রস্তাবনা।" : "Receive a structured milestone roadmap & pricing proposal within one business day."}
+                    </p>
                   </div>
                 </div>
 
@@ -216,8 +240,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     <ShieldCheck className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">100% IP & Code Ownership</h4>
-                    <p className="text-[11px] text-zinc-400">All Figma tokens, video masters, and production repositories transfer to you upon completion.</p>
+                    <h4 className="text-xs font-bold text-white">
+                      {language === "bn" ? "১০০% সোর্স কোড ও ডিজাইন মালিকানা" : "100% IP & Code Ownership"}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400">
+                      {language === "bn" ? "কাজ শেষে সমস্ত কোড, ভেক্টর ও প্রোডাকশন ফাইলস সরাসরি হস্তান্তর।" : "All Figma tokens, video masters, and production repositories transfer to you upon completion."}
+                    </p>
                   </div>
                 </div>
 
@@ -226,8 +254,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">No-Jank 60FPS Performance</h4>
-                    <p className="text-[11px] text-zinc-400">Guaranteed 95+ Core Web Vitals score on all web builds.</p>
+                    <h4 className="text-xs font-bold text-white">
+                      {language === "bn" ? "সর্বোচ্চ স্পিড ও কোয়ালিটি গ্যারান্টি" : "Top Performance Guarantee"}
+                    </h4>
+                    <p className="text-[11px] text-zinc-400">
+                      {language === "bn" ? "ওয়েবসাইট ও ডিজিটাল অ্যাসেটের সর্বোচ্চ স্পিড ও মসৃণ ইউজার এক্সপেরিয়েন্স।" : "Guaranteed 95+ Core Web Vitals score on all modern web builds."}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -250,20 +282,20 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   </div>
                   <div>
                     <div className="text-xs font-bold text-white flex items-center gap-2">
-                      <span>Prefer WhatsApp?</span>
+                      <span>{language === "bn" ? "হোয়াটসঅ্যাপে কথা বলতে চান?" : "Prefer WhatsApp?"}</span>
                       <span className="text-[10px] text-emerald-400 font-normal bg-emerald-500/10 px-1.5 py-0.2 rounded">Fastest</span>
                     </div>
                     <div className="text-[11px] font-mono text-emerald-300">+880 1676-056414</div>
                   </div>
                 </div>
                 <span className="text-xs font-semibold text-emerald-400 group-hover:translate-x-1 transition-transform">
-                  Chat Now →
+                  {language === "bn" ? "মেসেজ দিন →" : "Chat Now →"}
                 </span>
               </a>
 
               <div className="text-xs text-zinc-500 space-y-1">
                 <div>Direct Inquiries: <strong className="text-zinc-300 font-mono">hello@creativecreator.agency</strong></div>
-                <div>Headquarters: <strong className="text-zinc-300">San Francisco • London • Remote Worldwide</strong></div>
+                <div>Headquarters: <strong className="text-zinc-300">Dhaka, Bangladesh • Global Remote</strong></div>
               </div>
             </div>
           </div>
@@ -276,10 +308,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-2xl font-extrabold text-white">
-                  Inquiry Dispatched Successfully!
+                  {language === "bn" ? "ইনকোয়ারি সফলভাবে গ্রহণ করা হয়েছে!" : "Inquiry Dispatched Successfully!"}
                 </h3>
                 <p className="text-sm text-zinc-300 max-w-md mx-auto leading-relaxed">
-                  Thank you! Our Creative Director and Technical Architect are reviewing your brief. We will email you your bespoke scope roadmap within 24 hours.
+                  {language === "bn" 
+                    ? "ধন্যবাদ! আমাদের টিম আপনার ব্রিফ পর্যালোচনা করছে। ২৪ ঘণ্টার মধ্যে আপনার সাথে যোগাযোগ করা হবে।"
+                    : "Thank you! Our Creative Director and Technical Architect are reviewing your brief. We will email you your bespoke scope roadmap within 24 hours."}
                 </p>
                 <div className="pt-4">
                   <button
@@ -287,7 +321,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     onClick={() => setSubmitSuccess(false)}
                     className="px-6 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-xs font-semibold text-zinc-300 border border-zinc-800"
                   >
-                    Submit Another Inquiry
+                    {language === "bn" ? "আরেকটি ইনকোয়ারি পাঠান" : "Submit Another Inquiry"}
                   </button>
                 </div>
               </div>
@@ -303,7 +337,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 {/* 1. Services selection */}
                 <div>
                   <label className="text-xs font-semibold text-zinc-300 uppercase tracking-wider block mb-2.5">
-                    1. Required Disciplines (Select all that apply)
+                    {language === "bn" ? "১. প্রয়োজনীয় সার্ভিস (প্রযোজ্য সবগুলো নির্বাচন করুন)" : "1. Required Disciplines (Select all that apply)"}
                   </label>
                   <div className="grid grid-cols-2 gap-2">
                     {serviceOptions.map((srv) => {
@@ -332,7 +366,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
-                      Your Name *
+                      {language === "bn" ? "আপনার নাম *" : "Your Name *"}
                     </label>
                     <div className="relative">
                       <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -340,7 +374,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                         id="input-contact-name"
                         type="text"
                         required
-                        placeholder="e.g. Alex Sterling"
+                        placeholder={language === "bn" ? "যেমন: হাসান মাহমুদ" : "e.g. Alex Sterling"}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
@@ -350,7 +384,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
                   <div>
                     <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
-                      Work Email *
+                      {language === "bn" ? "ইমেইল অ্যাড্রেস *" : "Work Email *"}
                     </label>
                     <div className="relative">
                       <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
@@ -369,14 +403,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
                 <div>
                   <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
-                    Company / Organization (Optional)
+                    {language === "bn" ? "কোম্পানি / ব্যবসার নাম (ঐচ্ছিক)" : "Company / Business Name (Optional)"}
                   </label>
                   <div className="relative">
                     <Building className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
                     <input
                       id="input-contact-company"
                       type="text"
-                      placeholder="e.g. Acme Hypermedia"
+                      placeholder={language === "bn" ? "যেমন: ঢাকা ফ্যাশন হাউজ" : "e.g. Acme Enterprise"}
                       value={company}
                       onChange={(e) => setCompany(e.target.value)}
                       className="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
@@ -388,7 +422,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
-                      Approximate Budget Bracket
+                      {language === "bn" ? "বাজেট ব্র্যাকেট" : "Approximate Budget Bracket"}
                     </label>
                     <select
                       id="select-contact-budget"
@@ -402,7 +436,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
                   <div>
                     <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
-                      Desired Timeline
+                      {language === "bn" ? "কাঙ্ক্ষিত সময়সীমা" : "Desired Timeline"}
                     </label>
                     <select
                       id="select-contact-timeline"
@@ -410,7 +444,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       onChange={(e) => setTimeline(e.target.value)}
                       className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500"
                     >
-                      {timelineOptions.map(t => <option key={t} value={t}>{t}</option>)}
+                      {timelineOptions.map(to => <option key={to} value={to}>{to}</option>)}
                     </select>
                   </div>
                 </div>
@@ -418,13 +452,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 {/* 4. Project Details */}
                 <div>
                   <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
-                    Project Goals & Specific Deliverables *
+                    {language === "bn" ? "প্রজেক্টের বিবরণ ও লক্ষ্য *" : "Project Goals & Specific Deliverables *"}
                   </label>
                   <textarea
                     id="input-contact-description"
                     rows={4}
                     required
-                    placeholder="Describe what you want to create, current pain points, target metrics, or reference links..."
+                    placeholder={language === "bn" 
+                      ? "আপনার কি ধরনের কাজ প্রয়োজন, রেফারেন্স ওয়েবসাইট বা ফেসবুক পেইজের লিংক উল্লেখ করুন..." 
+                      : "Describe what you want to create, current pain points, target metrics, or reference links..."}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3.5 text-xs text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-all resize-none"
@@ -434,7 +470,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 {/* File Attachment Dropzone */}
                 <div>
                   <label className="text-xs font-semibold text-zinc-400 block mb-1.5">
-                    Attach Brand Guidelines / Wireframes (Optional)
+                    {language === "bn" ? "ব্র্যান্ড ফাইল / লোগো অ্যাটাচ করুন (ঐচ্ছিক)" : "Attach Brand Guidelines / Files (Optional)"}
                   </label>
                   <div className="border border-dashed border-zinc-800 hover:border-zinc-700 rounded-xl p-4 text-center bg-zinc-900/40 transition-colors">
                     <input
@@ -449,7 +485,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       className="cursor-pointer flex flex-col items-center justify-center gap-1.5"
                     >
                       <UploadCloud className="w-5 h-5 text-zinc-400" />
-                      <span className="text-xs text-zinc-300 font-medium">Click or drag & drop files here</span>
+                      <span className="text-xs text-zinc-300 font-medium">
+                        {language === "bn" ? "ফাইল আপলোড করতে ক্লিক করুন বা টেনে আনুন" : "Click or drag & drop files here"}
+                      </span>
                       <span className="text-[10px] text-zinc-500">PDF, PNG, JPG, FIG, ZIP up to 50MB</span>
                     </label>
                   </div>
@@ -485,12 +523,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Transmitting Inquiry Securely...</span>
+                      <span>{language === "bn" ? "পাঠানো হচ্ছে..." : "Transmitting Inquiry..."}</span>
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      <span>Submit Project Inquiry</span>
+                      <span>{t.contactSubmitBtn}</span>
                     </>
                   )}
                 </button>
