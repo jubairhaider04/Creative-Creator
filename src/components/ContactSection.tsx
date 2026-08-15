@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { saveInquiryToFirestore } from "../lib/firebase";
+import { useLanguage } from "../context/LanguageContext";
 
 interface ContactSectionProps {
   prefilledBrief?: string;
@@ -32,6 +33,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   prefilledBudget = "$10,000 - $25,000",
   prefilledTimeline = "4-6 weeks"
 }) => {
+  const { t } = useLanguage();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -61,17 +63,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   ];
 
   const budgetOptions = [
-    "$2,500 - $5,000",
-    "$5,000 - $10,000",
-    "$10,000 - $25,000",
-    "$25,000+ (Enterprise)"
+    "৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার প্যাকেজ)",
+    "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - মোস্ট পপুলার)",
+    "৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল প্যাকেজ)",
+    "৳ ১,০০,০০০+ (ফুল এন্টারপ্রাইজ সল্যুশন)"
   ];
 
   const timelineOptions = [
-    "1-2 weeks (Rush)",
-    "4-6 weeks (Standard)",
-    "2-3 months",
-    "Ongoing Retainer"
+    "৫-৭ দিন (জরুরি / রাশ ডেলিভারি)",
+    "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)",
+    "৩-৪ সপ্তাহ (কম্প্রিহেনসিভ প্রজেক্ট)",
+    "মাসিক রিটেইনার পার্টনারশিপ"
   ];
 
   const toggleService = (srv: string) => {
@@ -179,12 +181,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
                 <Send className="w-3.5 h-3.5 text-blue-400" />
-                <span>Start a Project</span>
+                <span>{t.contactBadge}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-                Let’s Build Something <br />
+                {t.contactTitle} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">
-                  Remarkable Together.
+                  {t.contactSubtitle}
                 </span>
               </h2>
               <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
@@ -231,10 +233,38 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               </div>
             </div>
 
-            {/* Direct Contact Info */}
-            <div className="pt-2 text-xs text-zinc-500 space-y-1">
-              <div>Direct Inquiries: <strong className="text-zinc-300 font-mono">hello@creativecreator.agency</strong></div>
-              <div>Headquarters: <strong className="text-zinc-300">San Francisco • London • Remote Worldwide</strong></div>
+            {/* Direct Contact Info & WhatsApp */}
+            <div className="pt-2 space-y-3">
+              <a
+                href="https://wa.me/8801676056414?text=Hi%2C%20I%20found%20your%20portfolio%20on%20Creative%20Creator%20and%20would%20like%20to%20discuss%20a%20project!"
+                target="_blank"
+                rel="noopener noreferrer"
+                id="btn-contact-whatsapp-direct"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-900/40 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-[#25D366]/20 border border-[#25D366]/40 flex items-center justify-center">
+                    <svg className="w-4 h-4 fill-[#25D366]" viewBox="0 0 24 24">
+                      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.77.813 2.796.814 3.183 0 5.768-2.587 5.768-5.766 0-3.18-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.519-4.481 10-10 10-1.745 0-3.385-.45-4.814-1.239l-5.186 1.36 1.385-5.06c-.868-1.488-1.385-3.218-1.385-5.061 0-5.519 4.481-10 10-10s10 4.481 10 10z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white flex items-center gap-2">
+                      <span>Prefer WhatsApp?</span>
+                      <span className="text-[10px] text-emerald-400 font-normal bg-emerald-500/10 px-1.5 py-0.2 rounded">Fastest</span>
+                    </div>
+                    <div className="text-[11px] font-mono text-emerald-300">+880 1676-056414</div>
+                  </div>
+                </div>
+                <span className="text-xs font-semibold text-emerald-400 group-hover:translate-x-1 transition-transform">
+                  Chat Now →
+                </span>
+              </a>
+
+              <div className="text-xs text-zinc-500 space-y-1">
+                <div>Direct Inquiries: <strong className="text-zinc-300 font-mono">hello@creativecreator.agency</strong></div>
+                <div>Headquarters: <strong className="text-zinc-300">San Francisco • London • Remote Worldwide</strong></div>
+              </div>
             </div>
           </div>
 

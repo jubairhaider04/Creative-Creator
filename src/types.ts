@@ -28,6 +28,7 @@ export interface Project {
 export interface ServicePillar {
   id: string;
   title: ServiceCategory;
+  banglaTitle?: string;
   iconName: string;
   tagline: string;
   description: string;

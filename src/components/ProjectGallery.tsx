@@ -132,78 +132,89 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
                   key={project.id}
                   id={`project-card-${project.id}`}
                   onClick={() => setActiveProject(project)}
-                  className="group cursor-pointer bg-zinc-900/50 hover:bg-zinc-900/90 border border-zinc-800/80 hover:border-zinc-700 rounded-2xl overflow-hidden transition-all duration-300 flex flex-col hover:shadow-2xl hover:shadow-black/60 hover:-translate-y-1"
+                  className="group relative cursor-pointer rounded-2xl transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02]"
                 >
-                  {/* Card Thumbnail */}
-                  <div className="relative aspect-video overflow-hidden bg-black">
-                    <img
-                      src={project.thumbnail}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
+                  {/* Subtle Ambient Glow Aura on Hover */}
+                  <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-br from-blue-500/0 via-indigo-500/0 to-emerald-500/0 opacity-0 group-hover:opacity-100 group-hover:from-blue-500/25 group-hover:via-indigo-500/20 group-hover:to-cyan-400/20 blur-xl transition-all duration-500 -z-10 pointer-events-none" />
 
-                    {/* Category pill */}
-                    <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                      <span className="px-2.5 py-1 rounded-md bg-black/70 backdrop-blur-md border border-white/10 text-[11px] font-semibold text-white">
-                        {project.category}
-                      </span>
-                    </div>
+                  {/* Card Container with border glow */}
+                  <div className="h-full bg-zinc-900/70 group-hover:bg-zinc-900/95 border border-zinc-800/80 group-hover:border-blue-500/40 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-[0_12px_36px_-8px_rgba(59,130,246,0.22)] transition-all duration-300 flex flex-col backdrop-blur-sm">
+                    
+                    {/* Card Thumbnail Container */}
+                    <div className="relative aspect-video overflow-hidden bg-black">
+                      <img
+                        src={project.thumbnail}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        loading="lazy"
+                      />
 
-                    {/* Video badge if available */}
-                    {project.videoPreviewUrl && (
-                      <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-md bg-blue-600/90 backdrop-blur-md text-[10px] font-bold text-white shadow-md">
-                        <Play className="w-2.5 h-2.5 fill-white" />
-                        <span>{project.videoDuration || "Video"}</span>
-                      </div>
-                    )}
+                      {/* Subtle Top Gradient Sheen */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
 
-                    {/* Quick Metric overlay badge */}
-                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between p-2 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-[11px]">
-                      <span className="text-zinc-400">{project.metrics[0].label}</span>
-                      <span className="font-bold text-emerald-400">{project.metrics[0].value}</span>
-                    </div>
-                  </div>
-
-                  {/* Card Info */}
-                  <div className="p-5 flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between text-xs text-zinc-500 mb-1.5">
-                        <span>{project.client}</span>
-                        <span>{project.year}</span>
-                      </div>
-                      <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1 mb-1.5">
-                        {project.title}
-                      </h3>
-                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-4">
-                        {project.subtitle}
-                      </p>
-                    </div>
-
-                    <div>
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {project.tags.slice(0, 3).map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-0.5 rounded bg-zinc-800/80 text-[10px] font-mono text-zinc-300"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {project.tags.length > 3 && (
-                          <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-[10px] font-mono text-zinc-500">
-                            +{project.tags.length - 3}
-                          </span>
-                        )}
+                      {/* Category pill with hover glow */}
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+                        <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md border border-white/15 text-[11px] font-semibold text-white group-hover:border-blue-400/50 transition-colors">
+                          {project.category}
+                        </span>
                       </div>
 
-                      {/* Footer link */}
-                      <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs text-blue-400 font-medium">
-                        <span>View Full Case Study</span>
-                        <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                      {/* Video badge if available */}
+                      {project.videoPreviewUrl && (
+                        <div className="absolute top-3 right-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-md bg-blue-600/90 backdrop-blur-md text-[10px] font-bold text-white shadow-md group-hover:bg-blue-500 transition-colors">
+                          <Play className="w-2.5 h-2.5 fill-white" />
+                          <span>{project.videoDuration || "Video"}</span>
+                        </div>
+                      )}
+
+                      {/* Quick Metric overlay badge */}
+                      <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between p-2.5 rounded-lg bg-black/70 backdrop-blur-md border border-white/10 group-hover:border-white/20 text-[11px] transition-all">
+                        <span className="text-zinc-400">{project.metrics[0].label}</span>
+                        <span className="font-bold text-emerald-400 tracking-tight">{project.metrics[0].value}</span>
                       </div>
                     </div>
+
+                    {/* Card Info */}
+                    <div className="p-5 flex-1 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between text-xs text-zinc-500 mb-1.5 font-medium">
+                          <span>{project.client}</span>
+                          <span>{project.year}</span>
+                        </div>
+                        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors line-clamp-1 mb-1.5">
+                          {project.title}
+                        </h3>
+                        <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-4">
+                          {project.subtitle}
+                        </p>
+                      </div>
+
+                      <div>
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {project.tags.slice(0, 3).map((tag, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 py-0.5 rounded bg-zinc-800/80 group-hover:bg-zinc-800 text-[10px] font-mono text-zinc-300 border border-zinc-700/30 group-hover:border-zinc-700/60 transition-colors"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                          {project.tags.length > 3 && (
+                            <span className="px-1.5 py-0.5 rounded bg-zinc-800 text-[10px] font-mono text-zinc-500">
+                              +{project.tags.length - 3}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Footer link */}
+                        <div className="pt-3 border-t border-zinc-800/80 group-hover:border-zinc-800 flex items-center justify-between text-xs text-blue-400 font-medium transition-colors">
+                          <span className="group-hover:text-blue-300">View Full Case Study</span>
+                          <ArrowUpRight className="w-4 h-4 text-blue-400 group-hover:text-blue-300 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-200" />
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               );

@@ -4,105 +4,109 @@ export const SERVICE_PILLARS: ServicePillar[] = [
   {
     id: "serv-web-dev",
     title: "Web Development",
+    banglaTitle: "ওয়েব ডেভেলপমেন্ট",
     iconName: "Code2",
-    tagline: "Ultra-fast, responsive web architectures engineered for maximum conversions and zero lag.",
-    description: "From custom SaaS platforms and headless e-commerce to dynamic interactive brand portfolios, we build resilient, scalable, and WCAG-accessible digital products with modern React, Next.js, and Tailwind CSS.",
+    tagline: "বাংলাদেশের লোকাল ব্যবসা ও ব্র্যান্ডের জন্য আল্ট্রা-ফাস্ট, কনভার্সন-ফ্রেন্ডলি আধুনিক ওয়েবসাইট।",
+    description: "রেসপনসিভ বিজনেস ওয়েবসাইট, ই-কমার্স স্টোর, রেস্টুরেন্ট অর্ডারিং সিস্টেম বা কাস্টম ওয়েব পোর্টাল—আমরা তৈরি করি লাইটহাউস ৯৯+ স্পিড এবং বিকাশ/নগদ পেমেন্ট সাপোর্টেড সেরা ওয়েবসাইট।",
     accentColor: "blue",
-    startingPrice: "$4,500",
-    turnaroundTime: "2-4 Weeks",
-    highlightMetric: "99+ Lighthouse Score & Sub-second First Contentful Paint",
+    startingPrice: "৳ ১৮,০০০ (18,000 TK)",
+    turnaroundTime: "৭ - ১০ দিন",
+    highlightMetric: "৯৯+ লাইটহাউস স্পিড স্কোর এবং ১ সেকেন্ডের কম লোডিং টাইম",
     keyFeatures: [
-      "Modern React 19 & Next.js Full-Stack Architecture",
-      "Tailwind CSS with responsive micro-animations",
-      "Interactive 3D WebGL / Canvas integrations",
-      "Core Web Vitals & SEO optimization (99+ score)",
-      "Headless CMS & REST/GraphQL API development",
-      "Secure authentication & payment gateway setups"
+      "মডার্ন React ও Next.js ফুল-স্ট্যাক আর্কিটেকচার",
+      "বিকাশ (bKash), নগদ (Nagad) ও কার্ড পেমেন্ট গেটওয়ে ইন্টিগ্রেশন",
+      "মোবাইল-ফার্স্ট রেসপনসিভ ডিজাইন ও WhatsApp ডিরেক্ট চ্যাট বাটন",
+      "গুগল ম্যাপস ও লোকাল বাংলাদেশ এসইও (SEO) অপটিমাইজেশন",
+      "সহজেই পণ্য ও কনটেন্ট আপডেটের জন্য অ্যাডমিন ড্যাশবোর্ড",
+      "ফ্রি SSL সার্টিফিকেট, ডোমেইন ও ক্লাউড হোস্টিং সেটআপ গাইডেন্স"
     ],
     deliverables: [
-      "Production-ready codebase & Git repository",
-      "Zero-downtime CI/CD deployment setup",
-      "Figma-to-code pixel perfection guarantee",
-      "Technical architecture documentation & handover"
+      "১০০% প্রোডাকশন কোড ও গিট রিপোজিটরি হ্যান্ডওভার",
+      "লাইভ ডেপ্লয়মেন্ট ও ডোমেইন হোস্টিং কানেকশন",
+      "ওয়েবসাইট ব্যবহারের বাংলা ভিডিও টিউটোরিয়াল ও ডকুমেন্টেশন",
+      "৩ মাসের ফ্রি টেকনিক্যাল মেইনটেনেন্স সাপোর্ট"
     ],
-    techStack: ["React 19", "Next.js", "TypeScript", "Tailwind CSS", "Motion", "Node.js / Express", "PostgreSQL / Firebase"]
+    techStack: ["React", "Next.js", "TypeScript", "Tailwind CSS", "bKash / Nagad API", "Firebase", "Node.js"]
   },
   {
     id: "serv-content-creation",
     title: "Content Creation",
+    banglaTitle: "কনটেন্ট ক্রিয়েশন",
     iconName: "PenTool",
-    tagline: "High-retention storytelling, authoritative SEO articles, and viral founder narratives.",
-    description: "We translate complex value propositions into compelling narratives that stop the scroll, educate decision-makers, and systematically turn passive readers into high-intent inbound clients.",
+    tagline: "ফেসবুক, ইনস্টাগ্রাম ও লিঙ্কডইনে ভাইরাল সোশ্যাল পোস্ট এবং এসইও আর্টিকেল।",
+    description: "আপনার ব্যবসার পণ্য ও সেবাকে আকর্ষণীয় বাংলা ও ইংরেজি কনটেন্টে রূপান্তর করি, যা কাস্টমারের বিশ্বাস অর্জন করে এবং সরাসরি বিক্রয় বাড়িয়ে তোলে।",
     accentColor: "emerald",
-    startingPrice: "$2,800",
-    turnaroundTime: "1-2 Weeks",
-    highlightMetric: "4.5x Average Organic Reach Growth across B2B channels",
+    startingPrice: "৳ ৮,৫০০ (8,500 TK)",
+    turnaroundTime: "৩ - ৫ দিন",
+    highlightMetric: "৪.৫x বেশি সোশ্যাল এঙ্গেজমেন্ট ও অর্গানিক ফেসবুক রিচ",
     keyFeatures: [
-      "High-intent SEO keyword research & strategy",
-      "Long-form thought leadership & technical whitepapers",
-      "Viral LinkedIn & X / Twitter thread ghostwriting",
-      "High-converting landing page & sales funnel copy",
-      "Email marketing sequences & weekly newsletters",
-      "Brand voice guidelines & messaging frameworks"
+      "হাই-কনভার্টিং ফেসবুক বিজ্ঞাপন ও সেলস পোস্ট কপিরাইটিং",
+      "বাংলা ও ইংরেজি এসইও ব্লগ আর্টিকেল ও প্রোডাক্ট ডেসক্রিপশন",
+      "মাসিক সোশ্যাল মিডিয়া কনটেন্ট ক্যালেন্ডার ও হ্যাশট্যাগ স্ট্র্যাটেজি",
+      "কাস্টমারকে আকৃষ্ট করার আকর্ষণীয় অফার ও ক্যাম্পেইন প্ল্যানিং",
+      "ব্র্যান্ডের নিজস্ব টোন অফ ভয়েস তৈরি ও কনটেন্ট অডিট",
+      "অর্গানিক রিচ বৃদ্ধির জন্য ট্রেন্ডিং টপিক অ্যানালাইসিস"
     ],
     deliverables: [
-      "Monthly content editorial calendars",
-      "Fully researched, formatted articles & essays",
-      "Multi-platform social distribution hooks",
-      "SEO rank tracking & engagement reports"
+      "মাসিক কনটেন্ট শিডিউল ও প্ল্যানিং ডক",
+      "সম্পূর্ণ রেডি-টু-পোস্ট বাংলা/ইংরেজি টেকক্সট ও ক্যাপশন",
+      "বিজ্ঞাপনের জন্য হাই-কনভার্টিং সেলস হুক ও স্ক্রিপ্ট",
+      "পারফরম্যান্স ও রিচ অ্যানালিটিক্স রিপোর্ট"
     ],
-    techStack: ["Ahrefs", "SEMrush", "Notion Content Engine", "Grammarly Business", "Substack / Beehiiv", "Google Search Console"]
+    techStack: ["Facebook Creator Studio", "SEO Tools", "Notion Content Hub", "Grammarly", "Google Trends"]
   },
   {
     id: "serv-video-editing",
     title: "Video Editing",
+    banglaTitle: "ভিডিও এডিটিং ও রিলস",
     iconName: "Film",
-    tagline: "Cinematic commercial spots, high-energy short-form reels, and seamless 4K motion graphics.",
-    description: "In an attention economy, audio-visual rhythm is everything. We combine master color grading, dynamic sound design, kinetic typography, and 3D visual effects to captivate audiences and drive conversions.",
+    tagline: "ফেসবুক, টিকটক ও ইউটিউব শর্টসের জন্য হাই-রিটেনশন ভাইরাল ভিডিও এডিটিং।",
+    description: "সিনেম্যাটিক কালার গ্রেডিং, আকর্ষণীয় বাংলা/ইংরেজি সাবটাইটেল, সাউন্ড ইফেক্টস এবং মোশন গ্রাফিক্স দিয়ে তৈরি ভিডিও যা দর্শকের মনোযোগ ধরে রাখে ও সেলস বৃদ্ধি করে।",
     accentColor: "purple",
-    startingPrice: "$3,200",
-    turnaroundTime: "5-10 Days",
-    highlightMetric: "85%+ Average Video Completion Retention on Short-Form",
+    startingPrice: "৳ ১০,০০০ (10,000 TK)",
+    turnaroundTime: "৩ - ৭ দিন",
+    highlightMetric: "৮৫%+ বেশি ভিডিও ওয়াচ-টাইম ও রিটেনশন রেট",
     keyFeatures: [
-      "Cinematic 4K color grading (ACES & DaVinci Studio)",
-      "Kinetic typography & animated caption systems",
-      "Bespoke sound design, SFX layering & audio mastering",
-      "3D camera tracking & motion graphic overlays",
-      "Platform optimization for YouTube, TikTok, Reels & Ads",
-      "Fast turnaround with iterative frame-accurate reviews"
+      "সিনেমাটিক ৪K কালার গ্রেডিং ও হাই-কোয়ালিটি এক্সপোর্ট",
+      "ট্রেন্ডি কাইনেটিক সাবটাইটেল ও অ্যানিমেটেড টেক্সট ইফেক্ট",
+      "ব্যাকগ্রাউন্ড মিউজিক সিঙ্কিং ও প্রো সাউন্ড ইফেক্টস (SFX)",
+      "ফেসবুক ও ইনস্টাগ্রাম রিলস, টিকটক এবং ইউটিউব শর্টস ফরম্যাট",
+      "পণ্য ও সেবার আকর্ষণীয় প্রোমোশনাল অ্যাড ভিডিও মেকিং",
+      "দ্রুত ডেলিভারি ও আনলিমিটেড রিভিশন পলিসি"
     ],
     deliverables: [
-      "High-bitrate Master exports (ProRes & 4K MP4)",
-      "Multi-aspect ratio cuts (16:9, 9:16, 1:1, 4:5)",
-      "Custom SFX & background soundtrack licensing",
-      "Editable project archives & motion presets"
+      "৪K ও ১০৮০p ফুল এইচডি মাস্টার ভিডিও ফাইলস",
+      "৯:১৬ (রিলস/শর্টস) এবং ১৬:৯ (ইউটিউব/ফেসবুক) রেশিও ভার্সন",
+      "রয়্যালটি-ফ্রি লাইসেন্সড সাউন্ডট্র্যাক ও ইফেক্টস",
+      "সোশ্যাল মিডিয়া থাম্বনেইল ডিজাইন"
     ],
-    techStack: ["DaVinci Resolve Studio", "Adobe Premiere Pro", "After Effects", "Logic Pro / Pro Tools", "Mocha Pro 3D"]
+    techStack: ["Adobe Premiere Pro", "After Effects", "DaVinci Resolve", "CapCut Pro", "Logic Pro"]
   },
   {
     id: "serv-graphic-design",
     title: "Graphic Design",
+    banglaTitle: "গ্রাফিক ডিজাইন ও ব্র্যান্ডিং",
     iconName: "Palette",
-    tagline: "Iconic brand identities, tokenized design systems, and stunning digital & print assets.",
-    description: "We craft distinctive visual identities that establish instant market authority. From cohesive Figma design systems to tactile packaging and 3D render collateral, your brand will look timeless and unforgettable.",
+    tagline: "স্মরণীয় লোগো, সম্পূর্ণ ব্র্যান্ড আইডেন্টিটি এবং সোশ্যাল মিডিয়া ক্রিয়েটিভস।",
+    description: "আপনার ব্যবসাকে বিশ্বমানের লুক দিন। প্রিমিয়াম লোগো ডিজাইন, বিজনেস কার্ড, প্রোডাক্ট প্যাকেজিং এবং ফেসবুক ব্যানার যা কাস্টমারের চোখে প্রিমিয়াম আস্থা তৈরি করে।",
     accentColor: "amber",
-    startingPrice: "$3,500",
-    turnaroundTime: "2-3 Weeks",
-    highlightMetric: "100% Tokenized Design-to-Code Sync with Figma",
+    startingPrice: "৳ ৯,৫০০ (9,500 TK)",
+    turnaroundTime: "৫ - ৭ দিন",
+    highlightMetric: "১০০% ভেক্টর ও প্রিন্ট-রেডি মাস্টার ফাইলস প্রদান",
     keyFeatures: [
-      "Complete brand identity & logo architecture",
-      "Figma design system with tokenized components",
-      "UI/UX interface wireframing & interactive prototypes",
-      "3D product modeling & photorealistic key renders",
-      "Luxury packaging design & print dielines",
-      "High-converting marketing banners & ad kits"
+      "ইউনিক ভেক্টর লোগো ডিজাইন ও সম্পূর্ণ ব্র্যান্ড গাইডলাইন",
+      "সোশ্যাল মিডিয়া পোস্ট, কভার ও ফেসবুক অ্যাড ব্যানার ডিজাইন",
+      "বিজনেস কার্ড, লেটারহেড, মানি রিসিপ্ট ও স্টেশনারি ডিজাইন",
+      "প্রোডাক্ট প্যাকেজিং, লেবেল ও প্রিন্ট ডাই-লাইন ডিজাইন",
+      "Figma UI/UX মোবাইল অ্যাপ ও ওয়েবসাইট ইন্টারফেস ডিজাইন",
+      "সব ধরণের সোশ্যাল মিডিয়া ব্যানার ও প্রমোশনাল প্যাকেজ"
     ],
     deliverables: [
-      "Comprehensive Brand Identity Book (PDF)",
-      "Vector master files (.SVG, .AI, .EPS, .FIG)",
-      "Design token library synced for developers",
-      "Full commercial copyright transfer"
+      "কমপ্লিট ব্র্যান্ড গাইডবুক (PDF)",
+      "প্রিন্ট ও এডিটেবল ভেক্টর মাস্টার ফাইলস (.AI, .EPS, .SVG, .PNG, .PSD)",
+      "সোশ্যাল মিডিয়া প্রোফাইল ও ব্যানার কিট",
+      "১০০% কমার্শিয়াল কপিরাইট ও মালিকানা হস্তান্তর"
     ],
-    techStack: ["Figma Enterprise", "Adobe Illustrator", "Photoshop", "Blender 3D", "Cinema 4D", "KeyShot"]
+    techStack: ["Adobe Illustrator", "Photoshop", "Figma", "InDesign", "Blender 3D"]
   }
 ];

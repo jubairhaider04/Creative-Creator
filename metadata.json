@@ -1,6 +1,6 @@
 {
   "name": "Creative Creator",
-  "description": "All-in-one digital services portfolio powered by Google features: Firebase Auth & Firestore data persistence, Google Search Grounding for live market intelligence, Google Maps Grounding for studio locator, and tiered Gemini AI (Pro with High Thinking, Flash, and Flash-Lite).",
+  "description": "All-in-one digital services studio engineered for Bangladeshi local business owners with transparent pricing in Bangla TK (Starter, Growth, Scale), direct WhatsApp integration (+8801676056414), bKash/Nagad payment setups, Firebase data persistence, Google Search & Maps Grounding, and tiered Gemini AI intelligence.",
   "requestFramePermissions": ["geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

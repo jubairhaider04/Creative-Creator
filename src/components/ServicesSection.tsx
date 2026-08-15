@@ -7,14 +7,15 @@ import {
   CheckCircle2, 
   Clock, 
   ArrowRight, 
-  Sparkles,
-  Zap,
-  TrendingUp,
-  Layers,
-  ChevronRight
+  Sparkles, 
+  Zap, 
+  TrendingUp, 
+  Layers, 
+  ChevronRight 
 } from "lucide-react";
 import { SERVICE_PILLARS } from "../data/servicesData";
 import { ServiceCategory } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 interface ServicesSectionProps {
   onSelectServiceForInquiry: (category: ServiceCategory) => void;
@@ -25,6 +26,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onSelectServiceForInquiry,
   onOpenQuoteCalculator
 }) => {
+  const { t } = useLanguage();
   const [activeServiceId, setActiveServiceId] = useState<string>("serv-web-dev");
 
   const currentService = SERVICE_PILLARS.find(s => s.id === activeServiceId) || SERVICE_PILLARS[0];
@@ -57,11 +59,11 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
               <Layers className="w-3.5 h-3.5 text-blue-400" />
-              <span>Full-Spectrum Digital Capabilities</span>
+              <span>{t.navServices}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-              Four Core Disciplines. <br />
-              <span className="text-zinc-400">One Synchronized Studio.</span>
+              {t.servicesTitle} <br />
+              <span className="text-zinc-400">{t.servicesSubtitle}</span>
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -71,7 +73,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               onClick={onOpenQuoteCalculator}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold border border-zinc-800 transition-colors"
             >
-              <span>Custom Scope Calculator</span>
+              <span>{t.servicesCalculateQuote}</span>
               <ChevronRight className="w-3.5 h-3.5 text-zinc-500" />
             </button>
           </div>

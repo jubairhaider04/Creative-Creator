@@ -15,6 +15,7 @@ import {
   Play
 } from "lucide-react";
 import { ServiceCategory } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 
 interface HeroProps {
   onOpenAiConsultant: () => void;
@@ -27,13 +28,14 @@ export const Hero: React.FC<HeroProps> = ({
   onOpenQuoteCalculator,
   onSelectCategory
 }) => {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<ServiceCategory>("Web Development");
 
   const services = [
     {
       id: "Web Development" as ServiceCategory,
       icon: Code2,
-      label: "Web Development",
+      label: t.servicesWebDev,
       accent: "text-blue-400 border-blue-500/30 bg-blue-500/10",
       description: "Next-gen React & WebGL full-stack apps with sub-second latency.",
       stat: "99+ Lighthouse"
@@ -41,7 +43,7 @@ export const Hero: React.FC<HeroProps> = ({
     {
       id: "Content Creation" as ServiceCategory,
       icon: PenTool,
-      label: "Content Creation",
+      label: t.servicesContentCreation,
       accent: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
       description: "Viral narratives, high-intent SEO essays, and executive ghostwriting.",
       stat: "4.5x Reach"
@@ -49,7 +51,7 @@ export const Hero: React.FC<HeroProps> = ({
     {
       id: "Video Editing" as ServiceCategory,
       icon: Film,
-      label: "Video Editing",
+      label: t.servicesVideoEditing,
       accent: "text-purple-400 border-purple-500/30 bg-purple-500/10",
       description: "Cinematic color grading, 4K motion graphics & high-retention shorts.",
       stat: "85%+ Retention"
@@ -57,7 +59,7 @@ export const Hero: React.FC<HeroProps> = ({
     {
       id: "Graphic Design" as ServiceCategory,
       icon: Palette,
-      label: "Graphic Design",
+      label: t.servicesGraphicDesign,
       accent: "text-amber-400 border-amber-500/30 bg-amber-500/10",
       description: "3D brand identity, tokenized Figma systems & luxury packaging.",
       stat: "100% Tokenized"
@@ -91,7 +93,7 @@ export const Hero: React.FC<HeroProps> = ({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <span className="text-xs font-medium text-zinc-300">
-              Q3/Q4 Project Bookings Open
+              {t.heroBadge}
             </span>
             <span className="text-zinc-600">•</span>
             <span className="text-xs text-blue-400 font-semibold">
@@ -103,14 +105,14 @@ export const Hero: React.FC<HeroProps> = ({
         {/* Main Display Headline */}
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] mb-6">
-            Digital Craftsmanship across{" "}
+            {t.heroHeadline1}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">
-              Code, Video, Design
+              {t.heroHeadlineHighlight}
             </span>{" "}
-            & Narrative.
+            {t.heroHeadline2}
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto font-normal leading-relaxed mb-10">
-            Creative Creator unites world-class web engineering, high-retention video editing, 3D graphic design, and viral content creation under one seamless studio.
+            {t.heroSubtitle}
           </p>
 
           {/* Action CTAs */}
@@ -120,7 +122,7 @@ export const Hero: React.FC<HeroProps> = ({
               id="hero-cta-showcase"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-500 active:scale-95 transition-all shadow-lg shadow-blue-600/25"
             >
-              <span>Explore Showcase</span>
+              <span>{t.heroExploreShowcase}</span>
               <ArrowRight className="w-4 h-4" />
             </a>
 
@@ -131,7 +133,7 @@ export const Hero: React.FC<HeroProps> = ({
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold text-zinc-200 bg-zinc-900 hover:bg-zinc-800 hover:text-white border border-zinc-800 active:scale-95 transition-all"
             >
               <Calculator className="w-4 h-4 text-emerald-400" />
-              <span>Instant Quote Builder</span>
+              <span>{t.heroQuoteBuilder}</span>
             </button>
 
             <button
@@ -141,7 +143,7 @@ export const Hero: React.FC<HeroProps> = ({
               className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-sm font-semibold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 active:scale-95 transition-all"
             >
               <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>AI Scope Advisor</span>
+              <span>{t.heroAiAdvisor}</span>
             </button>
           </div>
         </div>
@@ -226,10 +228,10 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
           <div>
             <div className="text-2xl sm:text-3xl font-extrabold text-blue-400 tracking-tight mb-1">
-              $140M+
+              ৳ ৫০ কোটি+
             </div>
             <div className="text-xs text-zinc-400 font-medium">
-              Client Value & Pipeline Created
+              Client Revenue & Pipeline Growth (BDT)
             </div>
           </div>
           <div>

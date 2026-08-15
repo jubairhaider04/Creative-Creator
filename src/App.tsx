@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { ServicesSection } from "./components/ServicesSection";
+import { PricingSection } from "./components/PricingSection";
 import { ProjectGallery } from "./components/ProjectGallery";
 import { QuoteCalculator } from "./components/QuoteCalculator";
 import { TestimonialsSection } from "./components/TestimonialsSection";
@@ -13,6 +14,7 @@ import { GoogleIntelligenceModal } from "./components/GoogleIntelligenceModal";
 import { AnalyticsDashboardModal } from "./components/AnalyticsDashboardModal";
 import { AuthModal } from "./components/AuthModal";
 import { ServiceCategory, UserAuth } from "./types";
+import { PricingPlan } from "./data/pricingData";
 import { subscribeToAuthState, signOutUser } from "./lib/firebase";
 
 export default function App() {
@@ -49,12 +51,36 @@ export default function App() {
   // Contact form pre-fill parameters
   const [inquiryBrief, setInquiryBrief] = useState<string>("");
   const [inquiryServices, setInquiryServices] = useState<string[]>(["Web Development"]);
-  const [inquiryBudget, setInquiryBudget] = useState<string>("$10,000 - $25,000");
-  const [inquiryTimeline, setInquiryTimeline] = useState<string>("4-6 weeks");
+  const [inquiryBudget, setInquiryBudget] = useState<string>("৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - মোস্ট পপুলার)");
+  const [inquiryTimeline, setInquiryTimeline] = useState<string>("১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)");
 
   // Handlers
   const handleSelectServiceForInquiry = (category: ServiceCategory) => {
     setInquiryServices([category]);
+    const contactElem = document.getElementById("contact");
+    if (contactElem) {
+      contactElem.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleSelectPlanForInquiry = (plan: PricingPlan) => {
+    setInquiryBrief(`[প্যাকেজ ইনকোয়ারি - ${plan.name} (${plan.banglaName})]\nবাজেট: ${plan.formattedTk} BDT\nডেলিভারি সময়: ${plan.turnaroundDays}\nপেমেন্ট শর্ত: ${plan.paymentTerms}\nমূল রিকোয়ারমেন্ট: `);
+    setInquiryServices(["Web Development", "Graphic Design"]);
+    setInquiryBudget(
+      plan.id === "starter" 
+        ? "৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার প্যাকেজ)"
+        : plan.id === "growth"
+        ? "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - মোস্ট পপুলার)"
+        : "৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল প্যাকেজ)"
+    );
+    setInquiryTimeline(
+      plan.id === "starter"
+        ? "৫-৭ দিন (জরুরি / রাশ ডেলিভারি)"
+        : plan.id === "growth"
+        ? "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)"
+        : "৩-৪ সপ্তাহ (কম্প্রিহেনসিভ প্রজেক্ট)"
+    );
+
     const contactElem = document.getElementById("contact");
     if (contactElem) {
       contactElem.scrollIntoView({ behavior: "smooth" });
@@ -71,7 +97,7 @@ export default function App() {
     setInquiryServices(config.services);
     setInquiryBudget(config.estimatedBudget);
     setInquiryTimeline(config.estimatedWeeks);
-    setInquiryBrief(`[CALCULATOR ESTIMATE - Tier: ${config.tier}]\nServices: ${config.services.join(", ")}\nSelected Addons: ${config.addons.join(", ")}\nEstimated Investment: ${config.estimatedBudget}\nEstimated Sprint: ${config.estimatedWeeks}`);
+    setInquiryBrief(`[ক্যালকুলেটর এস্টিমেট - প্যাকেজ: ${config.tier}]\nসার্ভিসসমূহ: ${config.services.join(", ")}\nঅ্যাড-অন ফিচার: ${config.addons.join(", ")}\nআনুমানিক ইনভেস্টমেন্ট: ${config.estimatedBudget}\nডেলিভারি সময়: ${config.estimatedWeeks}`);
     
     const contactElem = document.getElementById("contact");
     if (contactElem) {
@@ -127,12 +153,21 @@ export default function App() {
         <ServicesSection
           onSelectServiceForInquiry={handleSelectServiceForInquiry}
           onOpenQuoteCalculator={() => {
+            const el = document.getElementById("pricing");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+
+        {/* 3. Bangladeshi Business Pricing Plans (Starter, Growth, Scale in Bangla TK) */}
+        <PricingSection
+          onSelectPlanForInquiry={handleSelectPlanForInquiry}
+          onOpenQuoteCalculator={() => {
             const el = document.getElementById("calculator");
             if (el) el.scrollIntoView({ behavior: "smooth" });
           }}
         />
 
-        {/* 3. Dynamic Case Study Gallery */}
+        {/* 4. Dynamic Case Study Gallery */}
         <ProjectGallery
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
