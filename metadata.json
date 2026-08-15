@@ -1,0 +1,6 @@
+{
+  "name": "Creative Creator",
+  "description": "All-in-one digital services portfolio for web development, content creation, video editing, and graphic design with dynamic showcases, real-time analytics dashboard, interactive lead capture, MFA security, and AI project scope consultant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
