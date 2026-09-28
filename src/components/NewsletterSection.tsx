@@ -62,7 +62,7 @@ export const NewsletterSection: React.FC = () => {
         throw new Error(data.error || "Subscription failed");
       }
 
-      setSuccessMessage(data.message || "You are subscribed! Welcome to Creative Creator Insights.");
+      setSuccessMessage(data.message || "You are subscribed! Welcome to Bongio Digital Insights.");
       setEmail("");
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to subscribe. Please try again.");

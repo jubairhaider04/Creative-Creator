@@ -163,7 +163,7 @@ const translations: Record<Language, Translations> = {
     heroHeadline1: "Digital Craftsmanship across",
     heroHeadlineHighlight: "Code, Video, Design",
     heroHeadline2: "& Narrative.",
-    heroSubtitle: "Creative Creator unites world-class web engineering, high-retention video editing, 3D graphic design, and viral content creation under one seamless studio.",
+    heroSubtitle: "Bongio Digital unites world-class web engineering, high-retention video editing, 3D graphic design, and viral content creation under one seamless studio.",
     heroExploreShowcase: "Explore Showcase",
     heroQuoteBuilder: "Instant Quote Builder",
     heroAiAdvisor: "AI Scope Advisor",
@@ -234,7 +234,7 @@ const translations: Record<Language, Translations> = {
     // Testimonials
     testimonialsBadge: "Verified Client Testimonials",
     testimonialsTitle: "What Founders & Creative Directors Say",
-    testimonialsSubtitle: "Real feedback from enterprise leaders, founders, and creators who scaled with Creative Creator.",
+    testimonialsSubtitle: "Real feedback from enterprise leaders, founders, and creators who scaled with Bongio Digital.",
 
     // Insights
     blogBadge: "Engineering & Creative Insights",
@@ -298,7 +298,7 @@ const translations: Record<Language, Translations> = {
     heroHeadline1: "দক্ষ ডিজিটাল কারুশিল্প —",
     heroHeadlineHighlight: "কোড, ভিডিও, ডিজাইন",
     heroHeadline2: "ও কনটেন্ট নির্মাণ।",
-    heroSubtitle: "ক্রিয়েটিভ ক্রিয়েটর উচ্চমানের ওয়েব ডেভেলপমেন্ট, আকর্ষক ভিডিও এডিটিং, ৩ডি গ্রাফিক ডিজাইন এবং ভাইরাল কনটেন্ট ক্রিয়েশনকে একটি অনন্য প্ল্যাটফর্মে যুক্ত করে।",
+    heroSubtitle: "বংজিও ডিজিটাল (Bongio Digital) উচ্চমানের ওয়েব ডেভেলপমেন্ট, আকর্ষক ভিডিও এডিটিং, ৩ডি গ্রাফিক ডিজাইন এবং ভাইরাল কনটেন্ট ক্রিয়েশনকে একটি অনন্য প্ল্যাটফর্মে যুক্ত করে।",
     heroExploreShowcase: "প্রজেক্ট শোকেস দেখুন",
     heroQuoteBuilder: "ইনস্ট্যান্ট কোটেশন বিল্ডার",
     heroAiAdvisor: "এআই প্রজেক্ট অ্যাডভাইজার",
@@ -433,7 +433,7 @@ const translations: Record<Language, Translations> = {
     heroHeadline1: "Artesanía Digital en",
     heroHeadlineHighlight: "Código, Video, Diseño",
     heroHeadline2: "y Narrativa.",
-    heroSubtitle: "Creative Creator une ingeniería web de alto rendimiento, edición de video cinematográfica, diseño 3D y creación de contenido viral en un solo estudio.",
+    heroSubtitle: "Bongio Digital une ingeniería web de alto rendimiento, edición de video cinematográfica, diseño 3D y creación de contenido viral en un solo estudio.",
     heroExploreShowcase: "Explorar Portafolio",
     heroQuoteBuilder: "Cotizador Instantáneo",
     heroAiAdvisor: "Asesor de Alcance con IA",
@@ -504,7 +504,7 @@ const translations: Record<Language, Translations> = {
     // Testimonials
     testimonialsBadge: "Testimonios Verificados",
     testimonialsTitle: "Lo que Dicen Fundadores y Directores Creativos",
-    testimonialsSubtitle: "Comentarios reales de líderes empresariales y creadores que han escalado con Creative Creator.",
+    testimonialsSubtitle: "Comentarios reales de líderes empresariales y creadores que han escalado con Bongio Digital.",
 
     // Insights
     blogBadge: "Artículos e Ingeniería Creativa",

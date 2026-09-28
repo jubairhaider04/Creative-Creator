@@ -214,7 +214,7 @@ export const GoogleIntelligenceModal: React.FC<GoogleIntelligenceModalProps> = (
         body: JSON.stringify({
           task: liteTask,
           input: liteInput,
-          context: "Creative Creator Agency Brand Copy"
+          context: "Bongio Digital Agency Brand Copy"
         })
       });
       const data = await res.json();

@@ -553,7 +553,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ onOpenQuoteCalculator })
             )}
 
             <a
-              href="https://api.whatsapp.com/send?phone=8801676056414&text=Hi%2C%20I%20have%20a%20question%20about%20your%20pricing%20tiers%20and%20delivery%20process%20on%20Creative%20Creator!"
+              href="https://api.whatsapp.com/send?phone=8801676056414&text=Hi%2C%20I%20have%20a%20question%20about%20your%20pricing%20tiers%20and%20delivery%20process%20on%20Bongio%20Digital!"
               target="_blank"
               rel="noopener noreferrer"
               id="btn-faq-whatsapp-inquiry"

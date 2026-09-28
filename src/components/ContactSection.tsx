@@ -217,7 +217,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
             {/* Guarantees Box */}
             <div className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 space-y-4">
               <h3 className="text-xs font-bold text-zinc-300 uppercase tracking-wider">
-                {language === "bn" ? "আমাদের কোয়ালিটি অঙ্গীকার" : "The Creative Creator Standard"}
+                {language === "bn" ? "আমাদের কোয়ালিটি অঙ্গীকার" : "The Bongio Digital Standard"}
               </h3>
 
               <div className="space-y-3">

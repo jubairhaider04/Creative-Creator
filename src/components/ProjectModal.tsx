@@ -55,7 +55,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
           <div className="flex items-center gap-3">
             <ShareButtons 
-              title={`${project.title} - Creative Creator Portfolio`} 
+              title={`${project.title} - Bongio Digital Portfolio`} 
               url={typeof window !== "undefined" ? window.location.href : ""}
               size="sm"
             />

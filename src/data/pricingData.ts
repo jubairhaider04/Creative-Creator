@@ -68,7 +68,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       "Video walkthrough tutorial for site management"
     ],
     ctaText: "Book Starter Package",
-    whatsAppMessage: "Hello Creative Creator! I am interested in the Starter Package (৳ 15,000 BDT) for my business and would like to start.",
+    whatsAppMessage: "Hello Bongio Digital! I am interested in the Starter Package (৳ 15,000 BDT) for my business and would like to start.",
     bn: {
       name: "স্টার্টার প্যাকেজ",
       tagline: "ছোট ব্যবসা, শপ ও নতুন উদ্যোক্তাদের জন্য নিখুঁত অনলাইন সূচনা।",
@@ -90,7 +90,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       ],
       ctaText: "স্টার্টার প্যাকেজ বুক করুন",
       badge: "স্টার্টআপ ফ্রেন্ডলি",
-      whatsAppMessage: "হ্যালো ক্রিয়েটিভ ক্রিয়েটর! আমি আপনাদের 'স্টার্টার প্যাকেজ' (৳১৫,০০০) সম্পর্কে বিস্তারিত জানতে এবং প্রজেক্ট শুরু করতে আগ্রহী।"
+      whatsAppMessage: "হ্যালো বংজিও ডিজিটাল! আমি আপনাদের 'স্টার্টার প্যাকেজ' (৳১৫,০০০) সম্পর্কে বিস্তারিত জানতে এবং প্রজেক্ট শুরু করতে আগ্রহী।"
     },
     es: {
       name: "Paquete Starter",
@@ -113,7 +113,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       ],
       ctaText: "Reservar Paquete Starter",
       badge: "Ideal Startups",
-      whatsAppMessage: "¡Hola Creative Creator! Estoy interesado en el Paquete Starter (৳ 15,000 BDT) para mi negocio."
+      whatsAppMessage: "¡Hola Bongio Digital! Estoy interesado en el Paquete Starter (৳ 15,000 BDT) para mi negocio."
     }
   },
   {
@@ -143,7 +143,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       "Product photography retouching & marketing banner support"
     ],
     ctaText: "Choose Growth Package",
-    whatsAppMessage: "Hello Creative Creator! I want to book the Growth Package (৳ 35,000 BDT) to scale my business sales.",
+    whatsAppMessage: "Hello Bongio Digital! I want to book the Growth Package (৳ 35,000 BDT) to scale my business sales.",
     bn: {
       name: "গ্রোথ প্যাকেজ",
       tagline: "ই-কমার্স, গ্রোয়িং কোম্পানি ও ব্র্যান্ডের জন্য সেলস বাড়ানোর সেরা প্যাকেজ।",
@@ -166,7 +166,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       ],
       ctaText: "গ্রোথ প্যাকেজ নির্বাচন করুন",
       badge: "সবচেয়ে জনপ্রিয়",
-      whatsAppMessage: "হ্যালো ক্রিয়েটিভ ক্রিয়েটর! আমি আপনাদের 'গ্রোথ প্যাকেজ' (৳৩৫,০০০) বুক করতে চাই এবং আমার ব্যবসার বিস্তারিত আলোচনা করতে চাই।"
+      whatsAppMessage: "হ্যালো বংজিও ডিজিটাল! আমি আপনাদের 'গ্রোথ প্যাকেজ' (৳৩৫,০০০) বুক করতে চাই এবং আমার ব্যবসার বিস্তারিত আলোচনা করতে চাই।"
     },
     es: {
       name: "Paquete Growth",
@@ -190,7 +190,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       ],
       ctaText: "Elegir Paquete Growth",
       badge: "Más Popular",
-      whatsAppMessage: "¡Hola Creative Creator! Deseo contratar el Paquete Growth (৳ 35,000 BDT) para escalar mis ventas."
+      whatsAppMessage: "¡Hola Bongio Digital! Deseo contratar el Paquete Growth (৳ 35,000 BDT) para escalar mis ventas."
     }
   },
   {
@@ -220,7 +220,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       "VIP 1-on-1 growth consulting & marketing strategy roadmap"
     ],
     ctaText: "Inquire for Scale Package",
-    whatsAppMessage: "Hello Creative Creator! Our enterprise requires the Scale Package (৳ 75,000 BDT) full studio production. Let's discuss our roadmap.",
+    whatsAppMessage: "Hello Bongio Digital! Our enterprise requires the Scale Package (৳ 75,000 BDT) full studio production. Let's discuss our roadmap.",
     bn: {
       name: "স্কেল প্যাকেজ",
       tagline: "প্রতিষ্ঠিত কোম্পানি, এক্সপোর্টার ও হাই-গ্রোথ ব্যবসার জন্য অল-ইন-ওয়ান সল্যুশন।",
@@ -243,7 +243,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       ],
       ctaText: "স্কেল প্যাকেজে আলোচনা শুরু করুন",
       badge: "ফুল স্টুডিও সল্যুশন",
-      whatsAppMessage: "হ্যালো ক্রিয়েটিভ ক্রিয়েটর! আমাদের প্রতিষ্ঠিত ব্যবসার জন্য 'স্কেল প্যাকেজ' (৳৭৫,০০০) ফুল স্টুডিও সল্যুশন প্রয়োজন। প্রজেক্ট নিয়ে কথা বলতে চাই।"
+      whatsAppMessage: "হ্যালো বংজিও ডিজিটাল! আমাদের প্রতিষ্ঠিত ব্যবসার জন্য 'স্কেল প্যাকেজ' (৳৭৫,০০০) ফুল স্টুডিও সল্যুশন প্রয়োজন। প্রজেক্ট নিয়ে কথা বলতে চাই।"
     },
     es: {
       name: "Paquete Scale",
@@ -267,7 +267,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       ],
       ctaText: "Consultar por Paquete Scale",
       badge: "Estudio Completo",
-      whatsAppMessage: "¡Hola Creative Creator! Nuestra empresa requiere la solución integral Paquete Scale (৳ 75,000 BDT)."
+      whatsAppMessage: "¡Hola Bongio Digital! Nuestra empresa requiere la solución integral Paquete Scale (৳ 75,000 BDT)."
     }
   }
 ];

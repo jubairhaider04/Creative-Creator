@@ -150,7 +150,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
 
   const handleExportJson = () => {
     const scopeData = {
-      studio: "Creative Creator (Dhaka, Bangladesh)",
+      studio: "Bongio Digital (Dhaka, Bangladesh)",
       whatsapp: "+8801676056414",
       generatedAt: new Date().toISOString(),
       currency: "BDT (Bangla Taka - ৳)",
@@ -449,7 +449,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
               </a>
 
               <a
-                href={`https://wa.me/8801676056414?text=${encodeURIComponent(`Hello Creative Creator! I calculated a project quote: ${selectedServices.join(", ")} (${tier} Tier, Estimated Budget: ${estimatedBudgetStr}, Timeline: ${estimatedDaysStr}). I would like to discuss next steps.`)}`}
+                href={`https://wa.me/8801676056414?text=${encodeURIComponent(`Hello Bongio Digital! I calculated a project quote: ${selectedServices.join(", ")} (${tier} Tier, Estimated Budget: ${estimatedBudgetStr}, Timeline: ${estimatedDaysStr}). I would like to discuss next steps.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 id="btn-calculator-whatsapp"

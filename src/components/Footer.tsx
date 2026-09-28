@@ -19,7 +19,7 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex flex-col">
                 <span className="font-extrabold text-white text-base tracking-tight leading-none">
-                  Creative Creator
+                  Bongio Digital
                 </span>
                 <span className="text-[10px] text-zinc-500 font-mono">
                   All-in-One Digital Studio
@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
                 Direct consultation & quick turnaround scoping:
               </p>
               <a
-                href="https://wa.me/8801676056414?text=Hi%2C%20I%20found%20your%20portfolio%20on%20Creative%20Creator%20and%20would%20like%20to%20discuss%20a%20project!"
+                href="https://wa.me/8801676056414?text=Hi%2C%20I%20found%20your%20portfolio%20on%20Bongio%20Digital%20and%20would%20like%20to%20discuss%20a%20project!"
                 target="_blank"
                 rel="noopener noreferrer"
                 id="btn-footer-whatsapp-chat"
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
             <div className="pt-2">
               <span className="text-[11px] font-semibold text-zinc-500 block mb-2">Spread the Word</span>
               <ShareButtons 
-                title="Creative Creator - All-in-One Digital Services Studio" 
+                title="Bongio Digital - All-in-One Digital Services Studio" 
                 url={typeof window !== "undefined" ? window.location.origin : ""}
                 size="sm"
               />
@@ -129,7 +129,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 text-[11px] text-zinc-500">
           <div>
-            © {new Date().getFullYear()} Creative Creator Studio. All rights reserved. Crafted for maximum speed & clarity.
+            © {new Date().getFullYear()} Bongio Digital Studio. All rights reserved. Crafted for maximum speed & clarity.
           </div>
 
           <div className="flex items-center gap-4">

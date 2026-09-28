@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const isMobileOrTablet = typeof navigator !== "undefined" && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const message = encodeURIComponent("Hi, I found your portfolio on Creative Creator and would like to discuss a project!");
+    const message = encodeURIComponent("Hi, I found your portfolio on Bongio Digital and would like to discuss a project!");
     const phone = "8801676056414";
 
     if (isMobileOrTablet) {
@@ -120,13 +120,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-600 to-emerald-500 p-[1px] shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-all">
               <div className="w-full h-full bg-[#0d0f15] rounded-[11px] flex items-center justify-center">
-                <span className="text-white font-black text-lg tracking-tighter">CC</span>
+                <span className="text-white font-black text-lg tracking-tighter">BD</span>
               </div>
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="text-white font-bold text-base tracking-tight group-hover:text-blue-400 transition-colors">
-                  Creative Creator
+                  Bongio Digital
                 </span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               </div>
@@ -299,9 +299,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center justify-between pb-6 border-b border-zinc-800">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white text-sm">
-                CC
+                BD
               </div>
-              <span className="font-bold text-white text-base">Creative Creator</span>
+              <span className="font-bold text-white text-base">Bongio Digital</span>
             </div>
             <button
               type="button"

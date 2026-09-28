@@ -11,9 +11,9 @@ interface ShareButtonsProps {
 
 export const ShareButtons: React.FC<ShareButtonsProps> = ({
   title,
-  url = typeof window !== "undefined" ? window.location.href : "https://creativecreator.agency",
-  description = "Check out this digital showcase on Creative Creator.",
-  tags = ["Design", "WebDev", "CreativeCreator"],
+  url = typeof window !== "undefined" ? window.location.href : "https://bongiodigital.com",
+  description = "Check out this digital showcase on Bongio Digital.",
+  tags = ["Design", "WebDev", "BongioDigital"],
   size = "md"
 }) => {
   const [copied, setCopied] = useState(false);
