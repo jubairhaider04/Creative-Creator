@@ -101,7 +101,11 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
                 key={cat}
                 type="button"
                 id={`btn-filter-${cat.toLowerCase().replace(/\s+/g, "-")}`}
-                onClick={() => onSelectCategory(cat)}
+                onClick={() => {
+                  if (typeof onSelectCategory === "function") {
+                    onSelectCategory(cat);
+                  }
+                }}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border ${
                   isSelected
                     ? "bg-white text-zinc-950 border-white shadow-lg shadow-white/10"
@@ -125,7 +129,9 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
               type="button"
               onClick={() => {
                 setSearchQuery("");
-                onSelectCategory("All");
+                if (typeof onSelectCategory === "function") {
+                  onSelectCategory("All");
+                }
               }}
               className="px-4 py-2 rounded-xl bg-zinc-800 text-white text-xs font-semibold hover:bg-zinc-700"
             >

@@ -144,9 +144,12 @@ export default function App() {
         {/* 1. Hero Section */}
         <Hero
           onOpenAiConsultant={() => setIsAiModalOpen(true)}
-          onOpenCalculator={() => {
+          onOpenQuoteCalculator={() => {
             const el = document.getElementById("calculator");
             if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+          onSelectCategory={(category) => {
+            setSelectedCategory(category);
           }}
         />
 

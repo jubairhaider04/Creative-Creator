@@ -12,18 +12,29 @@ import { ServiceCategory } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 
 interface HeroProps {
-  onOpenAiConsultant: () => void;
-  onOpenQuoteCalculator: () => void;
-  onSelectCategory: (category: ServiceCategory) => void;
+  onOpenAiConsultant?: () => void;
+  onOpenQuoteCalculator?: () => void;
+  onOpenCalculator?: () => void;
+  onSelectCategory?: (category: ServiceCategory) => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   onOpenAiConsultant,
   onOpenQuoteCalculator,
+  onOpenCalculator,
   onSelectCategory
 }) => {
   const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<ServiceCategory>("Web Development");
+
+  const handleOpenCalculator = onOpenQuoteCalculator || onOpenCalculator;
+
+  const handleSelectCategory = (category: ServiceCategory) => {
+    setActiveTab(category);
+    if (typeof onSelectCategory === "function") {
+      onSelectCategory(category);
+    }
+  };
 
   const services = [
     {
@@ -139,7 +150,7 @@ export const Hero: React.FC<HeroProps> = ({
             <button
               type="button"
               id="hero-cta-quote-calc"
-              onClick={onOpenQuoteCalculator}
+              onClick={handleOpenCalculator}
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-semibold text-zinc-200 bg-zinc-900 hover:bg-zinc-800 hover:text-white border border-zinc-800 active:scale-95 transition-all"
             >
               <Calculator className="w-4 h-4 text-emerald-400" />
@@ -170,8 +181,7 @@ export const Hero: React.FC<HeroProps> = ({
                   type="button"
                   id={`hero-service-tab-${s.id.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={() => {
-                    setActiveTab(s.id);
-                    onSelectCategory(s.id);
+                    handleSelectCategory(s.id);
                   }}
                   className={`p-4 rounded-xl text-left border transition-all relative overflow-hidden ${
                     isSelected
@@ -209,7 +219,7 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
             <a
               href="#showcase"
-              onClick={() => onSelectCategory(activeTab)}
+              onClick={() => handleSelectCategory(activeTab)}
               className="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 group"
             >
               <span>{t.heroViewCaseStudies}</span>
