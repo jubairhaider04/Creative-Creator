@@ -183,6 +183,9 @@ export const Hero: React.FC<HeroProps> = ({
                   onClick={() => {
                     handleSelectCategory(s.id);
                   }}
+                  onMouseEnter={() => {
+                    handleSelectCategory(s.id);
+                  }}
                   className={`p-4 rounded-xl text-left border transition-all relative overflow-hidden ${
                     isSelected
                       ? "bg-zinc-900/90 border-zinc-700 shadow-xl shadow-black/40 ring-1 ring-blue-500/40"
