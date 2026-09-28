@@ -5,6 +5,7 @@ import { ServicesSection } from "./components/ServicesSection";
 import { PricingSection } from "./components/PricingSection";
 import { ProjectGallery } from "./components/ProjectGallery";
 import { QuoteCalculator } from "./components/QuoteCalculator";
+import { FaqSection } from "./components/FaqSection";
 import { TestimonialsSection } from "./components/TestimonialsSection";
 import { BlogSection } from "./components/BlogSection";
 import { NewsletterSection } from "./components/NewsletterSection";
@@ -183,7 +184,15 @@ export default function App() {
           onApplyToInquiry={handleApplyQuoteToInquiry}
         />
 
-        {/* 5. Client Testimonials with Impact Badges */}
+        {/* 5. Frequently Asked Questions (Pricing & Delivery) */}
+        <FaqSection
+          onOpenQuoteCalculator={() => {
+            const el = document.getElementById("calculator");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+
+        {/* 6. Client Testimonials with Impact Badges */}
         <TestimonialsSection />
 
         {/* 6. Blog & Industry Insights */}

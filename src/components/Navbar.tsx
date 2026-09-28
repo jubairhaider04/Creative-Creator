@@ -62,7 +62,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      const sections = ["services", "pricing", "showcase", "calculator", "testimonials", "insights", "contact"];
+      const sections = ["services", "pricing", "showcase", "calculator", "faq", "testimonials", "insights", "contact"];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -94,6 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { label: t.navPricing, href: "#pricing", id: "pricing" },
     { label: t.navShowcase, href: "#showcase", id: "showcase" },
     { label: t.navQuoteBuilder, href: "#calculator", id: "calculator" },
+    { label: t.navFaq, href: "#faq", id: "faq" },
     { label: t.navTestimonials, href: "#testimonials", id: "testimonials" },
     { label: t.navInsights, href: "#insights", id: "insights" },
     { label: t.navContact, href: "#contact", id: "contact" },

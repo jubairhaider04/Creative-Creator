@@ -8,6 +8,7 @@ export interface Translations {
   navPricing: string;
   navShowcase: string;
   navQuoteBuilder: string;
+  navFaq: string;
   navTestimonials: string;
   navInsights: string;
   navContact: string;
@@ -144,6 +145,7 @@ const translations: Record<Language, Translations> = {
     navPricing: "Packages & Pricing (৳)",
     navShowcase: "Showcase",
     navQuoteBuilder: "Quote Builder",
+    navFaq: "FAQ",
     navTestimonials: "Testimonials",
     navInsights: "Insights",
     navContact: "Contact",
@@ -278,6 +280,7 @@ const translations: Record<Language, Translations> = {
     navPricing: "মূল্য তালিকা ও প্যাকেজ (৳)",
     navShowcase: "প্রজেক্ট শোকেস",
     navQuoteBuilder: "কোট ক্যালকুলেটর",
+    navFaq: "সাধারণ জিজ্ঞাসা",
     navTestimonials: "গ্রাহক মতামত",
     navInsights: "ইনসাইটস",
     navContact: "যোগাযোগ",
@@ -412,6 +415,7 @@ const translations: Record<Language, Translations> = {
     navPricing: "Paquetes y Precios (৳)",
     navShowcase: "Portafolio",
     navQuoteBuilder: "Cotizador",
+    navFaq: "Preguntas Frecuentes",
     navTestimonials: "Testimonios",
     navInsights: "Artículos",
     navContact: "Contacto",
