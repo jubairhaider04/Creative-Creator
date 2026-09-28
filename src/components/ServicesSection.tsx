@@ -9,7 +9,10 @@ import {
   ArrowRight, 
   Layers, 
   ChevronRight,
-  TrendingUp
+  TrendingUp,
+  Sparkles,
+  Bot,
+  Zap
 } from "lucide-react";
 import { SERVICE_PILLARS } from "../data/servicesData";
 import { ServiceCategory } from "../types";
@@ -119,12 +122,44 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           </div>
         </div>
 
+        {/* Feature Highlight: AI Automation Develop for Any Social Media Services */}
+        <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-zinc-900 border border-blue-500/30 backdrop-blur-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl shadow-blue-950/20">
+          <div className="flex items-start sm:items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/25 shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                  AI Automation Develop
+                </span>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                  For Any Social Media Services
+                </span>
+              </div>
+              <p className="text-xs text-zinc-300 mt-1 max-w-2xl leading-relaxed">
+                We design and implement custom <strong>AI automation develop</strong> workflows for any social media platform—including Facebook, Instagram, WhatsApp, YouTube, TikTok & LinkedIn. Scale 24/7 lead intake, smart Auto-DMs, comment-to-order funnels, and automated content scheduling.
+              </p>
+            </div>
+          </div>
+          <a
+            href="#contact"
+            id="btn-services-ai-automation-inquire"
+            onClick={() => onSelectServiceForInquiry("Content Creation")}
+            className="shrink-0 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold flex items-center gap-2 transition-all shadow-md shadow-blue-600/30 active:scale-95"
+          >
+            <span>Inquire AI Automation</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
         {/* 4 Pillars Nav Tabs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
           {SERVICE_PILLARS.map((service) => {
             const Icon = getIcon(service.iconName);
             const isSelected = activeServiceId === service.id;
             const tabTitle = language === "bn" && service.banglaTitle ? service.banglaTitle : service.title;
+            const isSocialMedia = service.id !== "serv-web-dev";
             return (
               <button
                 key={service.id}
@@ -143,9 +178,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                 <div className="font-bold text-base text-white mb-1">
                   {tabTitle}
                 </div>
-                <div className="text-xs text-zinc-400 line-clamp-1">
+                <div className="text-xs text-zinc-400 line-clamp-1 mb-2">
                   {t.servicesStartingAt} {service.startingPrice}
                 </div>
+                {isSocialMedia && (
+                  <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <Sparkles className="w-2.5 h-2.5 text-blue-400" />
+                    <span>AI Automation</span>
+                  </div>
+                )}
                 {isSelected && (
                   <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-500 rounded-full" />
                 )}
@@ -184,6 +225,46 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                       <span>{feat}</span>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* AI Automation Develop for Social Media Services Showcase */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-950/40 via-indigo-950/30 to-purple-950/30 border border-blue-500/30 shadow-lg shadow-blue-950/20">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center shrink-0 text-blue-400">
+                    <Bot className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-blue-400">
+                        AI Automation Develop
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        Available for Any Social Media Services
+                      </span>
+                    </div>
+                    <p className="text-xs text-zinc-300 leading-relaxed mb-3">
+                      We engineer custom AI automation develop systems for <strong>Facebook, Instagram, WhatsApp, YouTube, TikTok & LinkedIn</strong> to eliminate repetitive manual work:
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-zinc-300">
+                      <div className="flex items-center gap-1.5 bg-zinc-950/60 p-2 rounded-lg border border-zinc-800/60">
+                        <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span>24/7 Smart Auto-DM & Chatbots</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-zinc-950/60 p-2 rounded-lg border border-zinc-800/60">
+                        <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span>Instant Comment-to-Lead Funnels</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-zinc-950/60 p-2 rounded-lg border border-zinc-800/60">
+                        <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span>Multi-Platform Auto Scheduling</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 bg-zinc-950/60 p-2 rounded-lg border border-zinc-800/60">
+                        <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span>AI Video & Banner Batch Creation</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

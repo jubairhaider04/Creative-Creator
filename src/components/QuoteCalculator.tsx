@@ -83,6 +83,11 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
       price: 5000 
     },
     { 
+      id: "ai-automation-social", 
+      label: language === "bn" ? "সোশ্যাল মিডিয়ার জন্য AI Automation Develop (অটো DM, কমেন্ট বট ও পোস্টিং)" : language === "es" ? "AI Automation Develop para redes sociales (Auto DM, bots y publicaciones)" : "AI Automation Develop for Any Social Media Services (Auto DMs, Comment Bots & Auto-Posting)", 
+      price: 4500 
+    },
+    { 
       id: "4k-motion-reels", 
       label: language === "bn" ? "৫টি কাস্টম ভাইরাল ভিডিও রিলস ও সোশ্যাল অ্যাডস" : language === "es" ? "5 Reels de Video Viral y Anuncios Promocionales" : "5 Custom Viral Video Reels & Ad Creatives", 
       price: 6000 

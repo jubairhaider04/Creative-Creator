@@ -42,6 +42,22 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [activeSection, setActiveSection] = useState("hero");
   const langMenuRef = useRef<HTMLDivElement>(null);
 
+  const handleWhatsAppClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const isMobileOrTablet = typeof navigator !== "undefined" && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const message = encodeURIComponent("Hi, I found your portfolio on Creative Creator and would like to discuss a project!");
+    const phone = "8801676056414";
+
+    if (isMobileOrTablet) {
+      e.preventDefault();
+      // Directly trigger native WhatsApp app
+      window.location.href = `whatsapp://send?phone=${phone}&text=${message}`;
+      // Fallback in case app scheme isn't registered
+      setTimeout(() => {
+        window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${message}`, "_blank");
+      }, 1200);
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -191,12 +207,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Direct WhatsApp CTA Button */}
             <a
-              href="https://wa.me/8801676056414?text=Hi%2C%20I%20found%20your%20portfolio%20on%20Creative%20Creator%20and%20would%20like%20to%20discuss%20a%20project!"
+              href="https://api.whatsapp.com/send?phone=8801676056414&text=Hi%2C%20I%20found%20your%20portfolio%20on%20Creative%20Creator%20and%20would%20like%20to%20discuss%20a%20project!"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={handleWhatsAppClick}
               id="btn-nav-whatsapp"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 hover:border-emerald-400 transition-all shadow-sm group"
-              title="Chat directly on WhatsApp: +8801676056414"
+              title="Open WhatsApp App"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -205,41 +222,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               <svg className="w-3.5 h-3.5 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
                 <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.77.813 2.796.814 3.183 0 5.768-2.587 5.768-5.766 0-3.18-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.519-4.481 10-10 10-1.745 0-3.385-.45-4.814-1.239l-5.186 1.36 1.385-5.06c-.868-1.488-1.385-3.218-1.385-5.061 0-5.519 4.481-10 10-10s10 4.481 10 10z"/>
               </svg>
-              <span className="text-[11px] font-mono tracking-tight hidden lg:inline">+880 1676-056414</span>
-              <span className="text-[11px] font-semibold lg:hidden">{t.navWhatsApp}</span>
+              <span className="text-[11px] font-semibold tracking-wide">WhatsApp</span>
             </a>
 
-            {/* Google Intelligence Suite Button */}
-            <button
-              type="button"
-              id="btn-nav-ai-consultant"
-              onClick={onOpenAiConsultant}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all shadow-sm group"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-12 transition-transform" />
-              <span>{t.navAiSuite}</span>
-              <span className="px-1.5 py-0.2 text-[9px] font-bold bg-amber-500/30 text-amber-200 rounded uppercase">
-                Pro & Flash
-              </span>
-            </button>
-
-            {/* Performance & Analytics Dashboard Button */}
-            <button
-              type="button"
-              id="btn-nav-analytics"
-              onClick={onOpenAnalytics}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-zinc-300 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 transition-all"
-            >
-              <BarChart3 className="w-3.5 h-3.5 text-blue-400" />
-              <span>{t.navCrmTelemetry}</span>
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-              </span>
-            </button>
-
-            {/* User Auth / Client Portal */}
-            {currentUser ? (
+            {/* User Auth if signed in */}
+            {currentUser && (
               <div className="flex items-center gap-2 pl-1">
                 <button
                   type="button"
@@ -264,16 +251,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {t.navSignOut}
                 </button>
               </div>
-            ) : (
-              <button
-                type="button"
-                id="btn-nav-login"
-                onClick={onOpenAuth}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-800 transition-all"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-                <span>{t.navSignIn}</span>
-              </button>
             )}
 
             {/* Get a Quote Button */}
@@ -376,17 +353,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="pt-4 flex flex-col gap-3">
               {/* Mobile WhatsApp Direct Message Button */}
               <a
-                href="https://wa.me/8801676056414?text=Hi%2C%20I%20found%20your%20portfolio%20on%20Creative%20Creator%20and%20would%20like%20to%20discuss%20a%20project!"
+                href="https://api.whatsapp.com/send?phone=8801676056414&text=Hi%2C%20I%20found%20your%20portfolio%20on%20Creative%20Creator%20and%20would%20like%20to%20discuss%20a%20project!"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  handleWhatsAppClick(e);
+                }}
                 id="btn-mobile-whatsapp"
                 className="w-full py-3 px-4 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-sm font-semibold flex items-center justify-center gap-2 shadow-sm"
               >
                 <svg className="w-4 h-4 fill-[#25D366] shrink-0" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.77.813 2.796.814 3.183 0 5.768-2.587 5.768-5.766 0-3.18-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.519-4.481 10-10 10-1.745 0-3.385-.45-4.814-1.239l-5.186 1.36 1.385-5.06c-.868-1.488-1.385-3.218-1.385-5.061 0-5.519 4.481-10 10-10s10 4.481 10 10z"/>
                 </svg>
-                <span>Direct WhatsApp: +880 1676-056414</span>
+                <span>WhatsApp</span>
               </a>
 
               <button
