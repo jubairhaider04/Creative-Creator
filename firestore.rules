@@ -1,33 +1,72 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Inquiries and CRM leads
-    match /inquiries/{inquiryId} {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "jubair04sale@gmail.com" ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin")
+      );
+    }
+
+    // 1. User Profiles (Protected Role & Status fields)
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update: if (isOwner(userId) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status']))) || isAdmin() || isOwner(userId);
+      allow delete: if isAdmin();
+    }
+
+    // 2. Services Catalog
+    match /services/{serviceId} {
       allow read, write: if true;
     }
+
+    // 3. Portfolio Case Studies
+    match /portfolio/{projectId} {
+      allow read, write: if true;
+    }
+
+    // 4. Inquiries & CRM Leads
     match /leads/{leadId} {
       allow read, write: if true;
     }
-    // Saved AI Project Plans & Scopes
+    match /inquiries/{inquiryId} {
+      allow read, write: if true;
+    }
+
+    // 5. AI Generated Project Plans
     match /user_ai_plans/{planId} {
       allow read, write: if true;
     }
-    // Blog Comments and Claps
+
+    // 6. Newsletter Subscribers
+    match /newsletter_subscribers/{subId} {
+      allow read, write: if true;
+    }
+
+    // 7. Blog Comments & Reactions
+    match /blog_posts/{postId}/comments/{commentId} {
+      allow read, write: if true;
+    }
     match /blog_comments/{commentId} {
       allow read, write: if true;
     }
     match /blog_claps/{clapId} {
       allow read, write: if true;
     }
-    // Newsletter subscribers
-    match /newsletter_subscribers/{subId} {
-      allow read, write: if true;
-    }
-    // User profile metadata
-    match /users/{userId} {
-      allow read, write: if true;
-    }
-    // Default open for prototype
+
+    // Fallback for prototype collections
     match /{document=**} {
       allow read, write: if true;
     }

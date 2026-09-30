@@ -1,0 +1,157 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered user profile with role-based authorization",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth user unique ID" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Full name of the user" },
+        "photoURL": { "type": "string", "description": "User avatar image URL" },
+        "phone": { "type": "string", "description": "User contact phone number" },
+        "company": { "type": "string", "description": "Client company name" },
+        "role": { "type": "string", "enum": ["admin", "client"], "description": "User access role" },
+        "status": { "type": "string", "enum": ["active", "suspended"], "description": "Account status" },
+        "createdAt": { "type": "string", "description": "ISO timestamp of user creation" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp of last profile update" },
+        "lastLoginAt": { "type": "string", "description": "Timestamp of last authentication" }
+      },
+      "required": ["uid", "email", "role", "status"]
+    },
+    "Service": {
+      "title": "Service",
+      "description": "Digital agency service offerings and discipline pillars",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique service identifier" },
+        "title": { "type": "string", "description": "Name of the service category" },
+        "banglaTitle": { "type": "string", "description": "Bangla translated title" },
+        "iconName": { "type": "string", "description": "Lucide icon identifier" },
+        "tagline": { "type": "string", "description": "Punchy value proposition" },
+        "description": { "type": "string", "description": "Detailed explanation of service scope" },
+        "accentColor": { "type": "string", "description": "Color theme accent for UI" },
+        "startingPrice": { "type": "string", "description": "Pricing tier starting point" },
+        "turnaroundTime": { "type": "string", "description": "Estimated turnaround delivery duration" },
+        "highlightMetric": { "type": "string", "description": "Key quantifiable performance metric" },
+        "keyFeatures": { "type": "array", "description": "List of core features included" },
+        "deliverables": { "type": "array", "description": "Handover deliverables provided" },
+        "techStack": { "type": "array", "description": "Technologies and tools utilized" },
+        "bn": { "type": "object", "description": "Bangla localization overrides" },
+        "es": { "type": "object", "description": "Spanish localization overrides" }
+      },
+      "required": ["id", "title", "tagline", "description", "startingPrice"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Agency portfolio case study showcase project",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique project identifier" },
+        "title": { "type": "string", "description": "Headline project title" },
+        "subtitle": { "type": "string", "description": "Project subtitle or focus area" },
+        "category": { "type": "string", "description": "Service category discipline" },
+        "client": { "type": "string", "description": "Client company name and location" },
+        "year": { "type": "string", "description": "Year of release" },
+        "thumbnail": { "type": "string", "description": "High resolution thumbnail image URL" },
+        "galleryImages": { "type": "array", "description": "Additional gallery screenshots" },
+        "videoPreviewUrl": { "type": "string", "description": "Optional video preview URL" },
+        "videoDuration": { "type": "string", "description": "Duration string for video projects" },
+        "tags": { "type": "array", "description": "Keyword tags" },
+        "metrics": { "type": "array", "description": "Impact performance metrics" },
+        "challenge": { "type": "string", "description": "Project problem statement and challenge" },
+        "solution": { "type": "string", "description": "Strategic and technical solution delivered" },
+        "deliverables": { "type": "array", "description": "List of deliverables handed over" },
+        "techStack": { "type": "array", "description": "Technologies and tools used" },
+        "liveUrl": { "type": "string", "description": "Public URL or demo link" },
+        "featured": { "type": "boolean", "description": "Whether to highlight on hero/home" }
+      },
+      "required": ["id", "title", "category", "client", "thumbnail", "challenge", "solution"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Client inquiry, project brief, or quote request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Lead identifier" },
+        "name": { "type": "string", "description": "Prospect full name" },
+        "email": { "type": "string", "format": "email", "description": "Prospect contact email" },
+        "company": { "type": "string", "description": "Company or business name" },
+        "services": { "type": "array", "description": "Requested service categories" },
+        "budget": { "type": "string", "description": "Estimated budget tier" },
+        "timeline": { "type": "string", "description": "Desired completion timeline" },
+        "description": { "type": "string", "description": "Project scope notes" },
+        "status": { "type": "string", "enum": ["new", "reviewing", "quoted", "closed"], "description": "CRM pipeline state" },
+        "estimatedValue": { "type": "number", "description": "Estimated revenue value in BDT" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["name", "email", "services", "budget"]
+    },
+    "AiPlan": {
+      "title": "AiPlan",
+      "description": "Generated AI project roadmap and technical scope plan",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "User ID of creator" },
+        "userEmail": { "type": "string", "description": "Email of creator" },
+        "plan": { "type": "object", "description": "Full structured plan object" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["plan", "createdAt"]
+    },
+    "NewsletterSubscriber": {
+      "title": "NewsletterSubscriber",
+      "description": "Email newsletter subscriber",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email", "description": "Subscriber email" },
+        "topics": { "type": "array", "description": "Interested topic preferences" },
+        "subscribedAt": { "type": "string", "description": "Subscription timestamp" }
+      },
+      "required": ["email", "subscribedAt"]
+    },
+    "BlogPostComment": {
+      "title": "BlogPostComment",
+      "description": "Comment and discussion entry on blog posts",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Author name" },
+        "email": { "type": "string", "description": "Author email" },
+        "avatar": { "type": "string", "description": "Avatar URL" },
+        "text": { "type": "string", "description": "Comment text" },
+        "createdAt": { "type": "string", "description": "Comment timestamp" }
+      },
+      "required": ["name", "text", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles with role-based access control"
+    },
+    "/services/{serviceId}": {
+      "schema": "Service",
+      "description": "Agency service offerings and pricing tiers"
+    },
+    "/portfolio/{projectId}": {
+      "schema": "Project",
+      "description": "Agency case studies and project showcase"
+    },
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Client CRM project inquiries and quote submissions"
+    },
+    "/user_ai_plans/{planId}": {
+      "schema": "AiPlan",
+      "description": "Saved AI project architectural blueprints"
+    },
+    "/newsletter_subscribers/{subId}": {
+      "schema": "NewsletterSubscriber",
+      "description": "Newsletter mailing list subscribers"
+    },
+    "/blog_posts/{postId}/comments/{commentId}": {
+      "schema": "BlogPostComment",
+      "description": "Comments and community feedback on blog posts"
+    }
+  }
+}

@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AuthPage } from "./components/AuthPage";
+import { ClientDashboard } from "./components/ClientDashboard";
+import { AdminDashboard } from "./components/AdminDashboard";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { ServicesSection } from "./components/ServicesSection";
@@ -14,11 +20,19 @@ import { Footer } from "./components/Footer";
 import { GoogleIntelligenceModal } from "./components/GoogleIntelligenceModal";
 import { AnalyticsDashboardModal } from "./components/AnalyticsDashboardModal";
 import { AuthModal } from "./components/AuthModal";
-import { ServiceCategory, UserAuth } from "./types";
+import { ServiceCategory, ServicePillar, Project } from "./types";
 import { PricingPlan } from "./data/pricingData";
-import { subscribeToAuthState, signOutUser } from "./lib/firebase";
+import { SERVICE_PILLARS } from "./data/servicesData";
+import { PORTFOLIO_PROJECTS } from "./data/portfolioData";
+import { 
+  subscribeToServicesFirestore, 
+  subscribeToPortfolioFirestore 
+} from "./lib/firebase";
 
-export default function App() {
+// Full Bongio Digital Homepage
+function HomePage() {
+  const { user, profile, logout } = useAuth();
+
   // Navigation & Category state
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | "All">("All");
 
@@ -27,25 +41,27 @@ export default function App() {
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
-  // Authenticated User state
-  const [currentUser, setCurrentUser] = useState<UserAuth | null>(null);
+  // Real-time Firestore dynamic state
+  const [services, setServices] = useState<ServicePillar[]>(SERVICE_PILLARS);
+  const [projects, setProjects] = useState<Project[]>(PORTFOLIO_PROJECTS);
 
-  // Subscribe to Firebase Auth state on mount
+  // Subscriptions to Firestore Collections on mount
   useEffect(() => {
-    const unsubscribe = subscribeToAuthState((firebaseUser) => {
-      if (firebaseUser) {
-        setCurrentUser({
-          email: firebaseUser.email || "user@google.com",
-          name: firebaseUser.displayName || "Google User",
-          role: (firebaseUser.email?.includes("admin") || firebaseUser.email?.includes("creative")) ? "admin" : "client",
-          avatar: firebaseUser.photoURL || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-          mfaVerifiedAt: new Date().toISOString()
-        });
+    const unsubServices = subscribeToServicesFirestore((liveServices) => {
+      if (liveServices && liveServices.length > 0) {
+        setServices(liveServices);
+      }
+    });
+
+    const unsubProjects = subscribeToPortfolioFirestore((liveProjects) => {
+      if (liveProjects && liveProjects.length > 0) {
+        setProjects(liveProjects);
       }
     });
 
     return () => {
-      if (unsubscribe) unsubscribe();
+      if (unsubServices) unsubServices();
+      if (unsubProjects) unsubProjects();
     };
   }, []);
 
@@ -116,24 +132,13 @@ export default function App() {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOutUser();
-    } catch (err) {
-      console.warn("Sign out notice:", err);
-    }
-    setCurrentUser(null);
-  };
-
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-blue-600 selection:text-white flex flex-col">
       {/* Navigation Header */}
       <Navbar
-        currentUser={currentUser}
         onOpenAiConsultant={() => setIsAiModalOpen(true)}
         onOpenAnalytics={() => setIsAnalyticsOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
-        onLogout={handleLogout}
         onOpenQuoteCalculator={() => {
           const el = document.getElementById("calculator");
           if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -154,8 +159,9 @@ export default function App() {
           }}
         />
 
-        {/* 2. Four Core Disciplines (Services) */}
+        {/* 2. Four Core Disciplines (Services) with Live Firestore Data */}
         <ServicesSection
+          services={services}
           onSelectServiceForInquiry={handleSelectServiceForInquiry}
           onOpenQuoteCalculator={() => {
             const el = document.getElementById("pricing");
@@ -172,19 +178,20 @@ export default function App() {
           }}
         />
 
-        {/* 4. Dynamic Case Study Gallery */}
+        {/* 4. Dynamic Case Study Gallery with Live Firestore Data */}
         <ProjectGallery
+          projects={projects}
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
           onSelectForInquiry={handleSelectServiceForInquiry}
         />
 
-        {/* 4. Interactive Scope & Quote Calculator */}
+        {/* 5. Interactive Scope & Quote Calculator */}
         <QuoteCalculator
           onApplyToInquiry={handleApplyQuoteToInquiry}
         />
 
-        {/* 5. Frequently Asked Questions (Pricing & Delivery) */}
+        {/* 6. Frequently Asked Questions (Pricing & Delivery) */}
         <FaqSection
           onOpenQuoteCalculator={() => {
             const el = document.getElementById("calculator");
@@ -192,16 +199,16 @@ export default function App() {
           }}
         />
 
-        {/* 6. Client Testimonials with Impact Badges */}
+        {/* 7. Client Testimonials with Impact Badges */}
         <TestimonialsSection />
 
-        {/* 6. Blog & Industry Insights */}
+        {/* 8. Blog & Industry Insights */}
         <BlogSection />
 
-        {/* 7. Newsletter Signup */}
+        {/* 9. Newsletter Signup */}
         <NewsletterSection />
 
-        {/* 8. Contact & Lead Capture Form */}
+        {/* 10. Contact & Lead Capture Form */}
         <ContactSection
           prefilledBrief={inquiryBrief}
           prefilledServices={inquiryServices}
@@ -213,33 +220,101 @@ export default function App() {
       {/* Footer with Social Integration */}
       <Footer />
 
-      {/* Google Intelligence Suite Modal (High Thinking, Search Grounding, Maps Grounding, Flash Lite) */}
+      {/* Google Intelligence Suite Modal */}
       <GoogleIntelligenceModal
         isOpen={isAiModalOpen}
         onClose={() => setIsAiModalOpen(false)}
         onApplyBriefToContact={handleApplyAiBrief}
-        currentUser={currentUser}
+        currentUser={profile ? {
+          email: profile.email,
+          name: profile.displayName,
+          role: profile.role,
+          avatar: profile.photoURL || "",
+          mfaVerifiedAt: ""
+        } : null}
       />
 
-      {/* Analytics & CRM Pipeline Modal */}
+      {/* Analytics, CMS & CRM Pipeline Modal */}
       <AnalyticsDashboardModal
         isOpen={isAnalyticsOpen}
         onClose={() => setIsAnalyticsOpen(false)}
-        currentUser={currentUser}
+        currentUser={profile ? {
+          email: profile.email,
+          name: profile.displayName,
+          role: profile.role,
+          avatar: profile.photoURL || "",
+          mfaVerifiedAt: ""
+        } : null}
+        services={services}
+        projects={projects}
         onOpenAuth={() => {
           setIsAnalyticsOpen(false);
           setIsAuthOpen(true);
         }}
       />
 
-      {/* Authentication & MFA / Google Sign-in Modal */}
+      {/* Authentication Modal */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
-        onLoginSuccess={(user) => {
-          setCurrentUser(user);
-        }}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          {/* Public Website */}
+          <Route path="/" element={<HomePage />} />
+
+          {/* Dedicated Auth Pages */}
+          <Route path="/login" element={<AuthPage initialMode="login" />} />
+          <Route path="/register" element={<AuthPage initialMode="register" />} />
+          <Route path="/forgot-password" element={<AuthPage initialMode="forgot-password" />} />
+
+          {/* Protected Client Workspace */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <ClientDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/*"
+            element={
+              <ProtectedRoute>
+                <ClientDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protected Admin Command Center */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute requireRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute requireRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback to Home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

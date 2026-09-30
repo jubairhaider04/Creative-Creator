@@ -109,7 +109,7 @@ async function startServer() {
   app.get("/api/health", (_req, res) => {
     res.json({
       status: "ok",
-      service: "Creative Creator API Engine",
+      service: "Bongio Digital API Engine",
       timestamp: new Date().toISOString(),
       capabilities: ["web_dev", "content_creation", "video_editing", "graphic_design"],
       geminiConfigured: Boolean(process.env.GEMINI_API_KEY)
@@ -158,7 +158,7 @@ async function startServer() {
         });
       }
 
-      const prompt = `You are the Principal Creative Director and Technical Architect at "Creative Creator", an elite digital agency providing Web Development, Content Creation, Video Editing, and Graphic Design.
+      const prompt = `You are the Principal Creative Director and Technical Architect at "Bongio Digital", an elite digital agency providing Web Development, Content Creation, Video Editing, and Graphic Design.
 
 A prospective client submitted the following project concept:
 - Project Concept: ${projectIdea}
@@ -256,7 +256,7 @@ Return ONLY valid JSON matching this schema.`;
         });
       }
 
-      const prompt = `You are the Lead Digital Strategist and Creative Intelligence Officer at Creative Creator.
+      const prompt = `You are the Lead Digital Strategist and Creative Intelligence Officer at Bongio Digital.
 Conduct a real-time market search using Google Search grounding on the user's topic: "${query}".
 Focus on current real-world data, 2026 design/tech industry benchmarks, live competitor strategies, and actionable takeaways for creative projects in Web Development, Video Production, Content Strategy, or Graphic Design.
 
@@ -322,7 +322,7 @@ Provide a comprehensive, crisp, structured report with:
         });
       }
 
-      const prompt = `You are the Production Logistics Director at Creative Creator studio.
+      const prompt = `You are the Production Logistics Director at Bongio Digital studio.
 Use Google Maps grounding to locate top-tier creative production facilities, 4K film studios, soundstages, photography rental spaces, podcast suites, or creative design hubs in or near "${location}".
 Search focus: "${query}".
 
@@ -436,7 +436,7 @@ List 3-5 verified real locations with their names, exact or approximate street a
         });
       }
 
-      const prompt = `You are the Lead Creative Producer and Scriptwriter at "Creative Creator".
+      const prompt = `You are the Lead Creative Producer and Scriptwriter at "Bongio Digital".
 Create a complete high-production script, storyboard, or content strategy breakdown:
 - Discipline: ${discipline || "Video Production"}
 - Core Topic/Product: ${topic || "Brand Launch"}
@@ -571,7 +571,7 @@ Return a structured JSON with:
 
     return res.status(201).json({
       success: true,
-      message: "Welcome to Creative Creator Insights! Look out for our monthly curated masterclass in your inbox.",
+      message: "Welcome to Bongio Digital Insights! Look out for our monthly curated masterclass in your inbox.",
       subscriber: newSub
     });
   });
@@ -616,48 +616,6 @@ Return a structured JSON with:
     });
   });
 
-  // Simulated MFA authentication
-  app.post("/api/auth/login", (req, res) => {
-    const { email, password } = req.body;
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
-    }
-
-    // Authenticate demo accounts
-    const isAdmin = email.toLowerCase().includes("admin") || email.toLowerCase() === "creator@agency.com";
-    return res.json({
-      mfaRequired: true,
-      challengeId: `mfa-${Date.now()}`,
-      user: {
-        email,
-        name: isAdmin ? "Chief Creative Officer (Admin)" : "Client Partner",
-        role: isAdmin ? "admin" : "client",
-      },
-      maskedPhone: "+1 (•••) •••-8829",
-      mfaMethod: "TOTP / Authenticator App (Demo Code: 492018 or any 6-digit code)"
-    });
-  });
-
-  app.post("/api/auth/verify-mfa", (req, res) => {
-    const { code, challengeId, email, role } = req.body;
-    if (!code || code.length < 6) {
-      return res.status(400).json({ error: "Please enter a valid 6-digit authentication token." });
-    }
-
-    // Accept valid 6-digit codes
-    return res.json({
-      success: true,
-      token: `jwt_cc_${Date.now()}_token`,
-      user: {
-        email: email || "admin@creativecreator.agency",
-        name: role === "admin" ? "Chief Creative Officer" : "Client Partner",
-        role: role || "admin",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-        mfaVerifiedAt: new Date().toISOString()
-      }
-    });
-  });
-
   // Vite integration for dev vs static in production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -674,7 +632,7 @@ Return a structured JSON with:
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Creative Creator server running on http://0.0.0.0:${PORT}`);
+    console.log(`Bongio Digital server running on http://0.0.0.0:${PORT}`);
   });
 }
 

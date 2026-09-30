@@ -14,12 +14,14 @@ interface ProjectGalleryProps {
   selectedCategory: ServiceCategory | "All";
   onSelectCategory: (category: ServiceCategory | "All") => void;
   onSelectForInquiry: (category: ServiceCategory) => void;
+  projects?: Project[];
 }
 
 export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
   selectedCategory,
   onSelectCategory,
-  onSelectForInquiry
+  onSelectForInquiry,
+  projects = PORTFOLIO_PROJECTS
 }) => {
   const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,7 +44,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
     return cat;
   };
 
-  const filteredProjects = PORTFOLIO_PROJECTS.filter((proj) => {
+  const filteredProjects = projects.filter((proj) => {
     const matchesCategory = selectedCategory === "All" || proj.category === selectedCategory;
     const matchesSearch = 
       proj.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -113,7 +115,7 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({
                 }`}
               >
                 {getCategoryLabel(cat)}
-                {cat === "All" ? ` (${PORTFOLIO_PROJECTS.length})` : ` (${PORTFOLIO_PROJECTS.filter(p => p.category === cat).length})`}
+                {cat === "All" ? ` (${projects.length})` : ` (${projects.filter(p => p.category === cat).length})`}
               </button>
             );
           })}

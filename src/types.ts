@@ -137,12 +137,30 @@ export interface AnalyticsData {
   }[];
 }
 
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  phone?: string;
+  company?: string;
+  role: "admin" | "client";
+  status: "active" | "suspended";
+  createdAt: string;
+  updatedAt?: string;
+  lastLoginAt?: string;
+}
+
 export interface UserAuth {
+  uid?: string;
   email: string;
   name: string;
   role: "admin" | "client";
   avatar: string;
-  mfaVerifiedAt: string;
+  phone?: string;
+  company?: string;
+  status?: "active" | "suspended";
+  mfaVerifiedAt?: string;
 }
 
 export interface AiProjectPlan {

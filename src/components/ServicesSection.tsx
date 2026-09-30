@@ -15,22 +15,24 @@ import {
   Zap
 } from "lucide-react";
 import { SERVICE_PILLARS } from "../data/servicesData";
-import { ServiceCategory } from "../types";
+import { ServiceCategory, ServicePillar } from "../types";
 import { useLanguage } from "../context/LanguageContext";
 
 interface ServicesSectionProps {
   onSelectServiceForInquiry: (category: ServiceCategory) => void;
   onOpenQuoteCalculator: () => void;
+  services?: ServicePillar[];
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onSelectServiceForInquiry,
-  onOpenQuoteCalculator
+  onOpenQuoteCalculator,
+  services = SERVICE_PILLARS
 }) => {
   const { t, language } = useLanguage();
   const [activeServiceId, setActiveServiceId] = useState<string>("serv-web-dev");
 
-  const currentService = SERVICE_PILLARS.find(s => s.id === activeServiceId) || SERVICE_PILLARS[0];
+  const currentService = services.find(s => s.id === activeServiceId) || services[0] || SERVICE_PILLARS[0];
 
   const getLocalizedService = (service: typeof currentService) => {
     if (language === "bn" && service.bn) {
@@ -155,7 +157,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
 
         {/* 4 Pillars Nav Tabs */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
-          {SERVICE_PILLARS.map((service) => {
+          {services.map((service) => {
             const Icon = getIcon(service.iconName);
             const isSelected = activeServiceId === service.id;
             const tabTitle = language === "bn" && service.banglaTitle ? service.banglaTitle : service.title;
