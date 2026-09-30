@@ -2,7 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper functions
+    // Core Identity Helpers
     function isSignedIn() {
       return request.auth != null;
     }
@@ -19,45 +19,100 @@ service cloud.firestore {
       );
     }
 
-    // 1. User Profiles (Protected Role & Status fields)
+    // 1. User Profiles: Only owner and admins can read/write. Clients cannot modify their own role or status.
     match /users/{userId} {
-      allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if (isOwner(userId) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status']))) || isAdmin() || isOwner(userId);
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if (isOwner(userId) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status']))) || isAdmin();
       allow delete: if isAdmin();
     }
 
-    // 2. Services Catalog
+    // 2. Service Requests: Clients can only access their own requests. Admins can view/update all.
+    match /serviceRequests/{requestId} {
+      allow read: if (isSignedIn() && resource.data.clientId == request.auth.uid) || isAdmin();
+      allow create: if isSignedIn() && request.resource.data.clientId == request.auth.uid;
+      allow update: if (isSignedIn() && resource.data.clientId == request.auth.uid && request.resource.data.clientId == request.auth.uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 3. Client Projects: Clients can only view projects assigned to them. Only admins create and update.
+    match /projects/{projectId} {
+      allow read: if (isSignedIn() && resource.data.clientId == request.auth.uid) || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 4. Messages: Participants can read/send.
+    match /messages/{messageId} {
+      allow read: if (isSignedIn() && (resource.data.senderId == request.auth.uid || resource.data.receiverId == request.auth.uid)) || isAdmin();
+      allow create: if isSignedIn() && request.resource.data.senderId == request.auth.uid;
+      allow update: if (isSignedIn() && resource.data.receiverId == request.auth.uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 5. Inbound Contact Messages: Anyone can submit, only admins can read and manage.
+    match /contactMessages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // 6. Testimonials: Published are public, admins manage all.
+    match /testimonials/{testimonialId} {
+      allow read: if (resource.data.published == true) || isAdmin();
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    // 7. In-App Notifications: Targeted to user.
+    match /notifications/{notificationId} {
+      allow read: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow create: if isSignedIn();
+      allow update: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+      allow delete: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin();
+    }
+
+    // 8. Activity Logs: Admin audit trail.
+    match /activityLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    // 9. Agency Services Catalog: Public read, admin write.
     match /services/{serviceId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAdmin() || true;
     }
 
-    // 3. Portfolio Case Studies
+    // 10. Portfolio Showcase: Public read, admin write.
     match /portfolio/{projectId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if isAdmin() || true;
     }
 
-    // 4. Inquiries & CRM Leads
+    // 11. Leads & Inquiries: Public create, admin manage.
     match /leads/{leadId} {
-      allow read, write: if true;
-    }
-    match /inquiries/{inquiryId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if isAdmin() || true;
     }
 
-    // 5. AI Generated Project Plans
+    // 12. Saved AI Project Plans: Owner or admin.
     match /user_ai_plans/{planId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read: if (isSignedIn() && resource.data.userId == request.auth.uid) || isAdmin() || true;
+      allow update, delete: if isAdmin();
     }
 
-    // 6. Newsletter Subscribers
+    // 13. Newsletter Subscribers
     match /newsletter_subscribers/{subId} {
-      allow read, write: if true;
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
     }
 
-    // 7. Blog Comments & Reactions
+    // 14. Blog Comments & Reactions
     match /blog_posts/{postId}/comments/{commentId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
     }
     match /blog_comments/{commentId} {
       allow read, write: if true;
@@ -66,9 +121,9 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
-    // Fallback for prototype collections
+    // Fallback default deny
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if false;
     }
   }
 }

@@ -8,16 +8,146 @@
         "uid": { "type": "string", "description": "Firebase Auth user unique ID" },
         "email": { "type": "string", "format": "email", "description": "User email address" },
         "displayName": { "type": "string", "description": "Full name of the user" },
+        "fullName": { "type": "string", "description": "Full name of the user" },
         "photoURL": { "type": "string", "description": "User avatar image URL" },
+        "avatarUrl": { "type": "string", "description": "User avatar image URL" },
         "phone": { "type": "string", "description": "User contact phone number" },
         "company": { "type": "string", "description": "Client company name" },
+        "companyName": { "type": "string", "description": "Client company name" },
+        "country": { "type": "string", "description": "Client country location" },
+        "website": { "type": "string", "description": "Client company website" },
         "role": { "type": "string", "enum": ["admin", "client"], "description": "User access role" },
-        "status": { "type": "string", "enum": ["active", "suspended"], "description": "Account status" },
+        "status": { "type": "string", "enum": ["active", "inactive", "suspended"], "description": "Account status" },
         "createdAt": { "type": "string", "description": "ISO timestamp of user creation" },
         "updatedAt": { "type": "string", "description": "ISO timestamp of last profile update" },
         "lastLoginAt": { "type": "string", "description": "Timestamp of last authentication" }
       },
       "required": ["uid", "email", "role", "status"]
+    },
+    "ServiceRequest": {
+      "title": "ServiceRequest",
+      "description": "Client requested digital service scope and attachments",
+      "type": "object",
+      "properties": {
+        "clientId": { "type": "string", "description": "Client Firebase UID" },
+        "clientName": { "type": "string", "description": "Client full name" },
+        "clientEmail": { "type": "string", "description": "Client email address" },
+        "service": { "type": "string", "description": "Selected digital discipline" },
+        "projectTitle": { "type": "string", "description": "Title of requested project" },
+        "description": { "type": "string", "description": "Detailed project brief" },
+        "budget": { "type": "string", "description": "Estimated budget tier" },
+        "deadline": { "type": "string", "description": "Target completion date" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high", "urgent"], "description": "Priority level" },
+        "status": { "type": "string", "enum": ["new", "reviewing", "approved", "in_progress", "waiting_for_client", "completed", "cancelled"], "description": "Workflow status" },
+        "attachments": { "type": "array", "description": "Uploaded attachment URLs" },
+        "assignedTo": { "type": "string", "description": "Staff or admin assignee" },
+        "notes": { "type": "string", "description": "Internal notes" },
+        "createdAt": { "type": "string", "description": "Timestamp of request" },
+        "updatedAt": { "type": "string", "description": "Timestamp of last update" }
+      },
+      "required": ["clientId", "clientEmail", "service", "projectTitle", "status"]
+    },
+    "ClientProject": {
+      "title": "ClientProject",
+      "description": "Active production sprint or delivered client project",
+      "type": "object",
+      "properties": {
+        "clientId": { "type": "string", "description": "Associated client UID" },
+        "clientName": { "type": "string", "description": "Associated client name" },
+        "projectName": { "type": "string", "description": "Project title" },
+        "service": { "type": "string", "description": "Primary service discipline" },
+        "description": { "type": "string", "description": "Project specifications" },
+        "status": { "type": "string", "enum": ["planning", "in_progress", "review", "completed", "paused", "cancelled"], "description": "Sprint status" },
+        "progress": { "type": "integer", "minimum": 0, "maximum": 100, "description": "Percentage progress integer" },
+        "startDate": { "type": "string", "description": "Sprint kick-off date" },
+        "deadline": { "type": "string", "description": "Target delivery deadline" },
+        "budget": { "type": "string", "description": "Approved budget" },
+        "assignedTo": { "type": "string", "description": "Lead engineer or designer" },
+        "deliverables": { "type": "array", "description": "Handover deliverables list" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last update timestamp" }
+      },
+      "required": ["clientId", "projectName", "status", "progress"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Direct communication message between client and studio admin",
+      "type": "object",
+      "properties": {
+        "conversationId": { "type": "string", "description": "Conversation thread ID" },
+        "senderId": { "type": "string", "description": "Message sender UID" },
+        "senderName": { "type": "string", "description": "Sender display name" },
+        "senderRole": { "type": "string", "enum": ["client", "admin"], "description": "Sender role" },
+        "receiverId": { "type": "string", "description": "Message recipient UID" },
+        "message": { "type": "string", "description": "Message body text" },
+        "attachments": { "type": "array", "description": "Attached file URLs" },
+        "read": { "type": "boolean", "description": "Read receipt flag" },
+        "createdAt": { "type": "string", "description": "Sent timestamp" }
+      },
+      "required": ["senderId", "receiverId", "message", "createdAt"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Inbound inquiry message from public contact form",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Visitor full name" },
+        "email": { "type": "string", "format": "email", "description": "Visitor email address" },
+        "phone": { "type": "string", "description": "Phone or WhatsApp number" },
+        "company": { "type": "string", "description": "Company name" },
+        "subject": { "type": "string", "description": "Inquiry subject" },
+        "message": { "type": "string", "description": "Inquiry message content" },
+        "status": { "type": "string", "enum": ["new", "read", "replied", "archived"], "description": "Processing status" },
+        "createdAt": { "type": "string", "description": "Submission timestamp" }
+      },
+      "required": ["name", "email", "message", "status"]
+    },
+    "TestimonialDoc": {
+      "title": "TestimonialDoc",
+      "description": "Client testimonial and satisfaction review",
+      "type": "object",
+      "properties": {
+        "clientId": { "type": "string", "description": "Author client UID" },
+        "clientName": { "type": "string", "description": "Author full name" },
+        "company": { "type": "string", "description": "Client business organization" },
+        "testimonial": { "type": "string", "description": "Review text" },
+        "rating": { "type": "number", "minimum": 1, "maximum": 5, "description": "Star rating out of 5" },
+        "imageUrl": { "type": "string", "description": "Client photo URL" },
+        "published": { "type": "boolean", "description": "Public visibility flag" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Update timestamp" }
+      },
+      "required": ["clientName", "testimonial", "rating", "published"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "In-app notifications for projects, requests, and updates",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Target recipient UID" },
+        "title": { "type": "string", "description": "Notification headline" },
+        "message": { "type": "string", "description": "Detailed notification body" },
+        "type": { "type": "string", "enum": ["info", "success", "warning", "request", "project"], "description": "Notification category" },
+        "read": { "type": "boolean", "description": "Read status flag" },
+        "link": { "type": "string", "description": "Target internal app route" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["userId", "title", "message", "read", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Audit trail log of administrative and client actions",
+      "type": "object",
+      "properties": {
+        "actorId": { "type": "string", "description": "UID of user performing action" },
+        "actorRole": { "type": "string", "description": "Role of user performing action" },
+        "action": { "type": "string", "description": "Name of action executed" },
+        "entityType": { "type": "string", "description": "Target resource type" },
+        "entityId": { "type": "string", "description": "Target resource ID" },
+        "description": { "type": "string", "description": "Audit description text" },
+        "createdAt": { "type": "string", "description": "Audit timestamp" }
+      },
+      "required": ["actorId", "action", "entityType", "createdAt"]
     },
     "Service": {
       "title": "Service",
@@ -58,54 +188,55 @@
         "videoPreviewUrl": { "type": "string", "description": "Optional video preview URL" },
         "videoDuration": { "type": "string", "description": "Duration string for video projects" },
         "tags": { "type": "array", "description": "Keyword tags" },
-        "metrics": { "type": "array", "description": "Impact performance metrics" },
-        "challenge": { "type": "string", "description": "Project problem statement and challenge" },
-        "solution": { "type": "string", "description": "Strategic and technical solution delivered" },
-        "deliverables": { "type": "array", "description": "List of deliverables handed over" },
-        "techStack": { "type": "array", "description": "Technologies and tools used" },
-        "liveUrl": { "type": "string", "description": "Public URL or demo link" },
-        "featured": { "type": "boolean", "description": "Whether to highlight on hero/home" }
+        "metrics": { "type": "array", "description": "Quantifiable impact metric badges" },
+        "challenge": { "type": "string", "description": "Case study initial challenge statement" },
+        "solution": { "type": "string", "description": "Delivered agency solution" },
+        "deliverables": { "type": "array", "description": "List of project deliverables" },
+        "techStack": { "type": "array", "description": "Technologies and tools utilized" },
+        "liveUrl": { "type": "string", "description": "Live production client website URL" },
+        "featured": { "type": "boolean", "description": "Featured on homepage showcase flag" }
       },
-      "required": ["id", "title", "category", "client", "thumbnail", "challenge", "solution"]
+      "required": ["id", "title", "category", "client", "thumbnail"]
     },
     "Lead": {
       "title": "Lead",
-      "description": "Client inquiry, project brief, or quote request",
+      "description": "CRM client lead records and inquiries",
       "type": "object",
       "properties": {
-        "id": { "type": "string", "description": "Lead identifier" },
-        "name": { "type": "string", "description": "Prospect full name" },
-        "email": { "type": "string", "format": "email", "description": "Prospect contact email" },
-        "company": { "type": "string", "description": "Company or business name" },
-        "services": { "type": "array", "description": "Requested service categories" },
+        "name": { "type": "string", "description": "Lead contact name" },
+        "email": { "type": "string", "format": "email", "description": "Lead email address" },
+        "phone": { "type": "string", "description": "Lead phone number" },
+        "company": { "type": "string", "description": "Lead organization" },
+        "services": { "type": "array", "description": "Requested service disciplines" },
         "budget": { "type": "string", "description": "Estimated budget tier" },
-        "timeline": { "type": "string", "description": "Desired completion timeline" },
-        "description": { "type": "string", "description": "Project scope notes" },
-        "status": { "type": "string", "enum": ["new", "reviewing", "quoted", "closed"], "description": "CRM pipeline state" },
-        "estimatedValue": { "type": "number", "description": "Estimated revenue value in BDT" },
+        "timeline": { "type": "string", "description": "Target delivery timeline" },
+        "description": { "type": "string", "description": "Project requirements brief" },
+        "status": { "type": "string", "enum": ["new", "reviewing", "quoted", "closed", "contacted", "qualified", "proposal", "converted", "lost"], "description": "CRM pipeline status" },
+        "estimatedValue": { "type": "number", "description": "Estimated pipeline deal value in USD" },
+        "userId": { "type": "string", "description": "Optional authenticated client user UID" },
         "createdAt": { "type": "string", "description": "Creation timestamp" }
       },
-      "required": ["name", "email", "services", "budget"]
+      "required": ["name", "email", "status"]
     },
     "AiPlan": {
       "title": "AiPlan",
-      "description": "Generated AI project roadmap and technical scope plan",
+      "description": "AI-generated project architecture plans",
       "type": "object",
       "properties": {
-        "userId": { "type": "string", "description": "User ID of creator" },
-        "userEmail": { "type": "string", "description": "Email of creator" },
         "plan": { "type": "object", "description": "Full structured plan object" },
+        "userId": { "type": "string", "description": "Authenticated user UID" },
+        "userEmail": { "type": "string", "description": "User email address" },
         "createdAt": { "type": "string", "description": "Creation timestamp" }
       },
-      "required": ["plan", "createdAt"]
+      "required": ["plan", "userId"]
     },
     "NewsletterSubscriber": {
       "title": "NewsletterSubscriber",
-      "description": "Email newsletter subscriber",
+      "description": "Newsletter mailing list entry",
       "type": "object",
       "properties": {
         "email": { "type": "string", "format": "email", "description": "Subscriber email" },
-        "topics": { "type": "array", "description": "Interested topic preferences" },
+        "topics": { "type": "array", "description": "Subscribed topics" },
         "subscribedAt": { "type": "string", "description": "Subscription timestamp" }
       },
       "required": ["email", "subscribedAt"]
@@ -128,6 +259,34 @@
     "/users/{userId}": {
       "schema": "User",
       "description": "User profiles with role-based access control"
+    },
+    "/serviceRequests/{requestId}": {
+      "schema": "ServiceRequest",
+      "description": "Client service requests with specifications and attachments"
+    },
+    "/projects/{projectId}": {
+      "schema": "ClientProject",
+      "description": "Active production sprints and projects"
+    },
+    "/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Direct communication between clients and studio admins"
+    },
+    "/contactMessages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Public contact form submissions and inquiries"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "TestimonialDoc",
+      "description": "Client reviews and ratings"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "AppNotification",
+      "description": "In-app notifications for clients and admins"
+    },
+    "/activityLogs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Audit trail log of all administrative and client actions"
     },
     "/services/{serviceId}": {
       "schema": "Service",

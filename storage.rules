@@ -1,0 +1,67 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "jubair04sale@gmail.com" ||
+        request.auth.token.email.matches(".*@bongiodigital\\.com$")
+      );
+    }
+    
+    function isSafeFileSize(maxMb) {
+      return request.resource.size < maxMb * 1024 * 1024;
+    }
+    
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isValidAttachment() {
+      return request.resource.contentType.matches('image/.*') ||
+             request.resource.contentType == 'application/pdf' ||
+             request.resource.contentType == 'application/msword' ||
+             request.resource.contentType == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+             request.resource.contentType == 'application/zip' ||
+             request.resource.contentType == 'application/x-zip-compressed';
+    }
+
+    // 1. Client profile images
+    match /users/{userId}/profile/{fileName} {
+      allow read: if true;
+      allow write: if (isOwner(userId) || isAdmin()) && isImage() && isSafeFileSize(5);
+    }
+
+    // 2. Client service request attachments
+    match /users/{userId}/requests/{requestId}/{fileName} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if (isOwner(userId) || isAdmin()) && isValidAttachment() && isSafeFileSize(25);
+    }
+
+    // 3. Client project files & deliverables
+    match /users/{userId}/projects/{projectId}/{fileName} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow write: if (isOwner(userId) || isAdmin()) && isSafeFileSize(50);
+    }
+
+    // 4. Testimonials media
+    match /testimonials/{testimonialId}/{fileName} {
+      allow read: if true;
+      allow write: if isSignedIn() && isImage() && isSafeFileSize(5);
+    }
+
+    // Default deny for all other paths
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

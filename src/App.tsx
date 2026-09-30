@@ -273,9 +273,10 @@ export default function App() {
           {/* Dedicated Auth Pages */}
           <Route path="/login" element={<AuthPage initialMode="login" />} />
           <Route path="/register" element={<AuthPage initialMode="register" />} />
+          <Route path="/signup" element={<AuthPage initialMode="register" />} />
           <Route path="/forgot-password" element={<AuthPage initialMode="forgot-password" />} />
 
-          {/* Protected Client Workspace */}
+          {/* Protected Client Workspace (supports both /dashboard and /client/*) */}
           <Route
             path="/dashboard"
             element={
@@ -286,6 +287,22 @@ export default function App() {
           />
           <Route
             path="/dashboard/*"
+            element={
+              <ProtectedRoute>
+                <ClientDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/client/dashboard"
+            element={
+              <ProtectedRoute>
+                <ClientDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/client/*"
             element={
               <ProtectedRoute>
                 <ClientDashboard />

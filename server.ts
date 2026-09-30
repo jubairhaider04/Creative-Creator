@@ -616,6 +616,55 @@ Return a structured JSON with:
     });
   });
 
+  // n8n Webhook Integration Endpoints
+  app.post("/api/webhooks/n8n/contact", async (req, res) => {
+    const eventPayload = {
+      event: "new_contact_message",
+      timestamp: new Date().toISOString(),
+      data: req.body
+    };
+    if (process.env.N8N_WEBHOOK_URL) {
+      try {
+        await fetch(process.env.N8N_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(eventPayload)
+        });
+      } catch (err) {
+        console.warn("n8n webhook forward warning:", err);
+      }
+    }
+    return res.json({ received: true, event: "new_contact_message" });
+  });
+
+  app.post("/api/webhooks/n8n/service-request", async (req, res) => {
+    const eventPayload = {
+      event: "new_service_request",
+      timestamp: new Date().toISOString(),
+      data: req.body
+    };
+    if (process.env.N8N_WEBHOOK_URL) {
+      try {
+        await fetch(process.env.N8N_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(eventPayload)
+        });
+      } catch (err) {
+        console.warn("n8n webhook forward warning:", err);
+      }
+    }
+    return res.json({ received: true, event: "new_service_request" });
+  });
+
+  app.get("/api/webhooks/n8n/status", (_req, res) => {
+    res.json({
+      configured: Boolean(process.env.N8N_WEBHOOK_URL),
+      targetUrl: process.env.N8N_WEBHOOK_URL ? "Configured" : "None",
+      supportedEvents: ["new_contact_message", "new_service_request", "new_client_signup", "project_status_changed"]
+    });
+  });
+
   // Vite integration for dev vs static in production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

@@ -15,7 +15,7 @@ import {
   Loader2
 } from "lucide-react";
 import confetti from "canvas-confetti";
-import { saveInquiryToFirestore } from "../lib/firebase";
+import { saveInquiryToFirestore, submitContactMessageFirestore } from "../lib/firebase";
 import { useLanguage } from "../context/LanguageContext";
 
 interface ContactSectionProps {
@@ -129,19 +129,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     setErrorMessage(null);
 
     try {
-      // Save to Cloud Firestore
+      // Save to Cloud Firestore contactMessages and leads
       try {
-        await saveInquiryToFirestore({
+        await submitContactMessageFirestore({
           name,
           email,
+          phone: "",
           company,
-          services: selectedServices,
-          budget,
-          timeline,
-          description: description + (attachedFiles.length > 0 ? `\n[Attachments: ${attachedFiles.map(f => f.name).join(", ")}]` : "")
+          subject: selectedServices.join(", ") || "Project Inquiry",
+          message: description + (attachedFiles.length > 0 ? `\n[Attachments: ${attachedFiles.map(f => f.name).join(", ")}]` : "")
         });
       } catch (firestoreErr) {
-        console.warn("Firestore sync notice:", firestoreErr);
+        console.warn("Firestore contactMessages sync notice:", firestoreErr);
       }
 
       const res = await fetch("/api/contact", {

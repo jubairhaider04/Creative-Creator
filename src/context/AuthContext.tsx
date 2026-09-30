@@ -14,20 +14,43 @@ import {
 } from "../lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
+export interface SignupData {
+  fullName: string;
+  email: string;
+  password: string;
+  phone?: string;
+  companyName?: string;
+  country?: string;
+  website?: string;
+}
+
 interface AuthContextType {
   user: FirebaseUser | null;
+  currentUser: FirebaseUser | null;
   profile: UserProfile | null;
+  userProfile: UserProfile | null;
   loading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
   isClient: boolean;
   isSuspended: boolean;
   login: (email: string, password: string) => Promise<UserProfile | null>;
-  register: (data: { name: string; email: string; password: string; phone?: string; company?: string }) => Promise<UserProfile | null>;
+  register: (data: SignupData | { name: string; email: string; password: string; phone?: string; company?: string }) => Promise<UserProfile | null>;
+  signup: (data: SignupData | { name: string; email: string; password: string; phone?: string; company?: string }) => Promise<UserProfile | null>;
   loginWithGoogle: () => Promise<UserProfile | null>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  updateProfile: (updates: { displayName?: string; phone?: string; company?: string; photoURL?: string }) => Promise<void>;
+  updateProfile: (updates: { 
+    fullName?: string; 
+    displayName?: string; 
+    phone?: string; 
+    companyName?: string; 
+    company?: string; 
+    country?: string; 
+    website?: string; 
+    photoURL?: string; 
+    avatarUrl?: string; 
+  }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -79,8 +102,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return res.profile;
   };
 
-  const register = async (data: { name: string; email: string; password: string; phone?: string; company?: string }) => {
-    const res = await registerWithEmail(data);
+  const register = async (data: any) => {
+    const fullName = data.fullName || data.name || "Client";
+    const companyName = data.companyName || data.company;
+    const res = await registerWithEmail({
+      fullName,
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
+      companyName,
+      country: data.country,
+      website: data.website
+    });
     setUser(res.user);
     setProfile(res.profile);
     return res.profile;
@@ -103,7 +136,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     await sendPasswordReset(email);
   };
 
-  const updateProfile = async (updates: { displayName?: string; phone?: string; company?: string; photoURL?: string }) => {
+  const updateProfile = async (updates: any) => {
     if (!user) throw new Error("No authenticated user");
     await updateUserProfileData(user.uid, updates);
     if (profile) {
@@ -123,7 +156,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <AuthContext.Provider
       value={{
         user,
+        currentUser: user,
         profile,
+        userProfile: profile,
         loading,
         isAuthenticated,
         isAdmin,
@@ -131,6 +166,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isSuspended,
         login,
         register,
+        signup: register,
         loginWithGoogle: handleGoogleLogin,
         logout,
         resetPassword,

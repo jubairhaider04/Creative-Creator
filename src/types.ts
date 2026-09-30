@@ -141,14 +141,133 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName: string;
+  fullName?: string;
   photoURL?: string;
+  avatarUrl?: string;
   phone?: string;
   company?: string;
+  companyName?: string;
+  country?: string;
+  website?: string;
   role: "admin" | "client";
-  status: "active" | "suspended";
+  status: "active" | "inactive" | "suspended";
   createdAt: string;
   updatedAt?: string;
   lastLoginAt?: string;
+}
+
+export interface ServiceRequest {
+  id: string;
+  clientId: string;
+  clientName: string;
+  clientEmail: string;
+  service: string;
+  projectTitle: string;
+  description: string;
+  budget: string;
+  deadline: string;
+  priority: "low" | "medium" | "high" | "urgent";
+  status: "new" | "reviewing" | "approved" | "in_progress" | "waiting_for_client" | "completed" | "cancelled";
+  attachments: string[];
+  createdAt: string;
+  updatedAt: string;
+  assignedTo?: string;
+  notes?: string;
+}
+
+export interface ClientProject {
+  id: string;
+  clientId: string;
+  clientName: string;
+  projectName: string;
+  service: string;
+  description: string;
+  status: "planning" | "in_progress" | "review" | "completed" | "paused" | "cancelled";
+  progress: number;
+  startDate: string;
+  deadline: string;
+  budget: string;
+  assignedTo?: string;
+  deliverables?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  senderName: string;
+  senderRole: "client" | "admin";
+  receiverId: string;
+  message: string;
+  attachments?: string[];
+  read: boolean;
+  createdAt: string;
+}
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  subject: string;
+  message: string;
+  status: "new" | "read" | "replied" | "archived";
+  createdAt: string;
+}
+
+export interface TestimonialDoc {
+  id: string;
+  clientId?: string;
+  clientName: string;
+  company: string;
+  testimonial: string;
+  rating: number;
+  imageUrl?: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AppNotification {
+  id: string;
+  userId: string;
+  title: string;
+  message: string;
+  type: "info" | "success" | "warning" | "request" | "project";
+  read: boolean;
+  link?: string;
+  createdAt: string;
+}
+
+export interface CrmLead {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  source: string;
+  service: string;
+  budget: string;
+  message: string;
+  status: "new" | "contacted" | "qualified" | "proposal" | "converted" | "lost";
+  assignedTo?: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ActivityLog {
+  id: string;
+  actorId: string;
+  actorRole: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  description: string;
+  createdAt: string;
 }
 
 export interface UserAuth {
