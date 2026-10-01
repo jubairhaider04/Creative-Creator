@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { AiProjectPlan, ServiceCategory, UserAuth } from "../types";
 import { saveAiPlanToFirestore } from "../lib/firebase";
+import { useLanguage } from "../context/LanguageContext";
 
 interface GoogleIntelligenceModalProps {
   isOpen: boolean;
@@ -42,6 +43,7 @@ export const GoogleIntelligenceModal: React.FC<GoogleIntelligenceModalProps> = (
   onApplyBriefToContact,
   currentUser
 }) => {
+  const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>("thinking");
 
   // 1. High Thinking State (gemini-3.1-pro-preview with ThinkingLevel.HIGH)
@@ -415,10 +417,21 @@ export const GoogleIntelligenceModal: React.FC<GoogleIntelligenceModalProps> = (
                       onChange={(e) => setBudgetBracket(e.target.value)}
                       className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
                     >
-                      <option value="$2,500 - $5,000">$2,500 - $5,000</option>
-                      <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-                      <option value="$10,000 - $25,000">$10,000 - $25,000</option>
-                      <option value="$25,000+">$25,000+ (Enterprise)</option>
+                      {language === "bn" ? (
+                        <>
+                          <option value="৳ ১০,০০০ - ৳ ২৫,০০০">৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার)</option>
+                          <option value="৳ ২৫,০০০ - ৳ ৫০,০০০">৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ)</option>
+                          <option value="৳ ৫০,০০০ - ৳ ১,০০,০০০">৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল)</option>
+                          <option value="৳ ১,০০,০০০+">৳ ১,০০,০০০+ (এন্টারপ্রাইজ)</option>
+                        </>
+                      ) : (
+                        <>
+                          <option value="$100 - $250">$100 - $250 (Starter Tier)</option>
+                          <option value="$250 - $500">$250 - $500 (Growth Tier)</option>
+                          <option value="$500 - $1,000">$500 - $1,000 (Scale Tier)</option>
+                          <option value="$1,000+">$1,000+ (Enterprise Full Studio)</option>
+                        </>
+                      )}
                     </select>
                   </div>
 

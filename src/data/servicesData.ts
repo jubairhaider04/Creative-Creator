@@ -1,4 +1,5 @@
 import { ServicePillar } from "../types";
+import { CENTRALIZED_PRICING } from "./pricingConfig";
 
 export const SERVICE_PILLARS: ServicePillar[] = [
   {
@@ -10,6 +11,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
     description: "Responsive business websites, high-converting E-commerce portals, custom web applications, and automated booking systems engineered with sub-second latency and 99+ Lighthouse performance scores.",
     accentColor: "blue",
     startingPrice: "৳ 18,000 (BDT)",
+    price: CENTRALIZED_PRICING.services.webDevelopment.startingPrice,
     turnaroundTime: "7 - 10 Days",
     highlightMetric: "99+ Lighthouse Speed Score & < 0.8s load time",
     keyFeatures: [
@@ -77,6 +79,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
     description: "We supercharge your brand with persuasive copywriting, viral social narratives, and full-stack AI automation develop for any social media platform—including Facebook, Instagram, WhatsApp, TikTok, and LinkedIn. From 24/7 smart Auto-DM funnels to automated content scheduling and lead capture.",
     accentColor: "emerald",
     startingPrice: "৳ 8,500 (BDT)",
+    price: CENTRALIZED_PRICING.services.contentCreation.startingPrice,
     turnaroundTime: "3 - 5 Days",
     highlightMetric: "4.5x Higher Social Engagement & 24/7 Automated Lead Capture",
     keyFeatures: [
@@ -150,6 +153,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
     description: "Cinematic color grading, dynamic kinetic subtitles, immersive sound effects, and AI automation develop for video repurposing across any social media channel—turning long-form footage into viral Shorts, Reels, and TikToks effortlessly.",
     accentColor: "purple",
     startingPrice: "৳ 10,000 (BDT)",
+    price: CENTRALIZED_PRICING.services.videoEditing.startingPrice,
     turnaroundTime: "3 - 7 Days",
     highlightMetric: "85%+ Average Video Retention & Watch-Time Rate",
     keyFeatures: [
@@ -223,6 +227,7 @@ export const SERVICE_PILLARS: ServicePillar[] = [
     description: "Elevate your business perception with world-class visual aesthetics and AI automation develop for social media creatives. We design distinctive logos, stationery, packaging, and high-volume automated social ad templates that scale your campaigns effortlessly.",
     accentColor: "amber",
     startingPrice: "৳ 9,500 (BDT)",
+    price: CENTRALIZED_PRICING.services.graphicDesign.startingPrice,
     turnaroundTime: "5 - 7 Days",
     highlightMetric: "100% Vector & Print-Ready Master Files Included",
     keyFeatures: [

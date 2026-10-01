@@ -29,7 +29,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onOpenQuoteCalculator,
   services = SERVICE_PILLARS
 }) => {
-  const { t, language } = useLanguage();
+  const { t, language, formatStartingFrom } = useLanguage();
   const [activeServiceId, setActiveServiceId] = useState<string>("serv-web-dev");
 
   const currentService = services.find(s => s.id === activeServiceId) || services[0] || SERVICE_PILLARS[0];
@@ -304,12 +304,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               {/* Pricing breakdown */}
               <div className="flex items-baseline justify-between border-b border-zinc-800 pb-4">
                 <div>
-                  <span className="text-xs text-zinc-400 uppercase font-medium">Standard Investment</span>
+                  <span className="text-xs text-zinc-400 uppercase font-medium">
+                    {language === "bn" ? "প্রারম্ভিক বিনিয়োগ" : "Standard Investment"}
+                  </span>
                   <div className="text-3xl font-extrabold text-white mt-0.5">
-                    {localizedActive.startingPrice}
+                    {currentService.price 
+                      ? formatStartingFrom(currentService.price)
+                      : (language === "bn" ? "শুরু হচ্ছে ৳১৮,০০০ থেকে" : "Starting from $150")}
                   </div>
                 </div>
-                <span className="text-xs text-zinc-500">Tier-based / Fixed Sprint</span>
+                <span className="text-xs text-zinc-500">
+                  {language === "bn" ? "টিয়ার-ভিত্তিক / ফিক্সড স্প্রিন্ট" : "Tier-based / Fixed Sprint"}
+                </span>
               </div>
 
               {/* Tech Stack */}

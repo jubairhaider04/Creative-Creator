@@ -36,12 +36,12 @@ export const FAQ_DATA: FaqItem[] = [
   {
     id: "faq-pricing-tiers",
     category: "pricing",
-    question: "What is included in the Starter (৳15,000), Growth (৳35,000), and Scale (৳75,000) packages?",
+    question: "What is included in the Starter ($149), Growth ($299), and Scale ($599) packages?",
     answer: "Our pricing is structured into three transparent, fixed-investment tiers tailored for businesses at different stages. There are no hidden fees or surprise billings.",
     keyPoints: [
-      "Starter (৳15,000): 1–3 page responsive site, Google Maps listing, WhatsApp integration, 5 custom social banners, and 1 month warranty (5–7 days delivery).",
-      "Growth (৳35,000): Full dynamic/E-commerce portal, automated bKash/Nagad checkout, CMS admin dashboard, 3 viral video reels, and 3 months priority support (10–14 days delivery).",
-      "Scale (৳75,000): Enterprise multi-page application, custom portals, complete brand identity kit, 4K video post-production, full AI automation pipeline, and 6 months VIP maintenance (3–4 weeks delivery)."
+      "Starter ($149): 1–3 page responsive site, Google Maps listing, WhatsApp integration, 5 custom social banners, and 1 month warranty (5–7 days delivery).",
+      "Growth ($299): Full dynamic/E-commerce portal, automated checkout gateway, CMS admin dashboard, 10 viral video reels, and 3 months priority support (10–14 days delivery).",
+      "Scale ($599): Enterprise multi-page application, custom portals, complete brand identity kit, 4K video post-production, full AI automation pipeline, and 6 months VIP maintenance (3–4 weeks delivery)."
     ],
     bn: {
       question: "স্টার্টার (৳১৫,০০০), গ্রোথ (৳৩৫,০০০) ও স্কেল (৳৭৫,০০০) প্যাকেজে কী কী অন্তর্ভুক্ত থাকে?",
@@ -53,12 +53,12 @@ export const FAQ_DATA: FaqItem[] = [
       ]
     },
     es: {
-      question: "¿Qué incluye cada paquete: Starter (৳15.000), Growth (৳35.000) y Scale (৳75.000)?",
+      question: "¿Qué incluye cada paquete: Starter ($149), Growth ($299) y Scale ($599)?",
       answer: "Nuestras tarifas fijas y transparentes están diseñadas para diferentes etapas empresariales sin costos ocultos.",
       keyPoints: [
-        "Starter (৳15.000): Sitio de 1-3 páginas, Google Maps, WhatsApp directo, 5 banners y 1 mes de garantía (5-7 días).",
-        "Growth (৳35.000): Tienda online o portal dinámico, pasarelas bKash/tarjetas, panel admin, 3 reels virales y 3 meses de soporte (10-14 días).",
-        "Scale (৳75.000): Aplicación web a medida, kit de marca completo, video 4K, pipelines de automatización con IA y 6 meses de soporte VIP (3-4 semanas)."
+        "Starter ($149): Sitio de 1-3 páginas, Google Maps, WhatsApp directo, 5 banners y 1 mes de garantía (5-7 días).",
+        "Growth ($299): Tienda online o portal dinámico, pasarelas de pago, panel admin, 10 reels virales y 3 meses de soporte (10-14 días).",
+        "Scale ($599): Aplicación web a medida, kit de marca completo, video 4K, pipelines de automatización con IA y 6 meses de soporte VIP (3-4 semanas)."
       ]
     }
   },

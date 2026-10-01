@@ -66,15 +66,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     "৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল প্যাকেজ)",
     "৳ ১,০০,০০০+ (ফুল এন্টারপ্রাইজ সল্যুশন)"
   ] : language === "es" ? [
-    "৳ 10.000 - ৳ 25.000 BDT (Paquete Inicial)",
-    "৳ 25.000 - ৳ 50.000 BDT (Paquete Crecimiento)",
-    "৳ 50.000 - ৳ 100.000 BDT (Paquete Escala)",
-    "৳ 100.000+ BDT (Solución Completa)"
+    "$100 - $250 (Nivel Inicial)",
+    "$250 - $500 (Nivel Crecimiento - Popular)",
+    "$500 - $1,000 (Nivel Escala)",
+    "$1,000+ (Solución Corporativa)"
   ] : [
-    "৳ 10,000 - ৳ 25,000 BDT (Starter Tier)",
-    "৳ 25,000 - ৳ 50,000 BDT (Growth Tier - Popular)",
-    "৳ 50,000 - ৳ 100,000 BDT (Scale Tier)",
-    "৳ 100,000+ BDT (Enterprise Full Studio)"
+    "$100 - $250 (Starter Tier)",
+    "$250 - $500 (Growth Tier - Popular)",
+    "$500 - $1,000 (Scale Tier)",
+    "$1,000+ (Enterprise Full Studio)"
   ];
 
   const timelineOptions = language === "bn" ? [

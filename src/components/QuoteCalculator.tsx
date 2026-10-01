@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { ServiceCategory } from "../types";
 import { useLanguage } from "../context/LanguageContext";
+import { CENTRALIZED_PRICING } from "../data/pricingConfig";
 
 interface QuoteCalculatorProps {
   onApplyToInquiry: (config: {
@@ -27,7 +28,7 @@ interface QuoteCalculatorProps {
 export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
   onApplyToInquiry
 }) => {
-  const { t, language } = useLanguage();
+  const { t, language, currency } = useLanguage();
   const [selectedServices, setSelectedServices] = useState<ServiceCategory[]>([
     "Web Development"
   ]);
@@ -39,29 +40,32 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
   ]);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
+  const isBn = language === "bn";
+  const currencyKey: "bdt" | "usd" = isBn ? "bdt" : "usd";
+
   const availableServices = [
     { 
       id: "Web Development" as ServiceCategory, 
-      label: language === "bn" ? "ওয়েব ডেভেলপমেন্ট" : language === "es" ? "Desarrollo Web" : "Web Development",
-      basePrice: 18000, 
+      label: isBn ? "ওয়েব ডেভেলপমেন্ট" : language === "es" ? "Desarrollo Web" : "Web Development",
+      price: CENTRALIZED_PRICING.services.webDevelopment.startingPrice,
       icon: Code2 
     },
     { 
       id: "Content Creation" as ServiceCategory, 
-      label: language === "bn" ? "কনটেন্ট ক্রিয়েশন" : language === "es" ? "Creación de Contenido" : "Content Creation",
-      basePrice: 8500, 
+      label: isBn ? "কনটেন্ট ক্রিয়েশন" : language === "es" ? "Creación de Contenido" : "Content Creation",
+      price: CENTRALIZED_PRICING.services.contentCreation.startingPrice,
       icon: PenTool 
     },
     { 
       id: "Video Editing" as ServiceCategory, 
-      label: language === "bn" ? "ভিডিও এডিটিং ও রিলস" : language === "es" ? "Edición de Video" : "Video Editing",
-      basePrice: 10000, 
+      label: isBn ? "ভিডিও এডিটিং ও রিলস" : language === "es" ? "Edición de Video" : "Video Editing",
+      price: CENTRALIZED_PRICING.services.videoEditing.startingPrice,
       icon: Film 
     },
     { 
       id: "Graphic Design" as ServiceCategory, 
-      label: language === "bn" ? "গ্রাফিক ডিজাইন ও ব্র্যান্ডিং" : language === "es" ? "Diseño Gráfico" : "Graphic Design",
-      basePrice: 9500, 
+      label: isBn ? "গ্রাফিক ডিজাইন ও ব্র্যান্ডিং" : language === "es" ? "Diseño Gráfico" : "Graphic Design",
+      price: CENTRALIZED_PRICING.services.graphicDesign.startingPrice,
       icon: Palette 
     },
   ];
@@ -69,33 +73,45 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
   const addonsList = [
     { 
       id: "seo-optimization", 
-      label: language === "bn" ? "গুগল ম্যাপস ও লোকাল এসইও (99+ SEO Audit)" : language === "es" ? "Optimización SEO Local y Google Maps" : "Google Maps & Local SEO Optimization (99+ Audit)", 
-      price: 3500 
+      label: isBn 
+        ? CENTRALIZED_PRICING.addons.seoOptimization.label.bn 
+        : CENTRALIZED_PRICING.addons.seoOptimization.label.en, 
+      price: CENTRALIZED_PRICING.addons.seoOptimization.price 
     },
     { 
       id: "bkash-nagad-gateway", 
-      label: language === "bn" ? "বিকাশ ও নগদ অটোমেটিক পেমেন্ট গেটওয়ে সেটআপ" : language === "es" ? "Pasarelas de pago bKash y Nagad automatizadas" : "bKash & Nagad Automatic Payment Gateway Setup", 
-      price: 4000 
+      label: isBn 
+        ? CENTRALIZED_PRICING.addons.paymentGateway.label.bn 
+        : CENTRALIZED_PRICING.addons.paymentGateway.label.en, 
+      price: CENTRALIZED_PRICING.addons.paymentGateway.price 
     },
     { 
       id: "figma-brand-kit", 
-      label: language === "bn" ? "কমপ্লিট ব্র্যান্ড আইডেন্টিটি ও Figma ভেক্টর কিট" : language === "es" ? "Kit de Identidad de Marca y Archivos Figma" : "Complete Brand Identity & Figma Vector Kit", 
-      price: 5000 
+      label: isBn 
+        ? CENTRALIZED_PRICING.addons.figmaBrandKit.label.bn 
+        : CENTRALIZED_PRICING.addons.figmaBrandKit.label.en, 
+      price: CENTRALIZED_PRICING.addons.figmaBrandKit.price 
     },
     { 
       id: "ai-automation-social", 
-      label: language === "bn" ? "সোশ্যাল মিডিয়ার জন্য AI Automation Develop (অটো DM, কমেন্ট বট ও পোস্টিং)" : language === "es" ? "AI Automation Develop para redes sociales (Auto DM, bots y publicaciones)" : "AI Automation Develop for Any Social Media Services (Auto DMs, Comment Bots & Auto-Posting)", 
-      price: 4500 
+      label: isBn 
+        ? CENTRALIZED_PRICING.addons.aiAutomationSocial.label.bn 
+        : CENTRALIZED_PRICING.addons.aiAutomationSocial.label.en, 
+      price: CENTRALIZED_PRICING.addons.aiAutomationSocial.price 
     },
     { 
       id: "4k-motion-reels", 
-      label: language === "bn" ? "৫টি কাস্টম ভাইরাল ভিডিও রিলস ও সোশ্যাল অ্যাডস" : language === "es" ? "5 Reels de Video Viral y Anuncios Promocionales" : "5 Custom Viral Video Reels & Ad Creatives", 
-      price: 6000 
+      label: isBn 
+        ? CENTRALIZED_PRICING.addons.motionReels.label.bn 
+        : CENTRALIZED_PRICING.addons.motionReels.label.en, 
+      price: CENTRALIZED_PRICING.addons.motionReels.price 
     },
     { 
       id: "interactive-3d-webgl", 
-      label: language === "bn" ? "ইন্টারেক্টিভ ৩D অ্যানিমেশন ও কাস্টম ফিচার্স" : language === "es" ? "Animaciones 3D / WebGL y Funcionalidades a Medida" : "Interactive 3D / WebGL Animations & Custom Features", 
-      price: 8000 
+      label: isBn 
+        ? CENTRALIZED_PRICING.addons.interactive3d.label.bn 
+        : CENTRALIZED_PRICING.addons.interactive3d.label.en, 
+      price: CENTRALIZED_PRICING.addons.interactive3d.price 
     },
   ];
 
@@ -117,16 +133,16 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
     }
   };
 
-  // Calculations in BDT (৳)
+  // Calculations in Active Currency (USD or BDT)
   const baseServiceTotal = selectedServices.reduce((sum, srv) => {
     const found = availableServices.find(s => s.id === srv);
-    return sum + (found ? found.basePrice : 0);
+    return sum + (found ? found.price[currencyKey] : 0);
   }, 0);
 
   const tierMultiplier = tier === "Starter" ? 0.9 : tier === "Growth" ? 1.35 : 2.1;
   const addonsTotal = selectedAddons.reduce((sum, aId) => {
     const found = addonsList.find(a => a.id === aId);
-    return sum + (found ? found.price : 0);
+    return sum + (found ? found.price[currencyKey] : 0);
   }, 0);
 
   const subtotal = (baseServiceTotal * tierMultiplier) + addonsTotal;
@@ -141,19 +157,22 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
   
   const minDays = Math.max(3, Math.round(baseDays));
   const maxDays = Math.max(5, Math.round(baseDays + 4));
-  const estimatedDaysStr = language === "bn" 
+  const estimatedDaysStr = isBn 
     ? `${minDays} - ${maxDays} দিন` 
     : language === "es" 
     ? `${minDays} - ${maxDays} Días` 
     : `${minDays} - ${maxDays} Days`;
-  const estimatedBudgetStr = `৳ ${finalEstimate.toLocaleString("en-US")} BDT`;
+  
+  const estimatedBudgetStr = isBn
+    ? `৳${finalEstimate.toLocaleString("en-US")}`
+    : `$${finalEstimate.toLocaleString("en-US")}`;
 
   const handleExportJson = () => {
     const scopeData = {
-      studio: "Bongio Digital (Dhaka, Bangladesh)",
+      studio: "Bongio Digital",
       whatsapp: "+8801676056414",
       generatedAt: new Date().toISOString(),
-      currency: "BDT (Bangla Taka - ৳)",
+      currency: isBn ? "BDT (Bangladeshi Taka - ৳)" : "USD (US Dollars - $)",
       tier,
       services: selectedServices,
       addons: selectedAddons.map(id => addonsList.find(a => a.id === id)?.label),
@@ -162,7 +181,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
       estimatedTimeline: estimatedDaysStr,
       deliverablesIncluded: [
         "100% Production source code & design files",
-        "bKash/Nagad payment & WhatsApp direct chat integration",
+        "Official invoice with secure payment gateway integration",
         "Live cloud hosting deployment assistance",
         "Technical maintenance warranty"
       ]
@@ -172,7 +191,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `creative-creator-quote-${Date.now()}.json`;
+    a.download = `bongio-digital-quote-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
 
@@ -187,7 +206,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-4">
             <Calculator className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{t.calcBadge} (BDT / ৳)</span>
+            <span>{t.calcBadge} ({isBn ? "BDT / ৳" : "USD / $"})</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
             {t.calcTitle}
@@ -209,7 +228,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                 </label>
                 {selectedServices.length > 1 && (
                   <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    {language === "bn" ? "১২% বান্ডল ডিসকাউন্ট অ্যাপ্লাইড" : "12% Multi-Service Bundle Discount Applied"}
+                    {isBn ? "১২% বান্ডল ডিসকাউন্ট অ্যাপ্লাইড" : "12% Multi-Service Bundle Discount Applied"}
                   </span>
                 )}
               </div>
@@ -217,6 +236,10 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                 {availableServices.map((srv) => {
                   const Icon = srv.icon;
                   const isChecked = selectedServices.includes(srv.id);
+                  const priceFormatted = isBn 
+                    ? `বেস: ৳${srv.price.bdt.toLocaleString("en-US")}` 
+                    : `Base: $${srv.price.usd.toLocaleString("en-US")}`;
+
                   return (
                     <button
                       key={srv.id}
@@ -235,8 +258,8 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                         </div>
                         <div>
                           <div className="text-xs font-bold text-white">{srv.label}</div>
-                          <div className="text-[11px] text-zinc-400">
-                            {language === "bn" ? `বেস: ৳${srv.basePrice.toLocaleString()}` : `Base: ৳${srv.basePrice.toLocaleString()} BDT`}
+                          <div className="text-[11px] text-zinc-400 font-mono">
+                            {priceFormatted}
                           </div>
                         </div>
                       </div>
@@ -259,17 +282,17 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                   { 
                     id: "Starter", 
                     label: "Starter", 
-                    sub: language === "bn" ? "মৌলিক ফিচার ও দ্রুত লঞ্চ" : language === "es" ? "Funciones esenciales" : "Essential Scope" 
+                    sub: isBn ? "মৌলিক ফিচার ও দ্রুত লঞ্চ" : language === "es" ? "Funciones esenciales" : "Essential Scope" 
                   },
                   { 
                     id: "Growth", 
                     label: "Growth", 
-                    sub: language === "bn" ? "সম্পূর্ণ ফিচার ও অ্যানিমেশন" : language === "es" ? "Alcance comercial completo" : "Full Business Suite" 
+                    sub: isBn ? "সম্পূর্ণ ফিচার ও অ্যানিমেশন" : language === "es" ? "Alcance comercial completo" : "Full Business Suite" 
                   },
                   { 
                     id: "Scale", 
                     label: "Scale", 
-                    sub: language === "bn" ? "কাস্টম পোর্টাল ও ফুল স্টুডিও" : language === "es" ? "Solución a medida y full studio" : "Custom Enterprise" 
+                    sub: isBn ? "কাস্টম পোর্টাল ও ফুল স্টুডিও" : language === "es" ? "Solución a medida y full studio" : "Custom Enterprise" 
                   }
                 ].map((tierItem) => {
                   const isSelected = tier === tierItem.id;
@@ -301,6 +324,10 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
               <div className="space-y-2">
                 {addonsList.map((addon) => {
                   const isChecked = selectedAddons.includes(addon.id);
+                  const addonPriceFormatted = isBn 
+                    ? `+৳${addon.price.bdt.toLocaleString("en-US")}` 
+                    : `+$${addon.price.usd.toLocaleString("en-US")}`;
+
                   return (
                     <button
                       key={addon.id}
@@ -320,7 +347,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                         <span className="text-xs font-medium text-zinc-200">{addon.label}</span>
                       </div>
                       <span className="text-xs font-mono text-emerald-400 font-semibold">
-                        +৳{addon.price.toLocaleString()}
+                        {addonPriceFormatted}
                       </span>
                     </button>
                   );
@@ -331,7 +358,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
             {/* Step 4: Urgency timeline */}
             <div>
               <label className="text-xs font-semibold text-zinc-300 uppercase tracking-wider block mb-3">
-                {language === "bn" ? "৪. ডেলিভারির গতি (Delivery Speed)" : "4. Delivery Speed & Urgency"}
+                {isBn ? "৪. ডেলিভারির গতি (Delivery Speed)" : "4. Delivery Speed & Urgency"}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -345,10 +372,10 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                   }`}
                 >
                   <div className="text-xs font-bold text-white">
-                    {language === "bn" ? "স্ট্যান্ডার্ড গতি" : "Standard Timeline"}
+                    {isBn ? "স্ট্যান্ডার্ড গতি" : "Standard Timeline"}
                   </div>
                   <div className="text-[10px] text-zinc-500">
-                    {language === "bn" ? "ধাপে ধাপে কোয়ালিটি রিভিউ ও রিভিশন" : "Iterative milestones & collaborative reviews"}
+                    {isBn ? "ধাপে ধাপে কোয়ালিটি রিভিউ ও রিভিশন" : "Iterative milestones & collaborative reviews"}
                   </div>
                 </button>
 
@@ -364,10 +391,10 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                 >
                   <div className="text-xs font-bold text-amber-300 flex items-center gap-1">
                     <Zap className="w-3 h-3 text-amber-400" />
-                    <span>{language === "bn" ? "সুপার-ফাস্ট রাশ স্প্রিন্ট (+১৫%)" : "Fast-Track Sprint (+15%)"}</span>
+                    <span>{isBn ? "সুপার-ফাস্ট রাশ স্প্রিন্ট (+১৫%)" : "Fast-Track Sprint (+15%)"}</span>
                   </div>
                   <div className="text-[10px] text-zinc-500">
-                    {language === "bn" ? "জরুরি অগ্রাধিকার ভিত্তিক দ্রুত ডেলিভারি" : "Priority overtime sprint & accelerated launch"}
+                    {isBn ? "জরুরি অগ্রাধিকার ভিত্তিক দ্রুত ডেলিভারি" : "Priority overtime sprint & accelerated launch"}
                   </div>
                 </button>
               </div>
@@ -378,7 +405,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
           <div className="lg:col-span-5 bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 sticky top-24">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
               <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-                {language === "bn" ? "বাজেট সারসংক্ষেপ" : "Scope & Investment Summary"}
+                {isBn ? "বাজেট সারসংক্ষেপ" : "Scope & Investment Summary"}
               </span>
               <span className="text-xs font-medium text-blue-400">
                 Tier: {tier}
@@ -395,7 +422,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                   <span className="text-emerald-400">{estimatedBudgetStr}</span>
                 </div>
                 <span className="text-[11px] text-zinc-500 block mt-1">
-                  {language === "bn" ? "* বিকাশ, নগদ বা ব্যাংকে কিস্তিতে পেমেন্ট সুবিধা" : "* Flexible installment options via bKash, Nagad or Bank"}
+                  {isBn ? "* বিকাশ, নগদ বা ব্যাংকে কিস্তিতে পেমেন্ট সুবিধা" : "* Flexible installment options via Stripe, Card or Wire"}
                 </span>
               </div>
 
@@ -410,7 +437,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
             {/* Scope Included Breakdown */}
             <div className="space-y-2 text-xs text-zinc-400 border-t border-zinc-800 pt-4">
               <div className="font-semibold text-zinc-300 mb-1">
-                {language === "bn" ? "যা যা অন্তর্ভুক্ত থাকবে:" : "Standard Inclusions:"}
+                {isBn ? "যা যা অন্তর্ভুক্ত থাকবে:" : "Standard Inclusions:"}
               </div>
               <div className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -418,15 +445,15 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{selectedAddons.length} {language === "bn" ? "টি অতিরিক্ত ফিচার" : "Strategic add-on capabilities"}</span>
+                <span>{selectedAddons.length} {isBn ? "টি অতিরিক্ত ফিচার" : "Strategic add-on capabilities"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{language === "bn" ? "মোবাইল রেসপনসিভ ও WhatsApp সাপোর্ট" : "Mobile-first responsive UX & WhatsApp direct support"}</span>
+                <span>{isBn ? "মোবাইল রেসপনসিভ ও WhatsApp সাপোর্ট" : "Mobile-first responsive UX & WhatsApp direct support"}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span>{language === "bn" ? "১০০% সোর্স কোড ও কপিরাইট ওনারশিপ" : "100% Source code, design files & copyright transfer"}</span>
+                <span>{isBn ? "১০০% সোর্স কোড ও কপিরাইট ওনারশিপ" : "100% Source code, design files & copyright transfer"}</span>
               </div>
             </div>
 
@@ -458,7 +485,7 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                 <svg className="w-3.5 h-3.5 fill-[#25D366]" viewBox="0 0 24 24">
                   <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.77.813 2.796.814 3.183 0 5.768-2.587 5.768-5.766 0-3.18-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.519-4.481 10-10 10-1.745 0-3.385-.45-4.814-1.239l-5.186 1.36 1.385-5.06c-.868-1.488-1.385-3.218-1.385-5.061 0-5.519 4.481-10 10-10s10 4.481 10 10z"/>
                 </svg>
-                <span>{language === "bn" ? "হোয়াটসঅ্যাপে তাৎক্ষণিক আলোচনা" : "Direct WhatsApp Discussion"}</span>
+                <span>{isBn ? "হোয়াটসঅ্যাপে তাৎক্ষণিক আলোচনা" : "Direct WhatsApp Discussion"}</span>
               </a>
 
               <button
@@ -470,8 +497,8 @@ export const QuoteCalculator: React.FC<QuoteCalculatorProps> = ({
                 <Download className="w-3 h-3 text-zinc-400" />
                 <span>
                   {downloadSuccess 
-                    ? (language === "bn" ? "ডকুমেন্ট ডাউনলোড সম্পন্ন!" : "Quote Exported Successfully!") 
-                    : (language === "bn" ? "কোট ডকুমেন্ট (.JSON) ডাউনলোড" : "Export Scope Document (.JSON)")}
+                    ? (isBn ? "ডকুমেন্ট ডাউনলোড সম্পন্ন!" : "Quote Exported Successfully!") 
+                    : (isBn ? "কোট ডকুমেন্ট (.JSON) ডাউনলোড" : "Export Scope Document (.JSON)")}
                 </span>
               </button>
             </div>

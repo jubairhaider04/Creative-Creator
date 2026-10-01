@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { useLanguage } from "./context/LanguageContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AuthPage } from "./components/AuthPage";
 import { ClientDashboard } from "./components/ClientDashboard";
@@ -32,6 +33,7 @@ import {
 // Full Bongio Digital Homepage
 function HomePage() {
   const { user, profile, logout } = useAuth();
+  const { language, formatDualPrice } = useLanguage();
 
   // Navigation & Category state
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | "All">("All");
@@ -68,8 +70,24 @@ function HomePage() {
   // Contact form pre-fill parameters
   const [inquiryBrief, setInquiryBrief] = useState<string>("");
   const [inquiryServices, setInquiryServices] = useState<string[]>(["Web Development"]);
-  const [inquiryBudget, setInquiryBudget] = useState<string>("৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - মোস্ট পপুলার)");
-  const [inquiryTimeline, setInquiryTimeline] = useState<string>("১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)");
+  const [inquiryBudget, setInquiryBudget] = useState<string>(() => 
+    language === "bn" ? "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - সবচেয়ে জনপ্রিয়)" : "$250 - $500 (Growth Tier - Popular)"
+  );
+  const [inquiryTimeline, setInquiryTimeline] = useState<string>(() =>
+    language === "bn" ? "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)" : "10 - 14 Days (Standard Sprint)"
+  );
+
+  // Keep default budget aligned if user changes language before selecting a package
+  useEffect(() => {
+    if (!inquiryBrief) {
+      setInquiryBudget(
+        language === "bn" ? "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - সবচেয়ে জনপ্রিয়)" : "$250 - $500 (Growth Tier - Popular)"
+      );
+      setInquiryTimeline(
+        language === "bn" ? "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)" : "10 - 14 Days (Standard Sprint)"
+      );
+    }
+  }, [language, inquiryBrief]);
 
   // Handlers
   const handleSelectServiceForInquiry = (category: ServiceCategory) => {
@@ -81,22 +99,27 @@ function HomePage() {
   };
 
   const handleSelectPlanForInquiry = (plan: PricingPlan) => {
-    const planNameBn = plan.bn?.name ? ` / ${plan.bn.name}` : "";
-    setInquiryBrief(`[Package Inquiry: ${plan.name}${planNameBn}]\nInvestment: ${plan.formattedTk} BDT\nDelivery Timeline: ${plan.turnaroundDays}\nPayment Terms: ${plan.paymentTerms}\nKey Requirements: `);
+    const isBn = language === "bn";
+    const planName = isBn && plan.bn?.name ? plan.bn.name : plan.name;
+    const priceFormatted = formatDualPrice(plan.price);
+    const turnaround = isBn && plan.bn?.turnaroundDays ? plan.bn.turnaroundDays : plan.turnaroundDays;
+    const payment = isBn && plan.bn?.paymentTerms ? plan.bn.paymentTerms : plan.paymentTerms;
+
+    setInquiryBrief(`[Package Inquiry: ${planName}]\nInvestment: ${priceFormatted}\nDelivery Timeline: ${turnaround}\nPayment Terms: ${payment}\nKey Requirements: `);
     setInquiryServices(["Web Development", "Graphic Design"]);
     setInquiryBudget(
       plan.id === "starter" 
-        ? "৳ 10,000 - ৳ 25,000 BDT (Starter Tier)"
+        ? (isBn ? "৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার প্যাকেজ)" : "$100 - $250 (Starter Tier)")
         : plan.id === "growth"
-        ? "৳ 25,000 - ৳ 50,000 BDT (Growth Tier - Popular)"
-        : "৳ 50,000 - ৳ 100,000 BDT (Scale Tier)"
+        ? (isBn ? "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ প্যাকেজ - সবচেয়ে জনপ্রিয়)" : "$250 - $500 (Growth Tier - Popular)")
+        : (isBn ? "৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল প্যাকেজ)" : "$500 - $1,000 (Scale Tier)")
     );
     setInquiryTimeline(
       plan.id === "starter"
-        ? "5 - 7 Days (Rush Delivery)"
+        ? (isBn ? "৫-৭ দিন (জরুরি / রাশ ডেলিভারি)" : "5 - 7 Days (Rush Delivery)")
         : plan.id === "growth"
-        ? "10 - 14 Days (Standard Sprint)"
-        : "3 - 4 Weeks (Comprehensive Project)"
+        ? (isBn ? "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)" : "10 - 14 Days (Standard Sprint)")
+        : (isBn ? "৩-৪ সপ্তাহ (কম্প্রিহেনসিভ প্রজেক্ট)" : "3 - 4 Weeks (Comprehensive Project)")
     );
 
     const contactElem = document.getElementById("contact");
@@ -112,10 +135,14 @@ function HomePage() {
     estimatedBudget: string;
     estimatedWeeks: string;
   }) => {
+    const isBn = language === "bn";
     setInquiryServices(config.services);
     setInquiryBudget(config.estimatedBudget);
     setInquiryTimeline(config.estimatedWeeks);
-    setInquiryBrief(`[ক্যালকুলেটর এস্টিমেট - প্যাকেজ: ${config.tier}]\nসার্ভিসসমূহ: ${config.services.join(", ")}\nঅ্যাড-অন ফিচার: ${config.addons.join(", ")}\nআনুমানিক ইনভেস্টমেন্ট: ${config.estimatedBudget}\nডেলিভারি সময়: ${config.estimatedWeeks}`);
+    setInquiryBrief(isBn
+      ? `[ক্যালকুলেটর এস্টিমেট - প্যাকেজ: ${config.tier}]\nসার্ভিসসমূহ: ${config.services.join(", ")}\nঅ্যাড-অন ফিচার: ${config.addons.join(", ")}\nআনুমানিক ইনভেস্টমেন্ট: ${config.estimatedBudget}\nডেলিভারি সময়: ${config.estimatedWeeks}`
+      : `[Calculator Scope Estimate - Tier: ${config.tier}]\nServices: ${config.services.join(", ")}\nAdd-ons: ${config.addons.join(", ")}\nEstimated Investment: ${config.estimatedBudget}\nDelivery Sprint: ${config.estimatedWeeks}`
+    );
     
     const contactElem = document.getElementById("contact");
     if (contactElem) {

@@ -1,3 +1,5 @@
+import { DualPrice } from "./data/pricingConfig";
+
 export type ServiceCategory = "Web Development" | "Content Creation" | "Video Editing" | "Graphic Design";
 
 export interface Project {
@@ -34,6 +36,7 @@ export interface ServicePillar {
   description: string;
   accentColor: string; // e.g. blue, emerald, purple, amber
   startingPrice: string;
+  price?: DualPrice;
   turnaroundTime: string;
   keyFeatures: string[];
   deliverables: string[];

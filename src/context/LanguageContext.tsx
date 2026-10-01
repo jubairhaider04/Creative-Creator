@@ -1,4 +1,16 @@
 import React, { createContext, useContext, useState } from "react";
+import { 
+  CurrencyCode, 
+  DualPrice, 
+  getCurrencyForLanguage, 
+  getCurrencySymbol, 
+  formatPrice, 
+  formatDualPrice, 
+  formatPeriod, 
+  formatStartingFrom, 
+  formatPriceRange, 
+  formatDisplayBudget 
+} from "../utils/pricingFormatter";
 
 export type Language = "en" | "bn" | "es";
 
@@ -142,7 +154,7 @@ const translations: Record<Language, Translations> = {
   en: {
     // Navbar
     navServices: "Services",
-    navPricing: "Packages & Pricing (৳)",
+    navPricing: "Packages & Pricing ($)",
     navShowcase: "Showcase",
     navQuoteBuilder: "Quote Builder",
     navFaq: "FAQ",
@@ -171,14 +183,14 @@ const translations: Record<Language, Translations> = {
     heroViewCaseStudies: "View Case Studies",
     heroMetric1Label: "High-Impact Deliverables",
     heroMetric2Label: "Client Satisfaction Rating",
-    heroMetric3Label: "Client Revenue & Pipeline Growth (BDT)",
-    heroMetric3Value: "৳ 50+ Cr BDT",
+    heroMetric3Label: "Client Revenue & Growth ($)",
+    heroMetric3Value: "$45M+",
     heroMetric4Label: "Average Web & Asset Delivery Speed",
 
     // Pricing
-    pricingBadge: "Tailored Packages & Transparent Pricing (BDT / ৳)",
+    pricingBadge: "Tailored Packages & Transparent Pricing (USD / $)",
     pricingTitle: "Transparent Packages & Pricing.",
-    pricingSubtitle: "No hidden fees. Choose the ideal tier for your business with fast turnaround, official invoice, and flexible installment options via bKash, Nagad, and Bank Transfer.",
+    pricingSubtitle: "No hidden fees. Choose the ideal tier for your business with fast turnaround, official invoice, and secure payment via Stripe, Credit Cards, Wire, and Bank Transfer.",
     pricingDeliveryLabel: "Delivery:",
     pricingPaymentLabel: "Payment:",
     pricingIdealForLabel: "Ideal For:",
@@ -189,7 +201,7 @@ const translations: Record<Language, Translations> = {
     pricingCustomTitle: "Need a custom scope or specific budget?",
     pricingCustomSubtitle: "Use our interactive Quote Calculator to configure your exact features and receive an instant estimate.",
     pricingOpenCalc: "Open Custom Quote Calculator",
-    pricingPaymentTitle: "Accepted Bangladeshi & International Payment Methods",
+    pricingPaymentTitle: "Accepted Global & Local Payment Methods",
     pricingPaymentSubtitle: "100% official invoice and receipt provided for every project",
 
     // Services
@@ -222,7 +234,7 @@ const translations: Record<Language, Translations> = {
     // Quote Calculator
     calcBadge: "Transparent Pricing Engine",
     calcTitle: "Interactive Scope & Budget Calculator",
-    calcSubtitle: "Select disciplines, project complexity, and strategic add-ons to receive an instant, accurate investment breakdown and sprint estimate in BDT (৳).",
+    calcSubtitle: "Select disciplines, project complexity, and strategic add-ons to receive an instant, accurate investment breakdown and sprint estimate in USD ($).",
     calcSelectDisciplines: "1. Select Service Disciplines",
     calcSelectComplexity: "2. Select Project Scope & Complexity",
     calcSelectAddons: "3. Optional Strategic Add-ons",
@@ -412,7 +424,7 @@ const translations: Record<Language, Translations> = {
   es: {
     // Navbar
     navServices: "Servicios",
-    navPricing: "Paquetes y Precios (৳)",
+    navPricing: "Paquetes y Precios ($)",
     navShowcase: "Portafolio",
     navQuoteBuilder: "Cotizador",
     navFaq: "Preguntas Frecuentes",
@@ -441,12 +453,12 @@ const translations: Record<Language, Translations> = {
     heroViewCaseStudies: "Ver Casos de Estudio",
     heroMetric1Label: "Entregables de Alto Impacto",
     heroMetric2Label: "Calificación de Satisfacción",
-    heroMetric3Label: "Valor de Pipeline Generado",
-    heroMetric3Value: "৳ 50+ Cr BDT",
+    heroMetric3Label: "Crecimiento e Ingresos ($)",
+    heroMetric3Value: "$45M+",
     heroMetric4Label: "Velocidad de Carga y Entrega",
 
     // Pricing
-    pricingBadge: "Paquetes Transparentes y Precios (BDT / ৳)",
+    pricingBadge: "Paquetes Transparentes y Precios (USD / $)",
     pricingTitle: "Paquetes y Precios Transparentes.",
     pricingSubtitle: "Sin costos ocultos. Elija el paquete ideal para su negocio con entrega rápida, factura oficial y facilidades de pago en cuotas.",
     pricingDeliveryLabel: "Entrega:",
@@ -459,7 +471,7 @@ const translations: Record<Language, Translations> = {
     pricingCustomTitle: "¿Tiene requerimientos personalizados o presupuesto específico?",
     pricingCustomSubtitle: "Utilice nuestro cotizador interactivo para agregar características a medida y obtener un presupuesto instantáneo.",
     pricingOpenCalc: "Abrir Cotizador Personalizado",
-    pricingPaymentTitle: "Métodos de Pago Aceptados en Bangladesh e Internacionales",
+    pricingPaymentTitle: "Métodos de Pago Internacionales y Locales Aceptados",
     pricingPaymentSubtitle: "100% de facturación oficial y recibo emitido por cada proyecto",
 
     // Services
@@ -492,7 +504,7 @@ const translations: Record<Language, Translations> = {
     // Quote Calculator
     calcBadge: "Motor de Precios Transparente",
     calcTitle: "Calculadora Interactiva de Alcance y Presupuesto",
-    calcSubtitle: "Seleccione disciplinas, complejidad del proyecto y complementos estratégicos para obtener un desglose instantáneo en BDT (৳).",
+    calcSubtitle: "Seleccione disciplinas, complejidad del proyecto y complementos estratégicos para obtener un desglose instantáneo en USD ($).",
     calcSelectDisciplines: "1. Seleccione las Disciplinas",
     calcSelectComplexity: "2. Seleccione el Alcance y Complejidad",
     calcSelectAddons: "3. Complementos Estratégicos",
@@ -546,9 +558,17 @@ const translations: Record<Language, Translations> = {
   }
 };
 
-interface LanguageContextType {
+export interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
+  currency: CurrencyCode;
+  currencySymbol: string;
+  formatPrice: (amount: number) => string;
+  formatDualPrice: (price: DualPrice) => string;
+  formatPeriod: (period: "month" | "year" | "package") => string;
+  formatStartingFrom: (price: DualPrice) => string;
+  formatPriceRange: (min: DualPrice, max: DualPrice) => string;
+  formatDisplayBudget: (rawBudget: string | undefined | null) => string;
   t: Translations;
   availableLanguages: { code: Language; label: string; flag: string }[];
 }
@@ -556,10 +576,10 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Default strictly to English ("en")
+  // Default strictly to English ("en"), restoring from "bongio_language" or "cc_preferred_language"
   const [language, setLanguageState] = useState<Language>(() => {
     try {
-      const saved = localStorage.getItem("cc_preferred_language") as Language;
+      const saved = (localStorage.getItem("bongio_language") || localStorage.getItem("cc_preferred_language")) as Language;
       if (saved === "en" || saved === "bn" || saved === "es") {
         return saved;
       }
@@ -572,6 +592,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     try {
+      localStorage.setItem("bongio_language", lang);
       localStorage.setItem("cc_preferred_language", lang);
     } catch {
       // safe fallback
@@ -584,9 +605,21 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     { code: "es", label: "Español", flag: "🇪🇸" },
   ];
 
-  const value = {
+  // Currency follows language automatically
+  const currency: CurrencyCode = getCurrencyForLanguage(language);
+  const currencySymbol = getCurrencySymbol(language);
+
+  const value: LanguageContextType = {
     language,
     setLanguage,
+    currency,
+    currencySymbol,
+    formatPrice: (amount: number) => formatPrice(amount, language),
+    formatDualPrice: (price: DualPrice) => formatDualPrice(price, language),
+    formatPeriod: (period: "month" | "year" | "package") => formatPeriod(period, language),
+    formatStartingFrom: (price: DualPrice) => formatStartingFrom(price, language),
+    formatPriceRange: (min: DualPrice, max: DualPrice) => formatPriceRange(min, max, language),
+    formatDisplayBudget: (rawBudget: string | undefined | null) => formatDisplayBudget(rawBudget, language),
     t: translations[language] || translations.en,
     availableLanguages
   };

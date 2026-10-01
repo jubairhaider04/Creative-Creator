@@ -22,7 +22,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
   onSelectPlanForInquiry,
   onOpenQuoteCalculator
 }) => {
-  const { t, language } = useLanguage();
+  const { t, language, currency, formatDualPrice } = useLanguage();
   const [selectedPlanId, setSelectedPlanId] = useState<string>("growth");
 
   return (
@@ -68,7 +68,9 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             const features = localized?.features || plan.features;
             const bonuses = localized?.bonuses || plan.bonuses;
             const ctaText = localized?.ctaText || plan.ctaText;
-            const whatsAppMessage = localized?.whatsAppMessage || plan.whatsAppMessage;
+            const whatsAppMessage = language === "bn" 
+              ? (localized?.whatsAppMessage || plan.whatsAppMessage)
+              : `Hello Bongio Digital! I am interested in the ${name} (${formatDualPrice(plan.price)} USD) for my business and would like to start.`;
 
             return (
               <div
@@ -110,16 +112,16 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
                       {tagline}
                     </p>
 
-                    {/* Price in Bangla TK (BDT) */}
+                    {/* Price in Active Currency (USD for English, BDT for Bangla) */}
                     <div className="flex items-baseline gap-2 mb-2">
                       <span className="text-4xl sm:text-5xl font-black text-white tracking-tight">
-                        {plan.formattedTk}
+                        {formatDualPrice(plan.price)}
                       </span>
                       <span className="text-xs font-semibold text-zinc-400 uppercase">
-                        BDT (৳)
+                        {currency === "BDT" ? "BDT (৳)" : "USD ($)"}
                       </span>
                       <span className="text-xs text-zinc-500 line-through ml-1">
-                        {plan.regularPriceTk}
+                        {formatDualPrice(plan.regularPrice)}
                       </span>
                     </div>
 
