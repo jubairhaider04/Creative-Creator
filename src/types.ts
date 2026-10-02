@@ -1,31 +1,55 @@
 import { DualPrice } from "./data/pricingConfig";
 
-export type ServiceCategory = "Web Development" | "Content Creation" | "Video Editing" | "Graphic Design";
+export type ServiceCategory = "Web Development" | "Content Creation" | "Video Editing" | "Graphic Design" | "AI Automation" | "Motion Graphics" | "Digital Marketing";
+
+export interface ProjectGalleryItem {
+  url: string;
+  alt?: string;
+  caption?: string;
+}
+
+export interface ProjectResultMetric {
+  label: string;
+  value: string;
+  description?: string;
+}
 
 export interface Project {
   id: string;
   title: string;
-  subtitle: string;
-  category: ServiceCategory;
-  client: string;
-  year: string;
-  thumbnail: string;
-  galleryImages: string[];
-  videoPreviewUrl?: string;
-  videoDuration?: string;
-  tags: string[];
-  metrics: {
-    label: string;
-    value: string;
-    description: string;
-  }[];
-  challenge: string;
-  solution: string;
-  deliverables: string[];
-  techStack: string[];
-  liveUrl?: string;
+  slug?: string;
+  subtitle?: string;
+  description?: string;
+  category: string;
+  clientName?: string;
+  client?: string; // legacy alias
+  year: number | string;
   featured?: boolean;
+  isPublished?: boolean;
+  thumbnailUrl?: string;
+  thumbnail: string; // fallback / alias
+  heroImageUrl?: string;
+  gallery?: ProjectGalleryItem[];
+  galleryImages?: string[]; // legacy alias
+  videoUrl?: string;
+  videoPreviewUrl?: string; // legacy alias
+  videoDuration?: string;
+  liveUrl?: string;
+  services?: string[];
+  technologies?: string[];
+  techStack?: string[]; // legacy alias
+  deliverables?: string[];
+  challenge?: string;
+  solution?: string;
+  results?: ProjectResultMetric[];
+  metrics?: ProjectResultMetric[]; // legacy alias
+  tags?: string[];
+  sortOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
+
+export type PortfolioProject = Project;
 
 export interface ServicePillar {
   id: string;

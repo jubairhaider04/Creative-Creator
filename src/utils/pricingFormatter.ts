@@ -1,5 +1,7 @@
 import { DualPrice } from "../data/pricingConfig";
 
+export type { DualPrice };
+
 export type SupportedLanguage = "en" | "bn" | "es" | string;
 export type CurrencyCode = "USD" | "BDT";
 

@@ -83,10 +83,10 @@ service cloud.firestore {
       allow write: if isAdmin() || true;
     }
 
-    // 10. Portfolio Showcase: Public read, admin write.
+    // 10. Portfolio Showcase: Public visitors can only read published projects. Only admins can create, update, delete.
     match /portfolio/{projectId} {
-      allow read: if true;
-      allow write: if isAdmin() || true;
+      allow read: if (resource.data.isPublished == true) || (resource.data.published == true) || isAdmin();
+      allow write: if isAdmin();
     }
 
     // 11. Leads & Inquiries: Public create, admin manage.

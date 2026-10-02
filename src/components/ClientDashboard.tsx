@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { 
   LayoutDashboard, 
   FolderGit2, 
@@ -53,6 +54,7 @@ import {
 
 export const ClientDashboard: React.FC = () => {
   const { user, profile, logout, updateProfile, isAdmin } = useAuth();
+  const { language, formatDisplayBudget } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -83,7 +85,9 @@ export const ClientDashboard: React.FC = () => {
   const [reqService, setReqService] = useState("Web Development");
   const [reqTitle, setReqTitle] = useState("");
   const [reqDesc, setReqDesc] = useState("");
-  const [reqBudget, setReqBudget] = useState("৳ 25,000 - ৳ 50,000 BDT (Growth Tier)");
+  const [reqBudget, setReqBudget] = useState(() => 
+    language === "bn" ? "৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ)" : "$250 - $500 (Growth Tier)"
+  );
   const [reqDeadline, setReqDeadline] = useState("10 - 14 Days");
   const [reqPriority, setReqPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
   const [reqFiles, setReqFiles] = useState<File[]>([]);
@@ -595,7 +599,7 @@ export const ClientDashboard: React.FC = () => {
                       <div key={r.id} className="p-3 rounded-xl bg-zinc-950/60 border border-zinc-800/80 flex items-center justify-between text-xs">
                         <div>
                           <div className="font-semibold text-white">{r.projectTitle}</div>
-                          <div className="text-[10px] text-zinc-400">{r.service} • {r.budget}</div>
+                          <div className="text-[10px] text-zinc-400">{r.service} • {formatDisplayBudget(r.budget)}</div>
                         </div>
                         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-500/30 capitalize">
                           {r.status.replace("_", " ")}
@@ -690,7 +694,7 @@ export const ClientDashboard: React.FC = () => {
                       </div>
                       <div>
                         <span className="text-[10px] text-zinc-500 block">Budget</span>
-                        <span className="text-emerald-400 font-mono font-semibold">{p.budget}</span>
+                        <span className="text-emerald-400 font-mono font-semibold">{formatDisplayBudget(p.budget)}</span>
                       </div>
                       <div>
                         <span className="text-[10px] text-zinc-500 block">Assigned Lead</span>
@@ -755,7 +759,7 @@ export const ClientDashboard: React.FC = () => {
                           <div className="text-[10px] text-zinc-500 line-clamp-1">{r.description}</div>
                         </td>
                         <td className="py-3 px-4 text-zinc-300">{r.service}</td>
-                        <td className="py-3 px-4 font-mono text-zinc-300">{r.budget}</td>
+                        <td className="py-3 px-4 font-mono text-zinc-300">{formatDisplayBudget(r.budget)}</td>
                         <td className="py-3 px-4">
                           <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-zinc-800 text-zinc-300">
                             {r.priority}
@@ -843,7 +847,7 @@ export const ClientDashboard: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-zinc-300 mb-1" htmlFor="req-budget">
-                    Budget Bracket
+                    {language === "bn" ? "বাজেট ব্র্যাকেট" : "Budget Bracket"}
                   </label>
                   <select
                     id="req-budget"
@@ -851,10 +855,21 @@ export const ClientDashboard: React.FC = () => {
                     onChange={(e) => setReqBudget(e.target.value)}
                     className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-blue-500"
                   >
-                    <option value="৳ 10,000 - ৳ 25,000 BDT (Starter)">৳ 10,000 - ৳ 25,000 (Starter)</option>
-                    <option value="৳ 25,000 - ৳ 50,000 BDT (Growth Tier)">৳ 25,000 - ৳ 50,000 (Growth)</option>
-                    <option value="৳ 50,000 - ৳ 100,000 BDT (Scale)">৳ 50,000 - ৳ 100,000 (Scale)</option>
-                    <option value="৳ 100,000+ BDT (Enterprise)">৳ 100,000+ (Enterprise)</option>
+                    {language === "bn" ? (
+                      <>
+                        <option value="৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার)">৳ ১০,০০০ - ৳ ২৫,০০০ (স্টার্টার)</option>
+                        <option value="৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ)">৳ ২৫,০০০ - ৳ ৫০,০০০ (গ্রোথ)</option>
+                        <option value="৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল)">৳ ৫০,০০০ - ৳ ১,০০,০০০ (স্কেল)</option>
+                        <option value="৳ ১,০০,০০০+ (এন্টারপ্রাইজ)">৳ ১,০০,০০০+ (এন্টারপ্রাইজ)</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="$100 - $250 (Starter Tier)">$100 - $250 (Starter Tier)</option>
+                        <option value="$250 - $500 (Growth Tier)">$250 - $500 (Growth Tier)</option>
+                        <option value="$500 - $1,000 (Scale Tier)">$500 - $1,000 (Scale Tier)</option>
+                        <option value="$1,000+ (Enterprise Full Studio)">$1,000+ (Enterprise Full Studio)</option>
+                      </>
+                    )}
                   </select>
                 </div>
 

@@ -74,7 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      const sections = ["services", "pricing", "showcase", "calculator", "faq", "testimonials", "insights", "contact"];
+      const sections = ["home", "services", "work", "pricing", "showcase", "calculator", "faq", "testimonials", "insights", "contact"];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -116,15 +116,41 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const navLinks = [
-    { label: t.navServices, href: "#services", id: "services" },
-    { label: t.navPricing, href: "#pricing", id: "pricing" },
-    { label: t.navShowcase, href: "#showcase", id: "showcase" },
-    { label: t.navQuoteBuilder, href: "#calculator", id: "calculator" },
-    { label: t.navFaq, href: "#faq", id: "faq" },
-    { label: t.navTestimonials, href: "#testimonials", id: "testimonials" },
-    { label: t.navInsights, href: "#insights", id: "insights" },
-    { label: t.navContact, href: "#contact", id: "contact" },
+    { label: "Home", href: "/", id: "home" },
+    { label: t.navServices || "Services", href: "#services", id: "services" },
+    { label: "Work", href: "#work", id: "work" },
+    { label: "Portfolio", href: "#showcase", id: "showcase" },
+    { label: t.navPricing || "Pricing", href: "#pricing", id: "pricing" },
+    { label: "About", href: "#faq", id: "faq" },
+    { label: t.navContact || "Contact", href: "#contact", id: "contact" },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, id: string) => {
+    if (href === "/") {
+      if (window.location.pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setActiveSection("home");
+      } else {
+        navigate("/");
+      }
+      return;
+    }
+    if (href.startsWith("#")) {
+      if (window.location.pathname !== "/") {
+        e.preventDefault();
+        navigate("/" + href);
+        return;
+      }
+      const targetId = href.replace("#", "");
+      const elem = document.getElementById(targetId);
+      if (elem) {
+        e.preventDefault();
+        elem.scrollIntoView({ behavior: "smooth" });
+        setActiveSection(id);
+      }
+    }
+  };
 
   const currentLangObj = availableLanguages.find(l => l.code === language) || availableLanguages[0];
   const activeUser = profile || (propUser ? {
@@ -177,6 +203,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <a
                   key={link.id}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href, link.id)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                     isActive
                       ? "bg-blue-600 text-white shadow-sm"
@@ -459,7 +486,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               <a
                 key={link.id}
                 href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  handleNavClick(e, link.href, link.id);
+                }}
                 className="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-900/50 hover:bg-zinc-800 text-zinc-200 text-sm font-medium border border-zinc-800/60"
               >
                 <span>{link.label}</span>

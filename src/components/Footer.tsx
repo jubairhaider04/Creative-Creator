@@ -95,13 +95,15 @@ export const Footer: React.FC = () => {
               Resources & Work
             </h4>
             <ul className="space-y-2 text-zinc-400">
+              <li><a href="#work" className="hover:text-white transition-colors">Selected Work (#work)</a></li>
+              <li><a href="/work" className="hover:text-white transition-colors">All Projects Archive (/work)</a></li>
               <li><a href="#showcase" className="hover:text-white transition-colors">Case Study Gallery</a></li>
               <li><a href="#testimonials" className="hover:text-white transition-colors">Verified Client Outcomes</a></li>
               <li><a href="#insights" className="hover:text-white transition-colors">Engineering Insights</a></li>
               <li><a href="#contact" className="hover:text-white transition-colors">Project Inquiries</a></li>
               <li>
                 <a 
-                  href="https://wa.me/8801676056414?text=Hi%2C%20I%20found%20your%20portfolio%20on%20Creative%20Creator%20and%20would%20like%20to%20discuss%20a%20project!" 
+                  href="https://wa.me/8801676056414?text=Hi%2C%20I%20found%20your%20portfolio%20on%20Bongio%20Digital%20and%20would%20like%20to%20discuss%20a%20project!" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 font-medium"

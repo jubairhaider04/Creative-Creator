@@ -89,7 +89,8 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <section 
-      id="hero"
+      id="home"
+      data-section="hero"
       className="relative min-h-screen pt-32 pb-20 flex flex-col justify-center overflow-hidden"
     >
       {/* Background ambient lighting and subtle grid */}

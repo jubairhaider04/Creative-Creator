@@ -3,8 +3,12 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import dotenv from "dotenv";
+import { PORTFOLIO_PROJECTS } from "./src/data/portfolioData";
+import { Project } from "./src/types";
 
 dotenv.config();
+
+let portfolioDatabase: Project[] = JSON.parse(JSON.stringify(PORTFOLIO_PROJECTS));
 
 interface Lead {
   id: string;
@@ -614,6 +618,200 @@ Return a structured JSON with:
         { country: "Australia & Others", share: 17, flag: "🌏" }
       ]
     });
+  });
+
+  // ==========================================
+  // PORTFOLIO REST API ENDPOINTS
+  // ==========================================
+
+  // GET /api/portfolio - List published projects (or all projects if admin)
+  app.get("/api/portfolio", (req, res) => {
+    const { category, search, all } = req.query;
+    let results = portfolioDatabase.slice();
+
+    // Unless explicitly requested by admin, return only published projects
+    if (all !== "true") {
+      results = results.filter((p) => p.isPublished !== false);
+    }
+
+    // Category filter
+    if (category && typeof category === "string" && category.toLowerCase() !== "all") {
+      results = results.filter((p) => 
+        p.category?.toLowerCase() === category.toLowerCase() ||
+        p.services?.some(s => s.toLowerCase().includes(category.toLowerCase()))
+      );
+    }
+
+    // Search query filter
+    if (search && typeof search === "string" && search.trim()) {
+      const q = search.toLowerCase().trim();
+      results = results.filter((p) => 
+        p.title.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.subtitle?.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q) ||
+        p.services?.some(s => s.toLowerCase().includes(q)) ||
+        p.technologies?.some(t => t.toLowerCase().includes(q)) ||
+        p.tags?.some(tag => tag.toLowerCase().includes(q))
+      );
+    }
+
+    // Sort by sortOrder ascending, then by year descending
+    results.sort((a, b) => {
+      const orderA = a.sortOrder !== undefined ? a.sortOrder : 999;
+      const orderB = b.sortOrder !== undefined ? b.sortOrder : 999;
+      if (orderA !== orderB) return orderA - orderB;
+      const yearA = typeof a.year === "number" ? a.year : parseInt(String(a.year), 10) || 0;
+      const yearB = typeof b.year === "number" ? b.year : parseInt(String(b.year), 10) || 0;
+      return yearB - yearA;
+    });
+
+    return res.json({ projects: results, total: results.length });
+  });
+
+  // GET /api/portfolio/featured - Returns the top featured project
+  app.get("/api/portfolio/featured", (_req, res) => {
+    const published = portfolioDatabase.filter((p) => p.isPublished !== false);
+    const featured = published.filter((p) => p.featured === true);
+    
+    // Sort by sortOrder
+    featured.sort((a, b) => (a.sortOrder ?? 999) - (b.sortOrder ?? 999));
+    published.sort((a, b) => (a.sortOrder ?? 999) - (b.sortOrder ?? 999));
+
+    const selected = featured[0] || published[0] || null;
+    if (!selected) {
+      return res.status(404).json({ error: "No projects available" });
+    }
+    return res.json({ project: selected });
+  });
+
+  // GET /api/portfolio/:slug - Get single project by slug or ID
+  app.get("/api/portfolio/:slug", (req, res) => {
+    const { slug } = req.params;
+    const project = portfolioDatabase.find(
+      (p) => (p.slug && p.slug.toLowerCase() === slug.toLowerCase()) || p.id === slug
+    );
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    return res.json({ project });
+  });
+
+  // POST /api/portfolio - Create new project (Admin)
+  app.post("/api/portfolio", (req, res) => {
+    const data = req.body;
+    if (!data.title) {
+      return res.status(400).json({ error: "Project title is required" });
+    }
+
+    const titleSlug = data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const newProject: Project = {
+      id: data.id || `proj-${Date.now()}`,
+      title: data.title,
+      slug: titleSlug,
+      subtitle: data.subtitle || "",
+      description: data.description || "",
+      category: data.category || "Web Development",
+      clientName: data.clientName || data.client || "Confidential",
+      client: data.clientName || data.client || "Confidential",
+      year: data.year ? (typeof data.year === "string" ? parseInt(data.year, 10) || 2025 : data.year) : 2026,
+      featured: Boolean(data.featured),
+      isPublished: data.isPublished !== undefined ? Boolean(data.isPublished) : true,
+      thumbnailUrl: data.thumbnailUrl || data.thumbnail || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&auto=format&fit=crop&q=80",
+      thumbnail: data.thumbnailUrl || data.thumbnail || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&auto=format&fit=crop&q=80",
+      heroImageUrl: data.heroImageUrl || data.thumbnailUrl || data.thumbnail || "",
+      gallery: Array.isArray(data.gallery) ? data.gallery : [],
+      galleryImages: Array.isArray(data.gallery) ? data.gallery.map((g: any) => g.url) : (data.galleryImages || []),
+      videoUrl: data.videoUrl || data.videoPreviewUrl || "",
+      videoPreviewUrl: data.videoUrl || data.videoPreviewUrl || "",
+      videoDuration: data.videoDuration || "",
+      liveUrl: data.liveUrl || "",
+      services: Array.isArray(data.services) ? data.services : [data.category || "Web Development"],
+      technologies: Array.isArray(data.technologies) ? data.technologies : (data.techStack || []),
+      techStack: Array.isArray(data.technologies) ? data.technologies : (data.techStack || []),
+      challenge: data.challenge || "",
+      solution: data.solution || "",
+      results: Array.isArray(data.results) ? data.results : (data.metrics || []),
+      metrics: Array.isArray(data.results) ? data.results : (data.metrics || []),
+      tags: Array.isArray(data.tags) ? data.tags : [],
+      sortOrder: typeof data.sortOrder === "number" ? data.sortOrder : portfolioDatabase.length + 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    portfolioDatabase.push(newProject);
+    return res.status(201).json({ success: true, project: newProject });
+  });
+
+  // PATCH /api/portfolio/:id - Update existing project (Admin)
+  app.patch("/api/portfolio/:id", (req, res) => {
+    const { id } = req.params;
+    const index = portfolioDatabase.findIndex((p) => p.id === id || p.slug === id);
+    if (index === -1) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    const updates = req.body;
+    const existing = portfolioDatabase[index];
+
+    const updated: Project = {
+      ...existing,
+      ...updates,
+      id: existing.id,
+      thumbnail: updates.thumbnailUrl || updates.thumbnail || existing.thumbnail,
+      thumbnailUrl: updates.thumbnailUrl || updates.thumbnail || existing.thumbnailUrl,
+      heroImageUrl: updates.heroImageUrl || existing.heroImageUrl,
+      clientName: updates.clientName || updates.client || existing.clientName,
+      client: updates.clientName || updates.client || existing.client,
+      techStack: updates.technologies || updates.techStack || existing.techStack,
+      metrics: updates.results || updates.metrics || existing.metrics,
+      updatedAt: new Date().toISOString()
+    };
+
+    portfolioDatabase[index] = updated;
+    return res.json({ success: true, project: updated });
+  });
+
+  // DELETE /api/portfolio/:id - Delete / archive project (Admin)
+  app.delete("/api/portfolio/:id", (req, res) => {
+    const { id } = req.params;
+    const index = portfolioDatabase.findIndex((p) => p.id === id || p.slug === id);
+    if (index === -1) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    const deleted = portfolioDatabase.splice(index, 1)[0];
+    return res.json({ success: true, deletedId: deleted.id });
+  });
+
+  // POST /api/portfolio/:id/publish - Toggle or set publish status (Admin)
+  app.post("/api/portfolio/:id/publish", (req, res) => {
+    const { id } = req.params;
+    const { isPublished } = req.body;
+    const project = portfolioDatabase.find((p) => p.id === id || p.slug === id);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    project.isPublished = isPublished !== undefined ? Boolean(isPublished) : !project.isPublished;
+    project.updatedAt = new Date().toISOString();
+    return res.json({ success: true, isPublished: project.isPublished, project });
+  });
+
+  // POST /api/portfolio/:id/feature - Toggle or set feature status (Admin)
+  app.post("/api/portfolio/:id/feature", (req, res) => {
+    const { id } = req.params;
+    const { featured } = req.body;
+    const project = portfolioDatabase.find((p) => p.id === id || p.slug === id);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    project.featured = featured !== undefined ? Boolean(featured) : !project.featured;
+    project.updatedAt = new Date().toISOString();
+    return res.json({ success: true, featured: project.featured, project });
   });
 
   // n8n Webhook Integration Endpoints

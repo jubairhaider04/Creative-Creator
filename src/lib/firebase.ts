@@ -13,11 +13,18 @@ import {
 } from "firebase/auth";
 import { 
   getFirestore, 
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+  persistentSingleTabManager,
   collection, 
   addDoc, 
   getDocs, 
+  getDocsFromCache,
+  getDocsFromServer,
   doc, 
   getDoc,
+  getDocFromCache,
   getDocFromServer,
   updateDoc, 
   deleteDoc,
@@ -27,7 +34,10 @@ import {
   onSnapshot, 
   serverTimestamp, 
   setDoc, 
-  where 
+  where,
+  enableNetwork,
+  disableNetwork,
+  waitForPendingWrites
 } from "firebase/firestore";
 import { 
   getStorage, 
@@ -72,16 +82,73 @@ export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
-// Initialize Firestore
-export const db = firebaseConfig.firestoreDatabaseId 
-  ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
-  : getFirestore(app);
+// Initialize Firestore with Offline Persistence enabled
+// This caches collections (services, portfolio, user requests, etc.) into IndexedDB
+// so cached data remains visible even when internet connection drops.
+let firestoreDb;
+const isBrowser = typeof window !== "undefined" && typeof indexedDB !== "undefined";
+
+if (isBrowser) {
+  try {
+    firestoreDb = initializeFirestore(
+      app,
+      {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager()
+        })
+      },
+      firebaseConfig.firestoreDatabaseId || undefined
+    );
+  } catch (err) {
+    try {
+      // Fallback for single-tab or private browsing mode
+      firestoreDb = initializeFirestore(
+        app,
+        {
+          localCache: persistentLocalCache({
+            tabManager: persistentSingleTabManager({})
+          })
+        },
+        firebaseConfig.firestoreDatabaseId || undefined
+      );
+    } catch {
+      // If already initialized (e.g. HMR or dev server)
+      firestoreDb = firebaseConfig.firestoreDatabaseId 
+        ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
+        : getFirestore(app);
+    }
+  }
+} else {
+  firestoreDb = firebaseConfig.firestoreDatabaseId 
+    ? getFirestore(app, firebaseConfig.firestoreDatabaseId)
+    : getFirestore(app);
+}
+
+export const db = firestoreDb;
 
 // Initialize Firebase Storage
 export const storage = getStorage(app);
 
-// Validate Connection on Boot
+// Network Control Utilities for Offline Persistence
+export const setFirestoreNetworkStatus = async (online: boolean): Promise<void> => {
+  try {
+    if (online) {
+      await enableNetwork(db);
+      console.log("Firestore network enabled: online mode active");
+    } else {
+      await disableNetwork(db);
+      console.log("Firestore network disabled: offline cache mode active");
+    }
+  } catch (err) {
+    console.warn("Notice: Firestore network toggle:", err);
+  }
+};
+
+// Validate Connection on Boot (non-blocking)
 export const testFirestoreConnection = async () => {
+  if (typeof navigator !== "undefined" && !navigator.onLine) {
+    return; // Skip server probe if navigator is currently offline
+  }
   try {
     await getDocFromServer(doc(db, "test", "connection"));
   } catch (error) {
@@ -475,15 +542,39 @@ export const createClientProjectFirestore = async (
   }
 };
 
-export const subscribeToClientProjects = (clientId: string, callback: (projects: ClientProject[]) => void) => {
+export const subscribeToClientProjects = (clientId: string, callback: (projects: ClientProject[], isFromCache?: boolean) => void) => {
   try {
     const q = query(collection(db, "projects"), where("clientId", "==", clientId));
-    return onSnapshot(q, (snapshot) => {
+
+    // Immediately hydrate from local IndexedDB cache if available
+    getDocsFromCache(q)
+      .then((cacheSnap) => {
+        if (!cacheSnap.empty) {
+          const projs = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as ClientProject));
+          projs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          callback(projs, true);
+        }
+      })
+      .catch(() => {
+        // Cache miss or pending initialization
+      });
+
+    return onSnapshot(q, { includeMetadataChanges: true }, (snapshot) => {
       const projs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ClientProject));
       projs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      callback(projs);
+      callback(projs, snapshot.metadata.fromCache);
     }, (err) => {
       console.warn("Client projects warning:", err);
+      // Attempt cache recovery
+      getDocsFromCache(q)
+        .then((cacheSnap) => {
+          if (!cacheSnap.empty) {
+            const projs = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as ClientProject));
+            projs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            callback(projs, true);
+          }
+        })
+        .catch(() => {});
     });
   } catch (err) {
     console.warn("Client projects subscription error:", err);
@@ -491,15 +582,54 @@ export const subscribeToClientProjects = (clientId: string, callback: (projects:
   }
 };
 
-export const subscribeToAllClientProjects = (callback: (projects: ClientProject[]) => void) => {
+export const getCachedClientProjects = async (clientId: string): Promise<ClientProject[]> => {
+  try {
+    const q = query(collection(db, "projects"), where("clientId", "==", clientId));
+    const snap = await getDocsFromCache(q);
+    if (!snap.empty) {
+      const projs = snap.docs.map(d => ({ id: d.id, ...d.data() } as ClientProject));
+      projs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      return projs;
+    }
+  } catch (err) {
+    // Cache miss
+  }
+  return [];
+};
+
+export const subscribeToAllClientProjects = (callback: (projects: ClientProject[], isFromCache?: boolean) => void) => {
   try {
     const colRef = collection(db, "projects");
-    return onSnapshot(colRef, (snapshot) => {
+
+    // Immediately hydrate from local IndexedDB cache if available
+    getDocsFromCache(colRef)
+      .then((cacheSnap) => {
+        if (!cacheSnap.empty) {
+          const projs = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as ClientProject));
+          projs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          callback(projs, true);
+        }
+      })
+      .catch(() => {
+        // Cache miss or pending initialization
+      });
+
+    return onSnapshot(colRef, { includeMetadataChanges: true }, (snapshot) => {
       const projs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ClientProject));
       projs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      callback(projs);
+      callback(projs, snapshot.metadata.fromCache);
     }, (err) => {
       console.warn("All client projects warning:", err);
+      // Attempt cache recovery
+      getDocsFromCache(colRef)
+        .then((cacheSnap) => {
+          if (!cacheSnap.empty) {
+            const projs = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as ClientProject));
+            projs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            callback(projs, true);
+          }
+        })
+        .catch(() => {});
     });
   } catch (err) {
     console.warn("All client projects error:", err);
@@ -805,26 +935,67 @@ export const seedServicesFirestore = async (): Promise<boolean> => {
   }
 };
 
-export const subscribeToServicesFirestore = (callback: (services: ServicePillar[]) => void) => {
+export const subscribeToServicesFirestore = (callback: (services: ServicePillar[], isFromCache?: boolean) => void) => {
   try {
     const colRef = collection(db, "services");
-    return onSnapshot(colRef, (snapshot) => {
+
+    // Immediately hydrate from local IndexedDB cache if available
+    getDocsFromCache(colRef)
+      .then((cacheSnap) => {
+        if (!cacheSnap.empty) {
+          const cachedServices = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as ServicePillar));
+          callback(cachedServices, true);
+        }
+      })
+      .catch(() => {
+        // Cache miss or pending initialization
+      });
+
+    return onSnapshot(colRef, { includeMetadataChanges: true }, (snapshot) => {
       if (snapshot.empty) {
-        callback(SERVICE_PILLARS);
-        seedServicesFirestore().catch(() => {});
+        if (!snapshot.metadata.fromCache && (typeof navigator === "undefined" || navigator.onLine)) {
+          callback(SERVICE_PILLARS, false);
+          seedServicesFirestore().catch(() => {});
+        } else {
+          callback(SERVICE_PILLARS, snapshot.metadata.fromCache);
+        }
       } else {
         const services = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ServicePillar));
-        callback(services);
+        callback(services, snapshot.metadata.fromCache);
       }
     }, (error) => {
       console.warn("Services subscription warning:", error);
-      callback(SERVICE_PILLARS);
+      // Attempt cache read on subscription failure (e.g. offline)
+      getDocsFromCache(colRef)
+        .then((cacheSnap) => {
+          if (!cacheSnap.empty) {
+            const cachedServices = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as ServicePillar));
+            callback(cachedServices, true);
+          } else {
+            callback(SERVICE_PILLARS, true);
+          }
+        })
+        .catch(() => {
+          callback(SERVICE_PILLARS, false);
+        });
     });
   } catch (err) {
     console.warn("Services subscription error:", err);
-    callback(SERVICE_PILLARS);
+    callback(SERVICE_PILLARS, false);
     return () => {};
   }
+};
+
+export const getCachedServices = async (): Promise<ServicePillar[]> => {
+  try {
+    const snap = await getDocsFromCache(collection(db, "services"));
+    if (!snap.empty) {
+      return snap.docs.map(d => ({ id: d.id, ...d.data() } as ServicePillar));
+    }
+  } catch (err) {
+    // Cache miss
+  }
+  return SERVICE_PILLARS;
 };
 
 export const saveServiceFirestore = async (service: ServicePillar) => {
@@ -859,32 +1030,87 @@ export const seedPortfolioFirestore = async (): Promise<boolean> => {
   }
 };
 
-export const subscribeToPortfolioFirestore = (callback: (projects: Project[]) => void) => {
+export const subscribeToPortfolioFirestore = (callback: (projects: Project[], isFromCache?: boolean) => void) => {
   try {
     const colRef = collection(db, "portfolio");
-    return onSnapshot(colRef, (snapshot) => {
+
+    // Immediately hydrate from local IndexedDB cache if available
+    getDocsFromCache(colRef)
+      .then((cacheSnap) => {
+        if (!cacheSnap.empty) {
+          const cachedProjects = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+          callback(cachedProjects, true);
+        }
+      })
+      .catch(() => {
+        // Cache miss or pending initialization
+      });
+
+    return onSnapshot(colRef, { includeMetadataChanges: true }, (snapshot) => {
       if (snapshot.empty) {
-        callback(PORTFOLIO_PROJECTS);
-        seedPortfolioFirestore().catch(() => {});
+        if (!snapshot.metadata.fromCache && (typeof navigator === "undefined" || navigator.onLine)) {
+          callback(PORTFOLIO_PROJECTS, false);
+          seedPortfolioFirestore().catch(() => {});
+        } else {
+          callback(PORTFOLIO_PROJECTS, snapshot.metadata.fromCache);
+        }
       } else {
         const projects = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as Project));
-        callback(projects);
+        callback(projects, snapshot.metadata.fromCache);
       }
     }, (error) => {
       console.warn("Portfolio subscription warning:", error);
-      callback(PORTFOLIO_PROJECTS);
+      // Attempt cache read on subscription failure (e.g. offline)
+      getDocsFromCache(colRef)
+        .then((cacheSnap) => {
+          if (!cacheSnap.empty) {
+            const cachedProjects = cacheSnap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+            callback(cachedProjects, true);
+          } else {
+            callback(PORTFOLIO_PROJECTS, true);
+          }
+        })
+        .catch(() => {
+          callback(PORTFOLIO_PROJECTS, false);
+        });
     });
   } catch (err) {
     console.warn("Portfolio subscription error:", err);
-    callback(PORTFOLIO_PROJECTS);
+    callback(PORTFOLIO_PROJECTS, false);
     return () => {};
   }
+};
+
+export const getCachedPortfolio = async (): Promise<Project[]> => {
+  try {
+    const snap = await getDocsFromCache(collection(db, "portfolio"));
+    if (!snap.empty) {
+      return snap.docs.map(d => ({ id: d.id, ...d.data() } as Project));
+    }
+  } catch (err) {
+    // Cache miss
+  }
+  return PORTFOLIO_PROJECTS;
 };
 
 export const saveProjectFirestore = async (project: Project) => {
   try {
     const docRef = doc(db, "portfolio", project.id);
-    await setDoc(docRef, { ...project, updatedAt: serverTimestamp() }, { merge: true });
+    const cleanProject = {
+      ...project,
+      slug: project.slug || project.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+      thumbnail: project.thumbnailUrl || project.thumbnail,
+      thumbnailUrl: project.thumbnailUrl || project.thumbnail,
+      heroImageUrl: project.heroImageUrl || project.thumbnailUrl || project.thumbnail,
+      clientName: project.clientName || project.client || "Confidential Partner",
+      client: project.clientName || project.client || "Confidential Partner",
+      isPublished: project.isPublished !== undefined ? project.isPublished : true,
+      featured: project.featured !== undefined ? project.featured : false,
+      year: typeof project.year === "string" ? parseInt(project.year, 10) || 2025 : project.year,
+      updatedAt: new Date().toISOString(),
+      updatedAtTimestamp: serverTimestamp()
+    };
+    await setDoc(docRef, cleanProject, { merge: true });
   } catch (err) {
     console.error("Error saving project in Firestore:", err);
     throw err;
@@ -898,6 +1124,69 @@ export const deleteProjectFirestore = async (projectId: string) => {
     console.error("Error deleting project in Firestore:", err);
     throw err;
   }
+};
+
+export const togglePublishProjectFirestore = async (projectId: string, isPublished: boolean) => {
+  try {
+    const docRef = doc(db, "portfolio", projectId);
+    await updateDoc(docRef, { 
+      isPublished, 
+      published: isPublished, 
+      updatedAt: new Date().toISOString() 
+    });
+  } catch (err) {
+    console.error("Error toggling publish status:", err);
+    throw err;
+  }
+};
+
+export const toggleFeatureProjectFirestore = async (projectId: string, featured: boolean) => {
+  try {
+    const docRef = doc(db, "portfolio", projectId);
+    await updateDoc(docRef, { 
+      featured, 
+      updatedAt: new Date().toISOString() 
+    });
+  } catch (err) {
+    console.error("Error toggling feature status:", err);
+    throw err;
+  }
+};
+
+export const updateProjectSortOrderFirestore = async (projectId: string, sortOrder: number) => {
+  try {
+    const docRef = doc(db, "portfolio", projectId);
+    await updateDoc(docRef, { 
+      sortOrder, 
+      updatedAt: new Date().toISOString() 
+    });
+  } catch (err) {
+    console.error("Error updating project sort order:", err);
+    throw err;
+  }
+};
+
+export const uploadPortfolioImage = async (
+  file: File, 
+  portfolioId: string, 
+  type: "thumbnail" | "hero" | "gallery"
+): Promise<string> => {
+  if (!file) throw new Error("No file provided");
+  
+  // Validate file type
+  if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+    throw new Error("Invalid file type. Only images and videos are supported.");
+  }
+  
+  // Validate file size (max 25MB for video, 12MB for images)
+  const maxSize = file.type.startsWith("video/") ? 25 * 1024 * 1024 : 12 * 1024 * 1024;
+  if (file.size > maxSize) {
+    throw new Error(`File is too large. Max size is ${file.type.startsWith("video/") ? "25MB" : "12MB"}.`);
+  }
+
+  const cleanPortfolioId = portfolioId.replace(/[^a-zA-Z0-9_-]/g, "_");
+  const folder = `portfolio/${cleanPortfolioId}/${type}`;
+  return await uploadFileToStorage(file, folder);
 };
 
 // ==========================================

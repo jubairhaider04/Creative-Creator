@@ -21,6 +21,11 @@ import { Footer } from "./components/Footer";
 import { GoogleIntelligenceModal } from "./components/GoogleIntelligenceModal";
 import { AnalyticsDashboardModal } from "./components/AnalyticsDashboardModal";
 import { AuthModal } from "./components/AuthModal";
+import { OfflineStatusBanner } from "./components/OfflineStatusBanner";
+import { WorkSection } from "./components/WorkSection";
+import { WorkPage } from "./components/WorkPage";
+import { WorkDetailModal } from "./components/WorkDetailModal";
+import { WorkFullscreenViewer } from "./components/WorkFullscreenViewer";
 import { ServiceCategory, ServicePillar, Project } from "./types";
 import { PricingPlan } from "./data/pricingData";
 import { SERVICE_PILLARS } from "./data/servicesData";
@@ -77,6 +82,31 @@ function HomePage() {
     language === "bn" ? "১০-১৪ দিন (স্ট্যান্ডার্ড টাইমলাইন)" : "10 - 14 Days (Standard Sprint)"
   );
 
+  // Work Section Interactive Modal & Fullscreen state
+  const [activeWorkProject, setActiveWorkProject] = useState<Project | null>(null);
+  const [isWorkDetailOpen, setIsWorkDetailOpen] = useState(false);
+  const [isWorkFullscreenOpen, setIsWorkFullscreenOpen] = useState(false);
+  const [fullscreenMediaIndex, setFullscreenMediaIndex] = useState(0);
+
+  // Hash-based smooth scroll helper on mount & hash change (e.g. #work)
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash) {
+        const id = window.location.hash.replace("#", "");
+        const timer = setTimeout(() => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 150);
+        return () => clearTimeout(timer);
+      }
+    };
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
+  }, []);
+
   // Keep default budget aligned if user changes language before selecting a package
   useEffect(() => {
     if (!inquiryBrief) {
@@ -92,6 +122,33 @@ function HomePage() {
   // Handlers
   const handleSelectServiceForInquiry = (category: ServiceCategory) => {
     setInquiryServices([category]);
+    const contactElem = document.getElementById("contact");
+    if (contactElem) {
+      contactElem.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleSelectWorkProject = (project: Project) => {
+    setActiveWorkProject(project);
+    setIsWorkDetailOpen(true);
+  };
+
+  const handleOpenWorkFullscreen = (project: Project, mediaIndex = 0) => {
+    setActiveWorkProject(project);
+    setFullscreenMediaIndex(mediaIndex);
+    setIsWorkFullscreenOpen(true);
+  };
+
+  const handleStartSimilarProject = (project: Project) => {
+    const serviceCategory = project.category || "Web Development";
+    setInquiryServices([serviceCategory]);
+    setInquiryBrief(
+      language === "bn"
+        ? `[রেফারেন্স প্রজেক্ট ভিত্তিক ইনকোয়ারি]\nআগ্রহী সার্ভিস: ${serviceCategory}\nরেফারেন্স প্রজেক্ট: ${project.title} (${project.clientName || project.client || "Bongio Showcase"})\n\nআমরা আমাদের ব্র্যান্ডের জন্য একই মানের সল্যুশন তৈরি করতে আগ্রহী।`
+        : `[Reference Project Inquiry]\nInterested Service: ${serviceCategory}\nReference Project: ${project.title} (${project.clientName || project.client || "Bongio Showcase"})\n\nWe would like to build a similar premium digital experience for our brand.`
+    );
+    setIsWorkDetailOpen(false);
+    setIsWorkFullscreenOpen(false);
     const contactElem = document.getElementById("contact");
     if (contactElem) {
       contactElem.scrollIntoView({ behavior: "smooth" });
@@ -196,7 +253,23 @@ function HomePage() {
           }}
         />
 
-        {/* 3. Bangladeshi Business Pricing Plans (Starter, Growth, Scale in Bangla TK) */}
+        {/* 3. New Premium WORK Section (#work) */}
+        <WorkSection
+          projects={projects}
+          onSelectProject={handleSelectWorkProject}
+          onOpenFullscreen={handleOpenWorkFullscreen}
+          onStartSimilarProject={handleStartSimilarProject}
+          onOpenQuoteCalculator={() => {
+            const el = document.getElementById("calculator");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+          onViewServices={() => {
+            const el = document.getElementById("services");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
+        />
+
+        {/* 4. Bangladeshi Business Pricing Plans (Starter, Growth, Scale in Bangla TK) */}
         <PricingSection
           onSelectPlanForInquiry={handleSelectPlanForInquiry}
           onOpenQuoteCalculator={() => {
@@ -285,6 +358,39 @@ function HomePage() {
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
       />
+
+      {/* Premium Work Detail Modal */}
+      <WorkDetailModal
+        isOpen={isWorkDetailOpen}
+        project={activeWorkProject}
+        allProjects={projects.filter(p => p.isPublished !== false)}
+        onClose={() => setIsWorkDetailOpen(false)}
+        onSelectProject={(p) => setActiveWorkProject(p)}
+        onOpenFullscreen={(p, idx) => handleOpenWorkFullscreen(p, idx)}
+        onStartSimilarProject={handleStartSimilarProject}
+      />
+
+      {/* Fullscreen Project Experience Viewer */}
+      <WorkFullscreenViewer
+        isOpen={isWorkFullscreenOpen}
+        project={activeWorkProject}
+        initialIndex={fullscreenMediaIndex}
+        onClose={() => setIsWorkFullscreenOpen(false)}
+        onNextProject={() => {
+          const published = projects.filter(p => p.isPublished !== false);
+          if (!activeWorkProject || published.length === 0) return;
+          const currIdx = published.findIndex(p => p.id === activeWorkProject.id);
+          const nextIdx = (currIdx + 1) % published.length;
+          setActiveWorkProject(published[nextIdx]);
+        }}
+        onPrevProject={() => {
+          const published = projects.filter(p => p.isPublished !== false);
+          if (!activeWorkProject || published.length === 0) return;
+          const currIdx = published.findIndex(p => p.id === activeWorkProject.id);
+          const prevIdx = (currIdx - 1 + published.length) % published.length;
+          setActiveWorkProject(published[prevIdx]);
+        }}
+      />
     </div>
   );
 }
@@ -293,9 +399,38 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <OfflineStatusBanner />
         <Routes>
           {/* Public Website */}
           <Route path="/" element={<HomePage />} />
+
+          {/* Dedicated Work Routes */}
+          <Route
+            path="/work"
+            element={
+              <WorkPage
+                onOpenAiConsultant={() => {}}
+                onOpenAnalytics={() => {}}
+                onOpenAuth={() => {}}
+                onOpenQuoteCalculator={() => {
+                  window.location.href = "/#calculator";
+                }}
+              />
+            }
+          />
+          <Route
+            path="/work/:slug"
+            element={
+              <WorkPage
+                onOpenAiConsultant={() => {}}
+                onOpenAnalytics={() => {}}
+                onOpenAuth={() => {}}
+                onOpenQuoteCalculator={() => {
+                  window.location.href = "/#calculator";
+                }}
+              />
+            }
+          />
 
           {/* Dedicated Auth Pages */}
           <Route path="/login" element={<AuthPage initialMode="login" />} />
@@ -340,6 +475,14 @@ export default function App() {
           {/* Protected Admin Command Center */}
           <Route
             path="/admin/dashboard"
+            element={
+              <ProtectedRoute requireRole="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/portfolio"
             element={
               <ProtectedRoute requireRole="admin">
                 <AdminDashboard />

@@ -59,6 +59,7 @@ import {
   deleteProjectFirestore,
   seedPortfolioFirestore
 } from "../lib/firebase";
+import { AdminPortfolioManager } from "./AdminPortfolioManager";
 import { 
   ServicePillar, 
   Project, 
@@ -78,7 +79,15 @@ export const AdminDashboard: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<
     "overview" | "clients" | "requests" | "projects" | "leads" | "contacts" | "messages" | "activity" | "services" | "portfolio" | "settings"
-  >("overview");
+  >(() => {
+    return location.pathname.includes("/portfolio") ? "portfolio" : "overview";
+  });
+
+  useEffect(() => {
+    if (location.pathname.includes("/portfolio")) {
+      setActiveTab("portfolio");
+    }
+  }, [location.pathname]);
 
   // Real-time Firestore state
   const [usersList, setUsersList] = useState<UserProfile[]>([]);
@@ -1074,9 +1083,23 @@ export const AdminDashboard: React.FC = () => {
                 <div key={s.id} className="p-4 rounded-2xl bg-zinc-900/40 border border-zinc-800 space-y-2">
                   <h4 className="font-bold text-white text-sm">{s.title}</h4>
                   <p className="text-xs text-zinc-400">{s.tagline}</p>
-                  <div className="flex justify-between text-xs pt-2 font-mono text-emerald-400">
-                    <span>{s.startingPrice}</span>
-                    <span>{s.turnaroundTime}</span>
+                  <div className="flex flex-col gap-1.5 text-xs pt-3 border-t border-zinc-800/80 font-mono">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[11px] text-zinc-400 font-sans">USD Base Price:</span>
+                      <span className="font-bold text-emerald-400">
+                        {s.price ? `$${s.price.usd.toLocaleString("en-US")}` : "$150"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[11px] text-zinc-400 font-sans">BDT Local Price:</span>
+                      <span className="font-bold text-blue-400">
+                        {s.price ? `৳${s.price.bdt.toLocaleString("en-US")}` : s.startingPrice}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-zinc-400 pt-1 text-[11px] font-sans">
+                      <span>Turnaround:</span>
+                      <span className="font-mono text-zinc-300">{s.turnaroundTime}</span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1087,16 +1110,13 @@ export const AdminDashboard: React.FC = () => {
         {/* 10. PORTFOLIO CMS */}
         {activeTab === "portfolio" && (
           <div className="space-y-4 animate-in fade-in duration-200">
-            <h3 className="text-base font-bold text-white">Portfolio Case Studies</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {projects.map((proj) => (
-                <div key={proj.id} className="p-3 rounded-2xl bg-zinc-900/40 border border-zinc-800 space-y-2">
-                  <img src={proj.thumbnail} alt="" className="h-28 w-full object-cover rounded-xl" />
-                  <h4 className="font-bold text-white text-xs truncate">{proj.title}</h4>
-                  <p className="text-[10px] text-zinc-400">{proj.client} • {proj.category}</p>
-                </div>
-              ))}
-            </div>
+            <AdminPortfolioManager
+              projects={projects}
+              onRefresh={() => {
+                // Subscription will auto-update
+              }}
+              showNotice={showNotice}
+            />
           </div>
         )}
 

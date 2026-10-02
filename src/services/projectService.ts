@@ -2,6 +2,7 @@ import {
   createClientProjectFirestore, 
   subscribeToClientProjects, 
   subscribeToAllClientProjects, 
+  getCachedClientProjects,
   updateProjectProgressFirestore,
   deleteClientProjectFirestore 
 } from "../lib/firebase";
@@ -11,6 +12,7 @@ export const projectService = {
   create: createClientProjectFirestore,
   subscribeClient: subscribeToClientProjects,
   subscribeAll: subscribeToAllClientProjects,
+  getCachedClient: getCachedClientProjects,
   updateProgress: updateProjectProgressFirestore,
   delete: deleteClientProjectFirestore
 };
