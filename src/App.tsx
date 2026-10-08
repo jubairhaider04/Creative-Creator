@@ -26,6 +26,7 @@ import { WorkSection } from "./components/WorkSection";
 import { WorkPage } from "./components/WorkPage";
 import { WorkDetailModal } from "./components/WorkDetailModal";
 import { WorkFullscreenViewer } from "./components/WorkFullscreenViewer";
+import { AI_AutomationSection } from "./components/AIAutomation/AI_AutomationSection";
 import { ServiceCategory, ServicePillar, Project } from "./types";
 import { PricingPlan } from "./data/pricingData";
 import { SERVICE_PILLARS } from "./data/servicesData";
@@ -253,7 +254,10 @@ function HomePage() {
           }}
         />
 
-        {/* 3. New Premium WORK Section (#work) */}
+        {/* 3. New Premium AI AUTOMATION Section (#ai-automation) */}
+        <AI_AutomationSection />
+
+        {/* 4. New Premium WORK Section (#work) */}
         <WorkSection
           projects={projects}
           onSelectProject={handleSelectWorkProject}

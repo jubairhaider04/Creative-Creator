@@ -81,6 +81,7 @@ export const Footer: React.FC = () => {
               Disciplines
             </h4>
             <ul className="space-y-2 text-zinc-400">
+              <li><a href="#ai-automation" className="text-cyan-400 hover:text-cyan-300 font-semibold transition-colors">AI Customer Automation (24/7)</a></li>
               <li><a href="#services" className="hover:text-white transition-colors">Web Development (60FPS)</a></li>
               <li><a href="#services" className="hover:text-white transition-colors">Content Creation & Copy</a></li>
               <li><a href="#services" className="hover:text-white transition-colors">4K Video Post-Production</a></li>
